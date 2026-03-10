@@ -10,7 +10,8 @@ use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 
 use agileplus_cli::commands::{
-    implement::ImplementArgs, plan::PlanArgs, queue::QueueArgs,
+    cycle::CycleArgs,
+    implement::ImplementArgs, module::ModuleArgs, plan::PlanArgs, queue::QueueArgs,
     research::ResearchArgs, retrospective::RetrospectiveArgs,
     ship::ShipArgs, specify::SpecifyArgs, triage::TriageArgs,
     validate::ValidateArgs,
@@ -43,6 +44,8 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Manage cycles (time-boxed delivery units).
+    Cycle(CycleArgs),
     /// Create or revise a feature specification.
     Specify(SpecifyArgs),
     /// Research a feature (pre-specify codebase scan or post-specify feasibility).
@@ -61,6 +64,8 @@ enum Commands {
     Triage(TriageArgs),
     /// Manage the triage backlog queue.
     Queue(QueueArgs),
+    /// Manage modules (product-area groupings of features).
+    Module(ModuleArgs),
 }
 
 #[tokio::main]
@@ -93,6 +98,20 @@ async fn run(cli: Cli) -> Result<()> {
         _ => {}
     }
 
+    // Module command only needs storage (no VCS)
+    if let Commands::Module(args) = cli.command {
+        // Initialise storage adapter early for module commands
+        if let Some(parent) = cli.db.parent() {
+            if !parent.as_os_str().is_empty() && !parent.exists() {
+                std::fs::create_dir_all(parent)
+                    .with_context(|| format!("creating directory {}", parent.display()))?;
+            }
+        }
+        let storage = SqliteStorageAdapter::new(&cli.db)
+            .with_context(|| format!("opening database at {}", cli.db.display()))?;
+        return agileplus_cli::commands::module::run(args, &storage).await;
+    }
+
     // Initialise storage adapter (create DB directory if needed)
     if let Some(parent) = cli.db.parent() {
         if !parent.as_os_str().is_empty() && !parent.exists() {
@@ -116,6 +135,9 @@ async fn run(cli: Cli) -> Result<()> {
     let agent = StubAgentAdapter;
 
     match cli.command {
+        Commands::Cycle(args) => {
+            agileplus_cli::commands::cycle::run(args, &storage).await?;
+        }
         Commands::Specify(args) => {
             agileplus_cli::commands::specify::run_specify(args, &storage, &vcs).await?;
         }
@@ -137,7 +159,7 @@ async fn run(cli: Cli) -> Result<()> {
         Commands::Retrospective(args) => {
             agileplus_cli::commands::retrospective::run_retrospective(args, &storage, &vcs).await?;
         }
-        Commands::Triage(_) | Commands::Queue(_) => unreachable!("handled above"),
+        Commands::Triage(_) | Commands::Queue(_) | Commands::Module(_) => unreachable!("handled above"),
     }
 
     Ok(())
