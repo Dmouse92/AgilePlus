@@ -21,9 +21,6 @@ jobs:
       pull-requests: write
     name: Buf Lint & Breaking
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
     steps:
       - uses: actions/checkout@v6
         with:
