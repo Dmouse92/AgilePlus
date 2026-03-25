@@ -8,25 +8,25 @@
 //! Traceability: WP11-T069
 
 use axum::extract::State;
-use axum::response::sse::{Event, KeepAlive, Sse};
 use axum::response::IntoResponse;
-use tokio_stream::wrappers::BroadcastStream;
+use axum::response::sse::{Event, KeepAlive, Sse};
 use tokio_stream::StreamExt as _;
+use tokio_stream::wrappers::BroadcastStream;
 
 use crate::state::AppState;
-use agileplus_domain::ports::{observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort};
+use agileplus_domain::ports::{
+    observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort,
+};
 
 /// `GET /api/v1/stream`
 ///
 /// Opens an SSE connection and streams domain events to the client.
 /// Requires a valid API key (enforced by the surrounding middleware layer).
-pub async fn stream_events<S, V, O>(
-    State(app): State<AppState<S, V, O>>,
-) -> impl IntoResponse
+pub async fn stream_events<S, V, O>(State(app): State<AppState<S, V, O>>) -> impl IntoResponse
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let rx = app.event_tx.subscribe();
     let stream = BroadcastStream::new(rx).filter_map(|msg| {

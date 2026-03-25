@@ -15,16 +15,18 @@ use axum::{Json, Router};
 use chrono::{DateTime, Duration, Utc};
 use serde::{Deserialize, Serialize};
 
-use agileplus_domain::ports::{observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort};
+use agileplus_domain::ports::{
+    observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort,
+};
 
 use crate::error::ApiError;
 use crate::state::AppState;
 
 pub fn routes<S, V, O>() -> Router<AppState<S, V, O>>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     Router::new()
         .route("/", get(list_events::<S, V, O>))
@@ -70,9 +72,9 @@ pub async fn list_events<S, V, O>(
     Query(params): Query<EventListParams>,
 ) -> Result<Json<Vec<EventResponse>>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     // Gather audit entries from all features as an event source.
     let all_features = app
@@ -129,7 +131,10 @@ where
     let until_dt: Option<DateTime<Utc>> = params
         .until
         .as_deref()
-        .map(|s| s.parse::<DateTime<Utc>>().map_err(|e| ApiError::BadRequest(format!("invalid until: {e}"))))
+        .map(|s| {
+            s.parse::<DateTime<Utc>>()
+                .map_err(|e| ApiError::BadRequest(format!("invalid until: {e}")))
+        })
         .transpose()?;
 
     let filtered: Vec<EventResponse> = events
@@ -186,9 +191,9 @@ pub async fn get_event<S, V, O>(
     Path(id): Path<i64>,
 ) -> Result<Json<EventResponse>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     // Scan audit entries across all features for the matching id.
     let all_features = app
@@ -229,27 +234,16 @@ fn parse_since(s: &str) -> Result<DateTime<Utc>, ApiError> {
         return Ok(dt);
     }
     // Try relative durations like "1h", "24h", "30m".
-    let (num, unit) = if s.ends_with('h') {
-        (
-            s[..s.len() - 1]
-                .parse::<i64>()
-                .map_err(|_| ApiError::BadRequest(format!("invalid since: {s}")))?,
-            "h",
-        )
-    } else if s.ends_with('m') {
-        (
-            s[..s.len() - 1]
-                .parse::<i64>()
-                .map_err(|_| ApiError::BadRequest(format!("invalid since: {s}")))?,
-            "m",
-        )
+    let parse_num = |n: &str| {
+        n.parse::<i64>()
+            .map_err(|_| ApiError::BadRequest(format!("invalid since: {s}")))
+    };
+    let duration = if let Some(n) = s.strip_suffix('h') {
+        Duration::hours(parse_num(n)?)
+    } else if let Some(n) = s.strip_suffix('m') {
+        Duration::minutes(parse_num(n)?)
     } else {
         return Err(ApiError::BadRequest(format!("invalid since: {s}")));
-    };
-    let duration = match unit {
-        "h" => Duration::hours(num),
-        "m" => Duration::minutes(num),
-        _ => unreachable!(),
     };
     Ok(Utc::now() - duration)
 }

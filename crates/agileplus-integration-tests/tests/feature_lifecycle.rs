@@ -5,17 +5,18 @@
 //!
 //! Traceability: WP19-T108
 
-use agileplus_integration_tests::common::{
-    fixtures::{feature_create_payload, transition_payload},
-    harness::{TestHarness, is_process_compose_installed},
-};
+use agileplus_integration_tests::common::fixtures::{feature_create_payload, transition_payload};
+
+#[cfg(feature = "integration")]
+use agileplus_integration_tests::common::harness::{TestHarness, is_process_compose_installed};
 
 /// Helper: skip the test if services are unavailable.
+#[cfg(feature = "integration")]
 macro_rules! require_services {
     () => {
         if !is_process_compose_installed() {
             eprintln!(
-                "SKIP: process-compose not installed — \
+                "SKIP: process-compose not installed -- \
                  run with --features integration and a live stack to execute this test."
             );
             return Ok(());
@@ -71,14 +72,25 @@ async fn feature_lifecycle_integration() -> anyhow::Result<()> {
         .send()
         .await?;
 
-    assert_eq!(get_resp.status().as_u16(), 200, "GET feature should succeed");
+    assert_eq!(
+        get_resp.status().as_u16(),
+        200,
+        "GET feature should succeed"
+    );
     let fetched: serde_json::Value = get_resp.json().await?;
     assert_eq!(fetched["friendly_name"], "E2E lifecycle feature");
 
     // -----------------------------------------------------------------------
     // Step 3: Transition through states
     // -----------------------------------------------------------------------
-    let states = ["specified", "researched", "planned", "implementing", "validated", "shipped"];
+    let states = [
+        "specified",
+        "researched",
+        "planned",
+        "implementing",
+        "validated",
+        "shipped",
+    ];
     for target in states {
         let tr = harness
             .client()
@@ -110,7 +122,11 @@ async fn feature_lifecycle_integration() -> anyhow::Result<()> {
         .send()
         .await?;
 
-    assert_eq!(events_resp.status().as_u16(), 200, "events list should succeed");
+    assert_eq!(
+        events_resp.status().as_u16(),
+        200,
+        "events list should succeed"
+    );
     let events: Vec<serde_json::Value> = events_resp.json().await?;
     assert!(
         !events.is_empty(),
@@ -118,8 +134,8 @@ async fn feature_lifecycle_integration() -> anyhow::Result<()> {
     );
 
     // Verify hash chain: each event's prev_hash should match the previous hash.
-    let mut prev_hash = "0000000000000000000000000000000000000000000000000000000000000000"
-        .to_string();
+    let mut prev_hash =
+        "0000000000000000000000000000000000000000000000000000000000000000".to_string();
     for event in &events {
         let event_prev = event["prev_hash"].as_str().unwrap_or("");
         assert_eq!(

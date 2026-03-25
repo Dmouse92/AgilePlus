@@ -5,6 +5,7 @@ after. All BDD tests run against mocks — no real gRPC server required.
 
 Traceability: WP16-T093
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -28,7 +29,7 @@ def _make_feature(slug: str, state: str) -> dict[str, Any]:
     }
 
 
-def before_scenario(context, scenario):  # noqa: ANN001
+def before_scenario(context, scenario):
     """Initialise fresh mock state before each BDD scenario."""
     context.loop = asyncio.new_event_loop()
     context.client = MagicMock(spec=AgilePlusCoreClient)
@@ -37,9 +38,7 @@ def before_scenario(context, scenario):  # noqa: ANN001
     context.client.run_command = AsyncMock(
         return_value={"success": True, "message": "ok", "outputs": {}}
     )
-    context.client.get_feature = AsyncMock(
-        return_value=_make_feature("default-feature", "created")
-    )
+    context.client.get_feature = AsyncMock(return_value=_make_feature("default-feature", "created"))
     context.client.list_features = AsyncMock(return_value=[])
     context.client.list_work_packages = AsyncMock(return_value=[])
     context.client.get_feature_state = AsyncMock(
@@ -67,6 +66,6 @@ def before_scenario(context, scenario):  # noqa: ANN001
     context.validation_report: dict[str, Any] | None = None
 
 
-def after_scenario(context, scenario):  # noqa: ANN001
+def after_scenario(context, scenario):
     """Clean up the event loop after each scenario."""
     context.loop.close()

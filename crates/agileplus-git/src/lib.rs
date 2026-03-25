@@ -4,16 +4,21 @@
 //! Traceability: WP07
 
 pub mod artifact;
+pub mod coordinator;
+pub mod events;
+pub mod guard;
+pub mod materialize;
+pub mod observer;
 pub mod repository;
+pub mod snapshot;
+pub mod topology;
 pub mod worktree;
 
 use std::path::{Path, PathBuf};
 
 use agileplus_domain::{
     error::DomainError,
-    ports::{
-        ConflictInfo, FeatureArtifacts, MergeResult, VcsPort, WorktreeInfo,
-    },
+    ports::{ConflictInfo, FeatureArtifacts, MergeResult, VcsPort, WorktreeInfo},
 };
 use git2::Repository;
 

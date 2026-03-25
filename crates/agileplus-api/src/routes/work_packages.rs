@@ -16,7 +16,9 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 
 use agileplus_domain::domain::work_package::{WorkPackage, WpState};
-use agileplus_domain::ports::{observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort};
+use agileplus_domain::ports::{
+    observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort,
+};
 
 use crate::error::ApiError;
 use crate::responses::WorkPackageResponse;
@@ -24,27 +26,29 @@ use crate::state::AppState;
 
 pub fn routes<S, V, O>() -> Router<AppState<S, V, O>>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     Router::new()
-        .route("/{id}", get(get_work_package::<S, V, O>).patch(update_work_package::<S, V, O>))
+        .route(
+            "/{id}",
+            get(get_work_package::<S, V, O>).patch(update_work_package::<S, V, O>),
+        )
         .route("/{id}/transition", post(transition_work_package::<S, V, O>))
 }
 
 /// Routes nested under `/api/v1/features/:slug/work-packages`.
 pub fn feature_wp_routes<S, V, O>() -> Router<AppState<S, V, O>>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
-    Router::new()
-        .route(
-            "/{slug}/work-packages",
-            get(list_work_packages::<S, V, O>).post(create_work_package::<S, V, O>),
-        )
+    Router::new().route(
+        "/{slug}/work-packages",
+        get(list_work_packages::<S, V, O>).post(create_work_package::<S, V, O>),
+    )
 }
 
 /// `GET /api/v1/work-packages/:id`
@@ -53,9 +57,9 @@ pub async fn get_work_package<S, V, O>(
     Path(id): Path<i64>,
 ) -> Result<Json<WorkPackageResponse>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let wp = state
         .storage
@@ -73,9 +77,9 @@ pub async fn list_work_packages<S, V, O>(
     Path(slug): Path<String>,
 ) -> Result<Json<Vec<WorkPackageResponse>>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let feature = state
         .storage
@@ -90,7 +94,9 @@ where
         .await
         .map_err(ApiError::from)?;
 
-    Ok(Json(wps.into_iter().map(WorkPackageResponse::from).collect()))
+    Ok(Json(
+        wps.into_iter().map(WorkPackageResponse::from).collect(),
+    ))
 }
 
 #[derive(Debug, Deserialize)]
@@ -107,9 +113,9 @@ pub async fn create_work_package<S, V, O>(
     Json(body): Json<CreateWpRequest>,
 ) -> Result<(StatusCode, Json<WorkPackageResponse>), ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let feature = app
         .storage
@@ -134,11 +140,20 @@ where
         plane_sub_issue_id: None,
         created_at: now,
         updated_at: now,
+        base_commit: None,
+        head_commit: None,
     };
 
-    let id = app.storage.create_work_package(&wp).await.map_err(ApiError::from)?;
+    let id = app
+        .storage
+        .create_work_package(&wp)
+        .await
+        .map_err(ApiError::from)?;
     let created = WorkPackage { id, ..wp };
-    Ok((StatusCode::CREATED, Json(WorkPackageResponse::from(created))))
+    Ok((
+        StatusCode::CREATED,
+        Json(WorkPackageResponse::from(created)),
+    ))
 }
 
 #[derive(Debug, Deserialize)]
@@ -155,9 +170,9 @@ pub async fn update_work_package<S, V, O>(
     Json(body): Json<UpdateWpRequest>,
 ) -> Result<Json<WorkPackageResponse>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let wp = app
         .storage
@@ -168,7 +183,9 @@ where
 
     let updated = WorkPackage {
         title: body.title.unwrap_or(wp.title.clone()),
-        acceptance_criteria: body.acceptance_criteria.unwrap_or(wp.acceptance_criteria.clone()),
+        acceptance_criteria: body
+            .acceptance_criteria
+            .unwrap_or(wp.acceptance_criteria.clone()),
         pr_url: body.pr_url.or(wp.pr_url.clone()),
         updated_at: Utc::now(),
         ..wp
@@ -196,9 +213,9 @@ pub async fn transition_work_package<S, V, O>(
     Json(body): Json<WpTransitionRequest>,
 ) -> Result<Json<WpTransitionResponse>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let wp = app
         .storage

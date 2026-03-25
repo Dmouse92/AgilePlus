@@ -21,6 +21,11 @@
 //!   POST /api/v1/features/:slug/audit/verify        — verify audit chain
 //!   GET  /api/v1/features/:slug/governance          — governance contract
 //!   POST /api/v1/features/:slug/validate            — run governance validation
+//!   GET  /api/v1/backlog                            - backlog list
+//!   POST /api/v1/backlog                            - backlog create
+//!   POST /api/v1/backlog/import                     - backlog bulk import
+//!   GET  /api/v1/worktrees                          - worktree list
+//!   POST /api/v1/worktrees                          - worktree create
 //!   GET  /api/v1/events                             — query events (T068)
 //!   GET  /api/v1/events/:id                         — single event (T068)
 //!   GET  /api/v1/stream                             — SSE real-time events (T069)
@@ -35,24 +40,29 @@ use axum::Json;
 use axum::routing::get;
 use axum::{Router, middleware};
 use tower_http::cors::CorsLayer;
+use tower_http::services::ServeDir;
 use tower_http::trace::TraceLayer;
 
 use agileplus_domain::credentials::CredentialStore;
-use agileplus_domain::ports::{observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort};
+use agileplus_domain::ports::{
+    ContentStoragePort, observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort,
+};
 
 type BoxError = Box<dyn std::error::Error + Send + Sync>;
 
 use crate::middleware::otel::opentelemetry_tracing_layer;
 use crate::responses::DetailedHealthResponse;
-use crate::routes::{audit, cycle, events, features, governance, module, stream, work_packages};
+use crate::routes::{
+    audit, backlog, cycle, events, features, governance, module, stream, work_packages, worktree,
+};
 use crate::state::AppState;
 
 /// Build the axum [`Router`] with all routes, middleware, and shared state.
 pub fn create_router<S, V, O>(state: AppState<S, V, O>) -> Router
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + ContentStoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let creds: Arc<dyn CredentialStore> = state.credentials.clone();
 
@@ -72,8 +82,14 @@ where
         .nest("/api/v1/features", features::routes::<S, V, O>())
         // Work-package CRUD + transitions
         .nest("/api/v1/work-packages", work_packages::routes::<S, V, O>())
+        // Backlog / triage / worktree
+        .nest("/api/v1/backlog", backlog::routes::<S, V, O>())
+        .nest("/api/v1/worktrees", worktree::routes::<S, V, O>())
         // Work-package routes nested under features
-        .nest("/api/v1/features", work_packages::feature_wp_routes::<S, V, O>())
+        .nest(
+            "/api/v1/features",
+            work_packages::feature_wp_routes::<S, V, O>(),
+        )
         // Governance and audit nested under features
         .nest("/api/v1/features", governance::routes::<S, V, O>())
         .nest("/api/v1/features", audit::routes::<S, V, O>())
@@ -90,9 +106,20 @@ where
         ))
         .with_state(state);
 
+    // Dashboard UI routes (no auth, seeded with dogfood data).
+    let dashboard_state = std::sync::Arc::new(tokio::sync::RwLock::new(
+        agileplus_dashboard::app_state::DashboardStore::seeded(),
+    ));
+    let dashboard = agileplus_dashboard::routes::router(dashboard_state);
+
     Router::new()
         .merge(public)
         .merge(protected)
+        .merge(dashboard)
+        // NOTE: "templates/static" is relative to the process CWD, which must
+        // be the workspace root (where the `templates/` directory lives).
+        // A future improvement could use a compile-time or env-based path.
+        .nest_service("/static", ServeDir::new("templates/static"))
         .layer(opentelemetry_tracing_layer())
         .layer(TraceLayer::new_for_http())
         .layer(CorsLayer::permissive())
@@ -103,9 +130,9 @@ async fn health_handler<S, V, O>(
     axum::extract::State(app): axum::extract::State<AppState<S, V, O>>,
 ) -> Json<DetailedHealthResponse>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + ContentStoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     use std::collections::HashMap;
 
@@ -113,7 +140,7 @@ where
     let mut services: HashMap<String, crate::responses::ServiceHealth> = HashMap::new();
 
     let t0 = Instant::now();
-    let sqlite_health = match app.storage.list_all_features().await {
+    let sqlite_health = match StoragePort::list_all_features(&*app.storage).await {
         Ok(_) => crate::responses::ServiceHealth::healthy(t0.elapsed().as_millis() as u64),
         Err(e) => crate::responses::ServiceHealth::unavailable(e.to_string()),
     };
@@ -151,9 +178,9 @@ async fn info_handler() -> Json<serde_json::Value> {
 /// Start the HTTP API server, binding to `addr`.
 pub async fn start_api<S, V, O>(addr: SocketAddr, state: AppState<S, V, O>) -> Result<(), BoxError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + ContentStoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let app = create_router(state);
     let listener = tokio::net::TcpListener::bind(addr).await?;

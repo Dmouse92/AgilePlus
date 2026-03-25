@@ -6,10 +6,9 @@
 
 use agileplus_domain::domain::feature::Feature;
 use agileplus_domain::domain::state_machine::FeatureState;
-use agileplus_plane::client::{PlaneIssue, PlaneIssueResponse};
+use agileplus_plane::client::{PlaneIssue, PlaneWorkItemResponse};
 use agileplus_plane::labels::PlaneLabel;
-use agileplus_plane::state_mapper::{PlaneStateMapper, PlaneStateMapperConfig, PlaneStateGroup};
-
+use agileplus_plane::state_mapper::{PlaneStateGroup, PlaneStateMapper};
 // ---------------------------------------------------------------------------
 // Contract: PlaneStateMapper — AgilePlus state → Plane state group
 // ---------------------------------------------------------------------------
@@ -57,21 +56,21 @@ fn contract_feature_state_validated_maps_to_completed() {
 #[test]
 fn contract_plane_backlog_maps_to_created() {
     let mapper = default_mapper();
-    let state = mapper.from_plane("backlog", "Backlog");
+    let state = mapper.map_plane_state("backlog", "Backlog");
     assert_eq!(state, FeatureState::Created);
 }
 
 #[test]
 fn contract_plane_started_maps_to_implementing() {
     let mapper = default_mapper();
-    let state = mapper.from_plane("started", "In Progress");
+    let state = mapper.map_plane_state("started", "In Progress");
     assert_eq!(state, FeatureState::Implementing);
 }
 
 #[test]
 fn contract_plane_completed_maps_to_validated() {
     let mapper = default_mapper();
-    let state = mapper.from_plane("completed", "Done");
+    let state = mapper.map_plane_state("completed", "Done");
     assert_eq!(state, FeatureState::Validated);
 }
 
@@ -79,7 +78,7 @@ fn contract_plane_completed_maps_to_validated() {
 fn contract_plane_unknown_group_is_handled_gracefully() {
     let mapper = default_mapper();
     // Must not panic; unknown groups fall back to Created or another sensible default.
-    let state = mapper.from_plane("totally-unknown-group", "");
+    let state = mapper.map_plane_state("totally-unknown-group", "");
     // Just verify it returns a valid FeatureState.
     let _as_str = state.to_string();
 }
@@ -90,9 +89,18 @@ fn contract_plane_unknown_group_is_handled_gracefully() {
 
 #[test]
 fn contract_plane_state_group_parsing_case_insensitive() {
-    assert_eq!(PlaneStateGroup::from_str("BACKLOG"), PlaneStateGroup::Backlog);
-    assert_eq!(PlaneStateGroup::from_str("Started"), PlaneStateGroup::Started);
-    assert_eq!(PlaneStateGroup::from_str("COMPLETED"), PlaneStateGroup::Completed);
+    assert_eq!(
+        "BACKLOG".parse::<PlaneStateGroup>().unwrap(),
+        PlaneStateGroup::Backlog
+    );
+    assert_eq!(
+        "Started".parse::<PlaneStateGroup>().unwrap(),
+        PlaneStateGroup::Started
+    );
+    assert_eq!(
+        "COMPLETED".parse::<PlaneStateGroup>().unwrap(),
+        PlaneStateGroup::Completed
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -118,7 +126,7 @@ fn contract_plane_issue_serializes_with_required_name_field() {
 #[test]
 fn contract_plane_issue_response_has_id_and_name() {
     let raw = r#"{"id":"plane-uuid-1","name":"Test","description_html":null,"state":null,"updated_at":null}"#;
-    let resp: PlaneIssueResponse = serde_json::from_str(raw).expect("deserialize");
+    let resp: PlaneWorkItemResponse = serde_json::from_str(raw).expect("deserialize");
     assert_eq!(resp.id, "plane-uuid-1");
     assert_eq!(resp.name, "Test");
 }
@@ -165,7 +173,11 @@ fn contract_plane_issue_built_from_feature_preserves_name() {
     // Simulate what OutboundSync.push_feature does when building the issue.
     let mapper = default_mapper();
     let (_group, state_id) = mapper.to_plane(feature.state);
-    let state_opt = if state_id.is_empty() { None } else { Some(state_id) };
+    let state_opt = if state_id.is_empty() {
+        None
+    } else {
+        Some(state_id)
+    };
 
     let issue = PlaneIssue {
         id: None,
@@ -188,7 +200,10 @@ fn contract_feature_with_plane_id_produces_update_not_create() {
 
     // Contract: if plane_issue_id is Some, the sync adapter must use PATCH (update),
     // not POST (create). Verified by checking the optional id field is treated correctly.
-    assert!(feature.plane_issue_id.is_some(), "plane_issue_id must be propagated");
+    assert!(
+        feature.plane_issue_id.is_some(),
+        "plane_issue_id must be propagated"
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -207,7 +222,7 @@ fn contract_state_roundtrip_is_stable() {
 
     for original_state in agileplus_states {
         let (group, _) = mapper.to_plane(original_state);
-        let recovered = mapper.from_plane(group.as_str(), "");
+        let recovered = mapper.map_plane_state(group.as_str(), "");
         assert_eq!(
             recovered, original_state,
             "state {original_state} must survive round-trip through Plane"

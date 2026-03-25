@@ -5,17 +5,21 @@
 //!
 //! Traceability: WP19-T110
 
+use agileplus_integration_tests::common::fixtures::plane_webhook_payload;
+
+#[cfg(feature = "integration")]
 use agileplus_integration_tests::common::{
-    fixtures::{feature_create_payload, plane_webhook_payload},
+    fixtures::feature_create_payload,
     harness::{TestHarness, is_process_compose_installed},
 };
 
 /// Helper: skip the test if services are unavailable.
+#[cfg(feature = "integration")]
 macro_rules! require_services {
     () => {
         if !is_process_compose_installed() {
             eprintln!(
-                "SKIP: process-compose not installed — \
+                "SKIP: process-compose not installed -- \
                  run with --features integration and a live stack to execute this test."
             );
             return Ok(());
@@ -78,7 +82,10 @@ async fn sync_conflict_integration() -> anyhow::Result<()> {
         .send()
         .await?;
 
-    assert!(patch_resp.status().is_success(), "local patch should succeed");
+    assert!(
+        patch_resp.status().is_success(),
+        "local patch should succeed"
+    );
 
     // -----------------------------------------------------------------------
     // Step 4: Simulate a competing Plane.so webhook modification
@@ -149,8 +156,7 @@ async fn sync_conflict_integration() -> anyhow::Result<()> {
     assert_eq!(final_resp.status().as_u16(), 200);
     let resolved: serde_json::Value = final_resp.json().await?;
     assert_eq!(
-        resolved["friendly_name"],
-        "Conflict test (modified locally)",
+        resolved["friendly_name"], "Conflict test (modified locally)",
         "local change should win"
     );
 

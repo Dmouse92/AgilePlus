@@ -28,8 +28,11 @@ impl TestFixtures {
             plane_state_id: None,
             labels: vec![],
             module_id: None,
+            project_id: None,
             created_at: Utc::now(),
             updated_at: Utc::now(),
+            created_at_commit: None,
+            last_modified_commit: None,
         };
 
         let feature2 = Feature {
@@ -43,8 +46,11 @@ impl TestFixtures {
             plane_state_id: None,
             labels: vec![],
             module_id: None,
+            project_id: None,
             created_at: Utc::now(),
             updated_at: Utc::now(),
+            created_at_commit: None,
+            last_modified_commit: None,
         };
 
         Self { feature1, feature2 }

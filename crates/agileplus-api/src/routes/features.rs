@@ -17,7 +17,9 @@ use serde::{Deserialize, Serialize};
 
 use agileplus_domain::domain::feature::Feature;
 use agileplus_domain::domain::state_machine::FeatureState;
-use agileplus_domain::ports::{observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort};
+use agileplus_domain::ports::{
+    observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort,
+};
 
 use crate::error::ApiError;
 use crate::responses::FeatureResponse;
@@ -25,13 +27,19 @@ use crate::state::AppState;
 
 pub fn routes<S, V, O>() -> Router<AppState<S, V, O>>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     Router::new()
-        .route("/", get(list_features::<S, V, O>).post(create_feature::<S, V, O>))
-        .route("/{slug}", get(get_feature::<S, V, O>).patch(update_feature::<S, V, O>))
+        .route(
+            "/",
+            get(list_features::<S, V, O>).post(create_feature::<S, V, O>),
+        )
+        .route(
+            "/{slug}",
+            get(get_feature::<S, V, O>).patch(update_feature::<S, V, O>),
+        )
         .route("/{slug}/transition", post(transition_feature::<S, V, O>))
 }
 
@@ -47,9 +55,9 @@ pub async fn list_features<S, V, O>(
     Query(params): Query<FeatureListParams>,
 ) -> Result<Json<Vec<FeatureResponse>>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let features = if let Some(state_filter) = params.state {
         let fs = parse_feature_state(&state_filter)?;
@@ -69,7 +77,9 @@ where
     // label filter is informational for now — domain layer doesn't have label storage yet
     let _ = params.label;
 
-    Ok(Json(features.into_iter().map(FeatureResponse::from).collect()))
+    Ok(Json(
+        features.into_iter().map(FeatureResponse::from).collect(),
+    ))
 }
 
 /// `GET /api/v1/features/:slug`
@@ -78,9 +88,9 @@ pub async fn get_feature<S, V, O>(
     Path(slug): Path<String>,
 ) -> Result<Json<FeatureResponse>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let feature = state
         .storage
@@ -106,9 +116,9 @@ pub async fn create_feature<S, V, O>(
     Json(body): Json<CreateFeatureRequest>,
 ) -> Result<(StatusCode, Json<FeatureResponse>), ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let initial_state = body
         .state
@@ -130,8 +140,11 @@ where
         plane_state_id: None,
         labels: vec![],
         module_id: None,
+        project_id: None,
         created_at: now,
         updated_at: now,
+        created_at_commit: None,
+        last_modified_commit: None,
     };
 
     let id = app
@@ -157,9 +170,9 @@ pub async fn update_feature<S, V, O>(
     Json(body): Json<UpdateFeatureRequest>,
 ) -> Result<Json<FeatureResponse>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let feature = app
         .storage
@@ -199,9 +212,9 @@ pub async fn transition_feature<S, V, O>(
     Json(body): Json<TransitionRequest>,
 ) -> Result<Json<TransitionResponse>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let feature = app
         .storage
@@ -227,6 +240,5 @@ where
 }
 
 pub fn parse_feature_state(s: &str) -> Result<FeatureState, ApiError> {
-    s.parse::<FeatureState>()
-        .map_err(ApiError::BadRequest)
+    s.parse::<FeatureState>().map_err(ApiError::BadRequest)
 }

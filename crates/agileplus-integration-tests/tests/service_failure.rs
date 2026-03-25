@@ -5,19 +5,23 @@
 //!
 //! Traceability: WP19-T111
 
-use std::time::{Duration, Instant};
-
 use agileplus_integration_tests::common::{
-    fixtures::feature_create_payload,
-    harness::{TestHarness, is_process_compose_installed, project_root},
+    fixtures::feature_create_payload, harness::project_root,
 };
 
+#[cfg(feature = "integration")]
+use std::time::{Duration, Instant};
+
+#[cfg(feature = "integration")]
+use agileplus_integration_tests::common::harness::{TestHarness, is_process_compose_installed};
+
 /// Helper: skip the test if services are unavailable.
+#[cfg(feature = "integration")]
 macro_rules! require_services {
     () => {
         if !is_process_compose_installed() {
             eprintln!(
-                "SKIP: process-compose not installed — \
+                "SKIP: process-compose not installed -- \
                  run with --features integration and a live stack to execute this test."
             );
             return Ok(());
@@ -45,11 +49,7 @@ async fn service_failure_recovery_integration() -> anyhow::Result<()> {
     // -----------------------------------------------------------------------
     // Step 1: Confirm all services are healthy at the start
     // -----------------------------------------------------------------------
-    let health_resp = harness
-        .client()
-        .get(harness.url("/health"))
-        .send()
-        .await?;
+    let health_resp = harness.client().get(harness.url("/health")).send().await?;
 
     assert_eq!(health_resp.status().as_u16(), 200);
     let health: serde_json::Value = health_resp.json().await?;
@@ -82,11 +82,7 @@ async fn service_failure_recovery_integration() -> anyhow::Result<()> {
     // -----------------------------------------------------------------------
     // Step 3: Verify health reports degraded
     // -----------------------------------------------------------------------
-    let degraded_resp = harness
-        .client()
-        .get(harness.url("/health"))
-        .send()
-        .await?;
+    let degraded_resp = harness.client().get(harness.url("/health")).send().await?;
 
     // The API should still respond (degraded, not down).
     assert!(
@@ -177,7 +173,10 @@ async fn service_failure_recovery_integration() -> anyhow::Result<()> {
         }
     }
 
-    assert!(recovered, "service should recover to healthy within 30 seconds");
+    assert!(
+        recovered,
+        "service should recover to healthy within 30 seconds"
+    );
 
     // -----------------------------------------------------------------------
     // Step 7: Verify cache is warm again (feature readable quickly)

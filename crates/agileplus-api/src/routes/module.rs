@@ -16,7 +16,9 @@ use serde::Serialize;
 
 use agileplus_domain::domain::module::{Module, ModuleWithFeatures};
 use agileplus_domain::error::DomainError;
-use agileplus_domain::ports::{observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort};
+use agileplus_domain::ports::{
+    observability::ObservabilityPort, storage::StoragePort, vcs::VcsPort,
+};
 
 use crate::error::ApiError;
 use crate::state::AppState;
@@ -40,9 +42,9 @@ pub struct ModuleTreeTemplate {
 /// Build the sub-router for module routes.
 pub fn routes<S, V, O>() -> Router<AppState<S, V, O>>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     Router::new()
         .route("/", get(list_modules::<S, V, O>))
@@ -56,11 +58,15 @@ async fn list_modules<S, V, O>(
     State(app): State<AppState<S, V, O>>,
 ) -> Result<Json<Vec<Module>>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
-    let modules = app.storage.list_root_modules().await.map_err(ApiError::from)?;
+    let modules = app
+        .storage
+        .list_root_modules()
+        .await
+        .map_err(ApiError::from)?;
     Ok(Json(modules))
 }
 
@@ -70,9 +76,9 @@ async fn get_module<S, V, O>(
     Path(id): Path<i64>,
 ) -> Result<Json<ModuleWithFeatures>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let mwf = app
         .storage
@@ -89,9 +95,9 @@ async fn get_module_tree<S, V, O>(
     Path(id): Path<i64>,
 ) -> Result<Json<Vec<ModuleTreeNode>>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
     let mut nodes = Vec::new();
     flatten_tree(id, 0, app.storage.as_ref(), &mut nodes)
@@ -106,11 +112,15 @@ pub async fn module_tree_page<S, V, O>(
     State(app): State<AppState<S, V, O>>,
 ) -> Result<Html<String>, ApiError>
 where
-    S: StoragePort + Send + Sync + Clone + 'static,
-    V: VcsPort + Send + Sync + Clone + 'static,
-    O: ObservabilityPort + Send + Sync + Clone + 'static,
+    S: StoragePort + Send + Sync + 'static,
+    V: VcsPort + Send + Sync + 'static,
+    O: ObservabilityPort + Send + Sync + 'static,
 {
-    let roots = app.storage.list_root_modules().await.map_err(ApiError::from)?;
+    let roots = app
+        .storage
+        .list_root_modules()
+        .await
+        .map_err(ApiError::from)?;
     let mut nodes = Vec::new();
     for root in &roots {
         flatten_tree(root.id, 0, app.storage.as_ref(), &mut nodes)
@@ -118,7 +128,9 @@ where
             .map_err(ApiError::from)?;
     }
     let tmpl = ModuleTreeTemplate { nodes };
-    let rendered = tmpl.render().map_err(|e| ApiError::Template(e.to_string()))?;
+    let rendered = tmpl
+        .render()
+        .map_err(|e| ApiError::Template(e.to_string()))?;
     Ok(Html(rendered))
 }
 

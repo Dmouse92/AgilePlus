@@ -70,9 +70,7 @@ fn contract_query_filter_by_entity_type_isolates_stream() {
         make_event(3, "Feature", 2, "Created"),
     ];
 
-    let result = EventQuery::new()
-        .entity_type("Feature")
-        .filter(&events);
+    let result = EventQuery::new().entity_type("Feature").filter(&events);
 
     assert_eq!(result.len(), 2, "must return only Feature events");
     assert!(result.iter().all(|e| e.entity_type == "Feature"));
@@ -105,7 +103,9 @@ fn contract_query_filter_by_entity_id() {
 
 #[test]
 fn contract_query_limit_matches_api_page_size() {
-    let events: Vec<Event> = (1..=25).map(|seq| make_event(seq, "Feature", 1, "Step")).collect();
+    let events: Vec<Event> = (1..=25)
+        .map(|seq| make_event(seq, "Feature", 1, "Step"))
+        .collect();
 
     // API uses limit=20 as default page size.
     let page = EventQuery::new().limit(20).filter(&events);
@@ -121,16 +121,18 @@ fn contract_query_limit_matches_api_page_size() {
 
 #[test]
 fn contract_query_sequence_range_enables_offset_pagination() {
-    let events: Vec<Event> = (1..=10).map(|seq| make_event(seq, "Feature", 1, "Step")).collect();
+    let events: Vec<Event> = (1..=10)
+        .map(|seq| make_event(seq, "Feature", 1, "Step"))
+        .collect();
 
     // Simulate page 1 (sequences 1-5) and page 2 (sequences 6-10).
     let page1 = EventQuery::new()
-        .from_sequence(1)
-        .to_sequence(5)
+        .after_sequence(1)
+        .end_sequence(5)
         .filter(&events);
     let page2 = EventQuery::new()
-        .from_sequence(6)
-        .to_sequence(10)
+        .after_sequence(6)
+        .end_sequence(10)
         .filter(&events);
 
     assert_eq!(page1.len(), 5);
@@ -146,7 +148,9 @@ fn contract_query_sequence_range_enables_offset_pagination() {
 #[test]
 fn contract_query_preserves_sequence_order() {
     // Build events in forward order — filter must preserve order.
-    let events: Vec<Event> = (1..=5).map(|seq| make_event(seq, "Feature", 1, "Step")).collect();
+    let events: Vec<Event> = (1..=5)
+        .map(|seq| make_event(seq, "Feature", 1, "Step"))
+        .collect();
     let result = EventQuery::new().entity_type("Feature").filter(&events);
 
     let sequences: Vec<i64> = result.iter().map(|e| e.sequence).collect();
@@ -168,9 +172,7 @@ fn contract_query_filter_by_event_type() {
         make_event(4, "Feature", 1, "Transitioned"),
     ];
 
-    let result = EventQuery::new()
-        .event_type("Transitioned")
-        .filter(&events);
+    let result = EventQuery::new().event_type("Transitioned").filter(&events);
 
     assert_eq!(result.len(), 2);
     assert!(result.iter().all(|e| e.event_type == "Transitioned"));
@@ -253,5 +255,9 @@ fn contract_combined_filter_and_limit() {
         .filter(&events);
 
     assert_eq!(result.len(), 5);
-    assert!(result.iter().all(|e| e.entity_id == 1 && e.event_type == "Transitioned"));
+    assert!(
+        result
+            .iter()
+            .all(|e| e.entity_id == 1 && e.event_type == "Transitioned")
+    );
 }
