@@ -124,7 +124,7 @@ impl DashboardStore {
             work_packages,
             health: default_health(),
             projects,
-            active_project_id: None,
+            active_project_id: Some(1),
         }
     }
 
