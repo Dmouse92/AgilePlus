@@ -18,6 +18,10 @@ AgilePlus tracks its own work through its own system.
 2. **Create spec for new work**: `agileplus specify --title "<feature>" --description "<desc>"`
 3. **Update work package status**: `agileplus status <feature-id> --wp <wp-id> --state <state>`
 4. **No code without corresponding AgilePlus spec**
+5. **Verify dashboard runtime services behavior**:
+   - implement and test `restart_service` and `toggle_service` API endpoints
+   - update service state config and in-memory health status
+   - include regression tests for each handler under `crates/agileplus-dashboard/src/routes.rs`
 
 ## Spec Management
 
