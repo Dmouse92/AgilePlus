@@ -4,8 +4,7 @@
 use std::collections::HashMap;
 
 use agileplus_domain::domain::{
-    cycle::Cycle, feature::Feature, module::Module, project::Project,
-    state_machine::FeatureState, work_package::WorkPackage,
+    cycle::Cycle, module::Module, project::Project,
 };
 
 use crate::app_state::DashboardStore;
