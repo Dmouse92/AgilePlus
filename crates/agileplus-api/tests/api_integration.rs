@@ -42,17 +42,39 @@ use chrono::Utc;
 
 // ── Mock Storage ─────────────────────────────────────────────────────────────
 
-#[derive(Default, Clone)]
+#[derive(Clone)]
 struct MockStorage {
     features: Arc<std::sync::Mutex<Vec<Feature>>>,
     work_packages: Arc<std::sync::Mutex<Vec<WorkPackage>>>,
     governance: Arc<std::sync::Mutex<Vec<GovernanceContract>>>,
+    projects: Arc<std::sync::Mutex<Vec<Project>>>
     audit: Arc<std::sync::Mutex<Vec<AuditEntry>>>,
+}
+
+impl Default for MockStorage {
+    fn default() -> Self {
+        Self {
+            features: Arc::new(std::sync::Mutex::new(Vec::new())),
+            work_packages: Arc::new(std::sync::Mutex::new(Vec::new())),
+            governance: Arc::new(std::sync::Mutex::new(Vec::new())),
+            audit: Arc::new(std::sync::Mutex::new(Vec::new())),
+            projects: Arc::new(std::sync::Mutex::new(Vec::new())),
+        }
+    }
 }
 
 impl MockStorage {
     fn with_test_data() -> Self {
         let s = MockStorage::default();
+        let now = Utc::now();
+        s.projects.lock().unwrap().push(Project {
+            id: 1,
+            slug: "test-project".to_string(),
+            name: "Test Project".to_string(),
+            description: "A test project".to_string(),
+            created_at: now,
+            updated_at: now,
+        });
         let now = Utc::now();
         s.features.lock().unwrap().push(Feature {
             id: 1,
