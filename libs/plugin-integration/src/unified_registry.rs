@@ -8,7 +8,7 @@ use std::sync::Arc;
 
 use plugin_registry::{
     error::PluginError,
-    plugin_trait::{Plugin, PluginConfig, PluginMetadata},
+    plugin_trait::{Plugin, PluginConfig},
     registry::PluginRegistry,
 };
 
@@ -34,25 +34,27 @@ impl UnifiedPluginRegistry {
         &self.inner
     }
 
-    /// Load a plugin by name with configuration.
+    /// Load and initialize a plugin.
+    ///
+    /// Combines load() and initialize() in one call.
     pub async fn load_plugin(
         &self,
-        name: &str,
         plugin: Arc<dyn Plugin>,
         config: PluginConfig,
     ) -> Result<(), PluginError> {
-        self.inner.load(name, plugin).await?;
-        self.inner.initialize(name, config).await
+        let name = plugin.name().to_string();
+        self.inner.load(plugin).await?;
+        self.inner.initialize(&name, config).await
     }
 
     /// List all loaded plugins.
-    pub fn list_plugins(&self) -> Vec<String> {
-        self.inner.list()
+    pub async fn list_plugins(&self) -> Vec<String> {
+        self.inner.list_plugins().await
     }
 
     /// Get a plugin by name.
-    pub fn get_plugin(&self, name: &str) -> Option<Arc<dyn Plugin>> {
-        self.inner.get(name)
+    pub async fn get_plugin(&self, name: &str) -> Result<Arc<dyn Plugin>, PluginError> {
+        self.inner.get(name).await
     }
 
     /// Shutdown a plugin.
@@ -75,13 +77,14 @@ impl Default for UnifiedPluginRegistry {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use plugin_registry::plugin_trait::PluginMetadata;
 
     #[tokio::test]
     async fn test_unified_registry_basic_operations() {
         let registry = UnifiedPluginRegistry::new();
 
         // Initially empty
-        assert!(registry.list_plugins().is_empty());
+        assert!(registry.list_plugins().await.is_empty());
 
         // Create a mock plugin
         struct MockPlugin;
@@ -97,14 +100,14 @@ mod tests {
         let plugin: Arc<dyn Plugin> = Arc::new(MockPlugin);
         let config = PluginConfig::default();
 
-        registry.load_plugin("test", plugin, config).await.unwrap();
-        assert_eq!(registry.list_plugins(), vec!["test"]);
+        registry.load_plugin(plugin.clone(), config).await.unwrap();
+        assert_eq!(registry.list_plugins().await, vec!["mock"]);
 
-        let loaded = registry.get_plugin("test");
-        assert!(loaded.is_some());
+        let loaded = registry.get_plugin("mock").await;
+        assert!(loaded.is_ok());
 
-        registry.shutdown_plugin("test").await.unwrap();
-        registry.unload_plugin("test").await.unwrap();
-        assert!(registry.list_plugins().is_empty());
+        registry.shutdown_plugin("mock").await.unwrap();
+        registry.unload_plugin("mock").await.unwrap();
+        assert!(registry.list_plugins().await.is_empty());
     }
 }
