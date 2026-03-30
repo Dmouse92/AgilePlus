@@ -30,6 +30,7 @@ members = [
   "libs/plugin-cli",
   "libs/plugin-git",
   "libs/plugin-grpc",
+  "libs/plugin-integration",
   # "libs/hexagonal-rs",       # TODO: missing src/lib.rs
   # "libs/hexkit",             # TODO: missing src/lib.rs
   # "libs/cipher",             # TODO: missing src/lib.rs

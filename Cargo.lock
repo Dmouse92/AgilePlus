@@ -3,6 +3,19 @@
 version = 4
 
 [[package]]
+name = "agileplus-plugin-core"
+version = "0.1.1"
+source = "git+https://github.com/KooshaPari/agileplus-plugin-core#ba652dec340478829bd479caec29ac152033721f"
+dependencies = [
+ "async-trait",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "android_system_properties"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -584,6 +597,16 @@ dependencies = [
  "tokio",
  "tonic",
  "tracing",
+]
+
+[[package]]
+name = "plugin-integration"
+version = "0.1.1"
+dependencies = [
+ "agileplus-plugin-core",
+ "plugin-registry",
+ "thiserror 2.0.18",
+ "tokio",
 ]
 
 [[package]]
