@@ -1,54 +1,27 @@
 [workspace]
 resolver = "3"
 members = [
-    # "crates/agileplus-domain", # TODO: missing src/lib.rs
-    # "crates/agileplus-cli", # TODO: missing src/lib.rs
-    # "crates/agileplus-api", # TODO: missing src/lib.rs
-    # "crates/agileplus-grpc", # TODO: missing src/lib.rs
-    # "crates/agileplus-sqlite", # TODO: missing src/lib.rs
-  # "crates/agileplus-git",     # TODO: missing src/lib.rs
-  # "crates/agileplus-plane",   # TODO: missing src/lib.rs
-  # "crates/agileplus-telemetry", # TODO: missing src/lib.rs
-  # "crates/agileplus-triage",  # TODO: missing src/lib.rs
-  # "crates/agileplus-events",  # TODO: missing src/lib.rs
-  # "crates/agileplus-cache",   # TODO: missing src/lib.rs
-  # "crates/agileplus-subcmds", # TODO: missing src/lib.rs
-  # "crates/agileplus-graph",   # TODO: missing src/lib.rs
-  # "crates/agileplus-nats",    # TODO: missing src/lib.rs
-  # "crates/agileplus-sync",    # TODO: missing src/lib.rs
-  # "crates/agileplus-dashboard", # TODO: missing src/lib.rs
-  # "crates/agileplus-github",  # TODO: missing src/lib.rs
-  # "crates/agileplus-p2p",    # TODO: missing src/lib.rs
-  # "crates/agileplus-integration-tests", # TODO: missing src/lib.rs
-  # "crates/agileplus-contract-tests", # TODO: missing src/lib.rs
-  # "crates/agileplus-benchmarks", # TODO: missing src/lib.rs
-  # "rust",                    # TODO: missing src/lib.rs
-  # "tests/bdd",               # TODO: missing src/lib.rs
-  "libs/nexus",
-  "libs/plugin-registry",
-  "libs/plugin-sample",
-  "libs/plugin-cli",
-  "libs/plugin-git",
-  "libs/plugin-grpc",
-  "libs/plugin-integration", "libs/intent-registry", "libs/health-monitor",
-  # "libs/hexagonal-rs",       # TODO: missing src/lib.rs
-  # "libs/hexkit",             # TODO: missing src/lib.rs
-  # "libs/cipher",             # TODO: missing src/lib.rs
-  # "libs/gauge",              # TODO: missing src/lib.rs
-  # "libs/logger",             # TODO: missing src/lib.rs
-  # "libs/metrics",            # TODO: missing src/lib.rs
-  # "libs/tracing",            # TODO: missing src/lib.rs
-  # "libs/cli-framework",      # TODO: missing src/lib.rs
-  # "libs/config-core",         # TODO: missing src/lib.rs
-  # "libs/xdd-lib-rs",         # TODO: missing src/lib.rs
-  # "tools/forge",             # TODO: missing src/lib.rs
+    "libs/nexus",
+    "libs/plugin-registry",
+    "libs/plugin-sample",
+    "libs/plugin-cli",
+    "libs/plugin-git",
+    "libs/plugin-grpc",
+    "libs/plugin-integration",
+    "libs/intent-registry",
+    "libs/health-monitor",
+    "libs/logger",
+    "libs/metrics",
+    "libs/config-core",
+    "libs/tracing-core",
+    "libs/cli-framework",
 ]
 
 [workspace.package]
 version = "0.1.1"
-edition = "2024"
+edition = "2021"
 license = "MIT"
-rust-version = "1.86"
+rust-version = "1.75"
 authors = ["AgilePlus Team"]
 repository = "https://github.com/KooshaPari/AgilePlus"
 keywords = ["agile", "project-management", "software-development"]

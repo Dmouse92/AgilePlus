@@ -1,4 +1,25 @@
 repos:
+  - repo: https://github.com/returntocorp/semgrep
+    rev: "v1.72.0"
+    hooks:
+      - id: semgrep
+        name: Semgrep
+        args: ["--config=.semgrep.yml", "--error"]
+        language: python
+        types: [python, rust, json, javascript, typescript, yaml, go]
+        additional_dependencies: ["semgrep"]
+
+  - repo: https://github.com/trufflesecurity/trufflehog
+    rev: "v3.93.6"
+    hooks:
+      - id: trufflehog
+        name: TruffleHog
+        entry: trufflehog git file://.
+        language: golang
+        types: [text]
+        pass_filenames: false
+        stages: [pre-push]
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -9,6 +30,7 @@ repos:
       - id: check-merge-conflict
       - id: check-added-large-files
         args: ["--maxkb=500"]
+      - id: detect-private-key
 
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v4.0.0
