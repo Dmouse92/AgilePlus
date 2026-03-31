@@ -50,7 +50,7 @@ edition = "2024"
 license = "MIT"
 rust-version = "1.86"
 authors = ["AgilePlus Team"]
-repository = "https://github.com/AgilePlus/agileplus"
+repository = "https://github.com/KooshaPari/AgilePlus"
 keywords = ["agile", "project-management", "software-development"]
 categories = ["Software Development", "Project Management"]
 
