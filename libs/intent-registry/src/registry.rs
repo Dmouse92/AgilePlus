@@ -6,7 +6,7 @@ use tokio::sync::RwLock;
 use tracing::{debug, info, warn};
 
 use crate::error::IntentRegistryError;
-use crate::intent::{Capability, ServiceIntent};
+use crate::intent::ServiceIntent;
 use crate::service::{RegisteredService, ServiceMetadata};
 
 /// The intent registry - main entry point for service discovery
