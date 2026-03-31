@@ -7,7 +7,7 @@ use async_trait::async_trait;
 use crate::error::Result;
 
 /// Configuration passed to a plugin during initialization.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct PluginConfig {
     /// Plugin-specific configuration as JSON.
     pub config: serde_json::Value,
@@ -28,7 +28,7 @@ impl Default for PluginConfig {
 }
 
 /// Metadata about a plugin.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct PluginMetadata {
     /// Plugin name.
     pub name: String,
