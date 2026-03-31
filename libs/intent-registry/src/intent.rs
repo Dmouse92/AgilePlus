@@ -7,17 +7,25 @@ use std::collections::HashSet;
 /// 
 /// Intents are high-level descriptions of what a service can do,
 /// allowing consumers to find services by capability rather than name.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Capability {
     /// The primary category of capability (e.g., "vcs", "storage", "auth")
     pub category: String,
     
     /// Specific actions or features within the category
     pub actions: HashSet<String>,
-    
-    /// Optional metadata about this capability
-    #[serde(default)]
-    pub metadata: Option<serde_json::Value>,
+}
+
+impl std::hash::Hash for Capability {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.category.hash(state);
+        // Sort actions for deterministic hashing
+        let mut sorted: Vec<_> = self.actions.iter().collect();
+        sorted.sort();
+        for action in sorted {
+            action.hash(state);
+        }
+    }
 }
 
 impl Capability {
@@ -26,7 +34,6 @@ impl Capability {
         Self {
             category: category.into(),
             actions: actions.into_iter().collect(),
-            metadata: None,
         }
     }
 
