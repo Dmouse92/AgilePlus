@@ -50,14 +50,14 @@ jobs:
           version: "28.x"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Format check
-      - name: Format check
-        run: cargo fmt --all -- --check
+        run: cd rust && cargo fmt --check
       - name: Clippy (warnings = errors)
-        run: cargo clippy --workspace -- -D warnings
+        run: cd rust && cargo clippy --all-targets -- -D warnings
       - name: Build
-        run: cargo build --workspace
+        run: cd rust && cargo build
       - name: Test
-        run: cargo test --workspace
+        run: cd rust && cargo test
+
   rust-build:
     name: Rust Build
     runs-on: ubuntu-latest
@@ -72,22 +72,24 @@ jobs:
           version: "28.x"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build
-      - name: Build
-        run: cargo build --workspace
+        run: cd rust && cargo build --all
 
   rust-msrv:
-    name: Rust MSRV (1.75)
+    name: Rust MSRV (stable)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@1.75.0
+      - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
       - uses: arduino/setup-protoc@v3
         with:
           version: "28.x"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check MSRV compatibility
-        run: cargo check --workspace
+        run: cd rust && cargo check
+
   # ─── Rust Security & Dep Audit ─────────────────────────────────────
   rust-audit:
     name: Rust Security Audit
@@ -194,11 +196,11 @@ jobs:
         run: cargo build --workspace
 
   core-msrv:
-    name: Core MSRV (1.75)
+    name: Core MSRV (1.86)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: dtolnay/rust-toolchain@1.75.0
+      - uses: dtolnay/rust-toolchain@1.100.0
       - uses: Swatinem/rust-cache@v2
       - uses: arduino/setup-protoc@v3
         with:
