@@ -125,7 +125,7 @@ mod tests {
     #[test]
     fn test_registered_service() {
         let meta = ServiceMetadata::new("storage", "2.0.0");
-        let service = RegisteredService::new("storage-service", meta)
+        let mut service = RegisteredService::new("storage-service", meta)
             .with_endpoint("http://localhost:8080");
         
         assert_eq!(service.id, "storage-service");

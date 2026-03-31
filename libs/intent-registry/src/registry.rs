@@ -186,7 +186,7 @@ mod tests {
         
         let metadata = ServiceMetadata::new("git-service", "1.0.0");
         let intents = vec![
-            ServiceIntent::new("vcs", ["git", "commit", "push"]),
+            ServiceIntent::new("vcs", vec!["git".to_string(), "commit".to_string(), "push".to_string()]),
         ];
         
         registry.register(
@@ -217,7 +217,7 @@ mod tests {
         let registry = IntentRegistry::new();
         
         let metadata = ServiceMetadata::new("test", "1.0.0");
-        let intents = vec![ServiceIntent::new("test", ["test"])];
+        let intents = vec![ServiceIntent::new("test", vec!["test".to_string()])];
         
         registry.register("test".to_string(), metadata, intents, None).await.unwrap();
         
@@ -232,7 +232,7 @@ mod tests {
         let registry = IntentRegistry::new();
         
         let metadata = ServiceMetadata::new("test", "1.0.0");
-        let intents = vec![ServiceIntent::new("test", ["test"])];
+        let intents = vec![ServiceIntent::new("test", vec!["test".to_string()])];
         
         registry.register("test".to_string(), metadata, intents, None).await.unwrap();
         

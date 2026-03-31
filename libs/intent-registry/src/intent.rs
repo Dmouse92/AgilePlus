@@ -100,7 +100,7 @@ mod tests {
 
     #[test]
     fn test_capability_creation() {
-        let cap = Capability::new("vcs", ["git", "commit"]);
+        let cap = Capability::new("vcs", vec!["git".to_string(), "commit".to_string()]);
         assert_eq!(cap.category, "vcs");
         assert!(cap.has_action("git"));
         assert!(cap.has_action("commit"));
@@ -109,7 +109,7 @@ mod tests {
 
     #[test]
     fn test_service_intent_creation() {
-        let intent = ServiceIntent::new("storage", ["read", "write"])
+        let intent = ServiceIntent::new("storage", vec!["read".to_string(), "write".to_string()])
             .with_version(">=1.0.0")
             .with_priority(10);
         

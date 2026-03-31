@@ -107,7 +107,7 @@ mod tests {
         
         let metadata = ServiceMetadata::new("git-service", "1.0.0")
             .with_label("priority", "10");
-        let intents = vec![ServiceIntent::new("vcs", ["git", "commit"])];
+        let intents = vec![ServiceIntent::new("vcs", vec!["git".to_string(), "commit".to_string()])];
         
         registry.register("git-svc".to_string(), metadata, intents, None).await.unwrap();
         
@@ -133,7 +133,7 @@ mod tests {
         
         // Register only storage
         let metadata = ServiceMetadata::new("storage", "1.0.0");
-        let intents = vec![ServiceIntent::new("storage", ["read", "write"])];
+        let intents = vec![ServiceIntent::new("storage", vec!["read".to_string(), "write".to_string()])];
         registry.register("storage-svc".to_string(), metadata, intents, None).await.unwrap();
         
         let resolver = IntentResolver::new(registry);
