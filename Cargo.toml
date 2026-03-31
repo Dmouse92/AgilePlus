@@ -59,6 +59,7 @@ criterion = { version = "0.5", features = ["async_tokio", "html_reports"] }
 time = ">=0.3.49"
 trait-variant = "0.1"
 async-trait = "0.1"
+sentry = { version = "0.33", features = ["backtrace", "contexts", "debug-images"] }
 
 # Plugin crates (external from separate repos)
 agileplus-plugin-core = { git = "https://github.com/KooshaPari/agileplus-plugin-core" }

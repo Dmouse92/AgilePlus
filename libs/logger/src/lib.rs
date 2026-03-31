@@ -3,8 +3,10 @@
 //! Provides a trait-based logging abstraction with multiple implementations.
 
 pub mod error;
+pub mod sentry_config;
 
 pub use error::{LogError, Result};
+pub use sentry_config::{initialize, initialize_with_options, capture_error, capture_message};
 
 /// Log severity levels.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default, serde::Serialize, serde::Deserialize)]
