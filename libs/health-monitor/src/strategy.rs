@@ -4,20 +4,15 @@ use serde::{Deserialize, Serialize};
 use crate::check::{HealthCheckResult, HealthStatus};
 
 /// Actions to take based on health evaluation
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum HealthAction {
+    #[default]
     Continue,
     Warn,
     Degrade,
     Recover,
     Fail,
-}
-
-impl Default for HealthAction {
-    fn default() -> Self {
-        Self::Continue
-    }
 }
 
 /// Strategy for handling health check failures
