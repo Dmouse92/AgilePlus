@@ -1,11 +1,11 @@
 [workspace]
 resolver = "3"
 members = [
-  # "crates/agileplus-domain",  # TODO: missing src/lib.rs
-  # "crates/agileplus-cli",     # TODO: missing src/lib.rs
-  # "crates/agileplus-api",     # TODO: missing src/lib.rs
-  # "crates/agileplus-grpc",    # TODO: missing src/lib.rs
-  # "crates/agileplus-sqlite",  # TODO: missing src/lib.rs
+    # "crates/agileplus-domain", # TODO: missing src/lib.rs
+    # "crates/agileplus-cli", # TODO: missing src/lib.rs
+    # "crates/agileplus-api", # TODO: missing src/lib.rs
+    # "crates/agileplus-grpc", # TODO: missing src/lib.rs
+    # "crates/agileplus-sqlite", # TODO: missing src/lib.rs
   # "crates/agileplus-git",     # TODO: missing src/lib.rs
   # "crates/agileplus-plane",   # TODO: missing src/lib.rs
   # "crates/agileplus-telemetry", # TODO: missing src/lib.rs
@@ -30,7 +30,7 @@ members = [
   "libs/plugin-cli",
   "libs/plugin-git",
   "libs/plugin-grpc",
-  "libs/plugin-integration", "libs/intent-registry",
+  "libs/plugin-integration", "libs/intent-registry", "libs/health-monitor",
   # "libs/hexagonal-rs",       # TODO: missing src/lib.rs
   # "libs/hexkit",             # TODO: missing src/lib.rs
   # "libs/cipher",             # TODO: missing src/lib.rs
