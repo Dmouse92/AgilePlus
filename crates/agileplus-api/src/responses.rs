@@ -8,7 +8,6 @@
 use serde::{Deserialize, Serialize};
 
 use agileplus_domain::domain::audit::AuditEntry;
-use agileplus_domain::domain::backlog::BacklogItem;
 use agileplus_domain::domain::feature::Feature;
 use agileplus_domain::domain::governance::GovernanceContract;
 use agileplus_domain::domain::work_package::WorkPackage;
@@ -117,33 +116,6 @@ impl From<AuditEntry> for AuditEntryResponse {
             actor: e.actor,
             transition: e.transition,
             hash: e.hash.iter().map(|b| format!("{b:02x}")).collect(),
-        }
-    }
-}
-
-// ----- Backlog -----
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct BacklogItemResponse {
-    pub id: Option<i64>,
-    pub title: String,
-    pub description: String,
-    pub status: String,
-    pub priority: String,
-    pub r#type: String,
-    pub feature_slug: Option<String>,
-}
-
-impl From<BacklogItem> for BacklogItemResponse {
-    fn from(item: BacklogItem) -> Self {
-        Self {
-            id: item.id,
-            title: item.title,
-            description: item.description,
-            status: item.status.to_string(),
-            priority: item.priority.to_string(),
-            r#type: item.intent.to_string(),
-            feature_slug: item.feature_slug,
         }
     }
 }

@@ -15,3 +15,59 @@
 [34m●[39m  Storybook collects completely anonymous usage telemetry. We use it to
 [90m│[39m  shape Storybook's roadmap and prioritize features. You can learn more,
 [90m│[39m  including how to opt out, at ]8;;https://storybook.js.org/telemetryhttps://storybook.js.org/telemetry]8;;
+[90m│[39m
+[34m●[39m  Building preview..
+[90m│[39m
+[33m▲[39m  No story files found for the specified pattern: [34msrc/**/*.mdx[39m
+[90m│[39m  [43mVite[49m [36mvite v8.0.3 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...[90m│[39m
+[33m▲[39m  Expected '@storybook/addon-actions' (or '@storybook/addon-essentials')
+[90m│[39m  to be listed before '@storybook/addon-interactions' in main Storybook
+[90m│[39m  config.
+[32m✓[39m 151 modules transformed.
+[90m│[39m
+[31m■[39m  [43mVite[49m [31m✗[39m Build failed in 3.09s
+[90m│[39m
+[31m■[39m  Failed to build the preview
+[90m│[39m
+[31m■[39m  [31mBuild failed with 1 error:
+
+[90m│[39m  [31m[UNRESOLVED_IMPORT] Error:[0m Could not resolve '../src/styles/index.css'
+[90m│[39m  in .storybook/preview.ts
+[90m│[39m  [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m .storybook/preview.ts:1:8 [38;5;246m][0m
+[90m│[39m  [38;5;246m│[0m
+[90m│[39m  [38;5;246m1 │[0m [38;5;249mi[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m"../src/styles/index.css"[38;5;249m;[0m
+[90m│[39m  [38;5;240m│[0m        ────────────┬────────────
+[90m│[39m  [38;5;240m│[0m                    ╰────────────── Module not found.
+[90m│[39m  [38;5;240m│[0m
+[90m│[39m  [38;5;240m│[0m [38;5;115mHelp[0m: '.storybook/preview.ts' is imported by the following path:
+[90m│[39m  [38;5;240m│[0m         - .storybook/preview.ts
+[90m│[39m  [38;5;240m│[0m         - \0virtual:/@storybook/builder-vite/project-annotations.js
+[90m│[39m  [38;5;240m│[0m         - \0virtual:/@storybook/builder-vite/vite-app.js
+[90m│[39m  [38;5;240m│[0m         - iframe.html
+[90m│[39m  [38;5;246m───╯[0m
+[90m│[39m  [39m
+[90m│[39m  at aggregateBindingErrorsIntoJsError
+[90m│[39m  (file://./node_modules/rolldown/dist/shared/error-BLhcSyeg.mjs:48:18)
+[90m│[39m  at unwrapBindingResult
+[90m│[39m  (file://./node_modules/rolldown/dist/shared/error-BLhcSyeg.mjs:18:128)
+[90m│[39m  at #build
+[90m│[39m  (file://./node_modules/rolldown/dist/shared/rolldown-build-CPrIX9V6.mjs:3313:34)
+[90m│[39m  at async buildEnvironment
+[90m│[39m  (file://./node_modules/vite/dist/node/chunks/node.js:32849:64)
+[90m│[39m  at async Object.build
+[90m│[39m  (file://./node_modules/vite/dist/node/chunks/node.js:33271:19)
+[90m│[39m  at async build
+[90m│[39m  (file://./node_modules/@storybook/builder-vite/dist/index.js:1508:290)
+[90m│[39m  at async Promise.all (index 0)
+[90m│[39m  at async buildStaticStandalone
+[90m│[39m  (file://./node_modules/storybook/dist/core-server/index.js:6498:7)
+[90m│[39m  at async withTelemetry
+[90m│[39m  (file://./node_modules/storybook/dist/_node-chunks/chunk-6PADJQ3N.js:218:12)
+[90m│[39m  at async build
+[90m│[39m  (file://./node_modules/storybook/dist/bin/core.js:2679:3)
+[90m│[39m  at async _Command.<anonymous>
+[90m│[39m  (file://./node_modules/storybook/dist/bin/core.js:2824:7)
+[90m│[39m
+[90m└[39m  Storybook exited with an error
+

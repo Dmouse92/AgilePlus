@@ -106,31 +106,23 @@ pub struct WorkPackageBuilder {
     id: i64,
     feature_id: i64,
     title: String,
+    sequence: i32,
+    summary: String,
     state: WpState,
-    sequence: Option<i64>,
-    acceptance_criteria: String,
     file_scope: Vec<String>,
-    worktree_path: Option<String>,
-}
-
-impl Default for WorkPackageBuilder {
-    fn default() -> Self {
-        Self::new(1, "Default WP")
-    }
 }
 
 impl WorkPackageBuilder {
     /// Create a new work package builder.
-    pub fn new(feature_id: i64, title: &str) -> Self {
+    pub fn new(feature_id: i64, title: &str, sequence: i32) -> Self {
         Self {
             id: 1,
             feature_id,
             title: title.to_string(),
+            sequence,
+            summary: String::new(),
             state: WpState::Planned,
-            sequence: None,
-            acceptance_criteria: String::new(),
             file_scope: Vec::new(),
-            worktree_path: None,
         }
     }
 
@@ -146,9 +138,9 @@ impl WorkPackageBuilder {
         self
     }
 
-    /// Set the acceptance criteria.
-    pub fn acceptance_criteria(mut self, criteria: &str) -> Self {
-        self.acceptance_criteria = criteria.to_string();
+    /// Set the summary/description.
+    pub fn summary(mut self, summary: &str) -> Self {
+        self.summary = summary.to_string();
         self
     }
 
@@ -164,25 +156,21 @@ impl WorkPackageBuilder {
         self
     }
 
-    /// Set the worktree path.
-    pub fn worktree_path(mut self, path: &str) -> Self {
-        self.worktree_path = Some(path.to_string());
-        self
-    }
-
     /// Build the WorkPackage.
     pub fn build(self) -> WorkPackage {
-        let now = chrono::Utc::now();
+        let now = Utc::now();
         WorkPackage {
             id: self.id,
             feature_id: self.feature_id,
             title: self.title,
+            sequence: self.sequence,
+            acceptance_criteria: self.summary,
             state: self.state,
-            acceptance_criteria: self.acceptance_criteria,
+            file_scope: self.file_scope,
             agent_id: None,
             pr_url: None,
             pr_state: None,
-            worktree_path: self.worktree_path,
+            worktree_path: None,
             plane_sub_issue_id: None,
             base_commit: None,
             head_commit: None,
@@ -226,15 +214,15 @@ mod tests {
         let wp = WorkPackageBuilder::new(1, "Test WP", 1)
             .id(100)
             .state(WpState::Done)
-            .acceptance_criteria("This is a test")
-            .with_files(vec!["src/lib.rs".to_string()])
+            .summary("This is a test")
+            .with_file("src/lib.rs")
             .build();
 
         assert_eq!(wp.id, 100);
         assert_eq!(wp.feature_id, 1);
         assert_eq!(wp.title, "Test WP");
         assert_eq!(wp.state, WpState::Done);
-        assert_eq!(wp.acceptance_criteria, "This is a test");
+        assert_eq!(wp.summary, "This is a test");
         assert_eq!(wp.file_scope, vec!["src/lib.rs"]);
     }
 
