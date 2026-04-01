@@ -1,0 +1,17 @@
+
+> web@0.0.0 build-storybook
+> storybook build --output-dir=/var/folders/wl/z8733y815nzg28yy0_1_lh7w0000gn/T/chromatic--59834-TVbsFNKNhpZ7
+
+
+[90m┌[39m  Building storybook v10.3.3
+[90m│[39m
+[32m◇[39m  Cleaning outputDir:
+[90m│[39m  [36m../../../../../../../../../var/folders/wl/z8733y815nzg28yy0_1_lh7w0000gn/T/chromatic--59834-TVbsFNKNhpZ7[39m
+[90m│[39m
+[32m◇[39m  Loading presets
+[90m│[39m
+[32m◇[39m  Building manager..
+[90m│[39m
+[34m●[39m  Storybook collects completely anonymous usage telemetry. We use it to
+[90m│[39m  shape Storybook's roadmap and prioritize features. You can learn more,
+[90m│[39m  including how to opt out, at ]8;;https://storybook.js.org/telemetryhttps://storybook.js.org/telemetry]8;;
