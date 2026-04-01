@@ -46,3 +46,22 @@ impl Entity for WorkPackage {
         "work_package"
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::domain::entity::{Entity, EntityId};
+
+    #[test]
+    fn test_create_work_package() {
+        let spec_id = EntityId::from_string("spec-1");
+        let wp = WorkPackage::new(
+            spec_id.clone(),
+            "Implementation",
+            "Description",
+        );
+        assert_eq!(wp.title(), "Implementation");
+        assert_eq!(wp.spec_id().as_str(), "spec-1");
+        assert_eq!(wp.entity_type(), "work_package");
+    }
+}

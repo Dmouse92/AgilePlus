@@ -76,15 +76,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn port_builder_default() {
+    fn test_port_builder() {
         let builder = PortBuilder::<()>::new();
-        let config = builder.build().unwrap();
-        assert!(!config.cache_enabled);
-    }
-
-    #[test]
-    fn port_builder_with_options() {
-        let config = PortBuilder::<()>::new()
+        let config = builder
             .with_cache(true)
             .with_timeout(30)
             .with_retry(true)
@@ -93,5 +87,37 @@ mod tests {
             .unwrap();
         assert!(config.cache_enabled);
         assert_eq!(config.timeout_secs, Some(30));
+        assert!(config.retry_enabled);
+        assert_eq!(config.max_retries, Some(3));
+    }
+
+    #[test]
+    fn test_port_builder_invalid_retry() {
+        let builder = PortBuilder::<()>::new()
+            .with_retry(true);
+        let res = builder.build();
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn context_builder_test() {
+        let ctx = ContextBuilder::<i32, String, bool>::new()
+            .with_storage(42)
+            .with_vcs("git".to_string())
+            .with_agent(true)
+            .build()
+            .unwrap();
+        assert_eq!(ctx.0, 42);
+        assert_eq!(ctx.1, "git");
+        assert_eq!(ctx.2, true);
+    }
+
+    #[test]
+    fn context_builder_missing_vcs() {
+        let res = ContextBuilder::<i32, String, bool>::new()
+            .with_storage(42)
+            .with_agent(true)
+            .build();
+        assert!(res.is_err());
     }
 }
