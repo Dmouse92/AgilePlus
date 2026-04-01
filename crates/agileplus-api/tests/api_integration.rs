@@ -26,7 +26,6 @@ use agileplus_domain::domain::feature::Feature;
 use agileplus_domain::domain::governance::{Evidence, GovernanceContract, PolicyRule};
 use agileplus_domain::domain::metric::Metric;
 use agileplus_domain::domain::module::{Module, ModuleFeatureTag, ModuleWithFeatures};
-use agileplus_domain::domain::project::Project;
 use agileplus_domain::domain::state_machine::FeatureState;
 use agileplus_domain::domain::sync_mapping::SyncMapping;
 use agileplus_domain::domain::work_package::{WorkPackage, WpDependency, WpState};
@@ -48,7 +47,7 @@ struct MockStorage {
     features: Arc<std::sync::Mutex<Vec<Feature>>>,
     work_packages: Arc<std::sync::Mutex<Vec<WorkPackage>>>,
     governance: Arc<std::sync::Mutex<Vec<GovernanceContract>>>,
-    projects: Arc<std::sync::Mutex<Vec<Project>>>,
+    projects: Arc<std::sync::Mutex<Vec<Project>>>
     audit: Arc<std::sync::Mutex<Vec<AuditEntry>>>,
 }
 
@@ -941,16 +940,4 @@ async fn response_content_type_is_json() {
         ct.contains("application/json"),
         "Expected application/json, got: {ct}"
     );
-}
-
-#[tokio::test]
-async fn get_backlog_items() {
-    let server = setup_test_server().await;
-    let resp = server
-        .get("/api/v1/backlog")
-        .add_header("X-API-Key", TEST_API_KEY)
-        .await;
-    resp.assert_status_ok();
-    let body: serde_json::Value = resp.json();
-    assert!(body.is_array());
 }

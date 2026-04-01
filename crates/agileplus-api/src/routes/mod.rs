@@ -1,7 +1,6 @@
 //! HTTP route handler modules.
 
 pub mod audit;
-pub mod backlog;
 pub mod cycle;
 pub mod events;
 pub mod features;
