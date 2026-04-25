@@ -20,6 +20,7 @@ use agileplus_domain::domain::{
 };
 
 use crate::app_state::{ServiceHealth, SharedState};
+use crate::health;
 use crate::process_detector;
 use crate::templates::{
     AgentActivityPartial, AgentSettingsPage, AgentView, CiLinkView, DashboardPage,
@@ -1032,9 +1033,13 @@ pub async fn agents_json(State(_state): State<SharedState>) -> impl IntoResponse
 // ── /api/dashboard/health (JSON) ────────────────────────────────────────
 
 /// JSON API: GET /api/dashboard/health
-/// Returns service health status as JSON (polls every 10s from dashboard templates).
+/// Returns service health status as JSON (runs real health checks; polls every 10s from dashboard templates).
 pub async fn health_json(State(state): State<SharedState>) -> impl IntoResponse {
-    let store = state.read().await;
+    // Run real health checks and update the store.
+    let real_health = health::run_health_checks();
+
+    let mut store = state.write().await;
+    store.health = real_health;
 
     let services: Vec<ServiceHealthJson> = store
         .health
