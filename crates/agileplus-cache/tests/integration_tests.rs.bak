@@ -1,10 +1,13 @@
 use agileplus_cache::{
-    CacheConfig, CacheError, CacheStore, InMemoryCacheStore, ProjectionCache,
+    CacheError, CacheStore, CacheConfig, InMemoryCacheStore, ProjectionCache, RateLimiter,
+    TypedCacheStore,
 };
 use agileplus_domain::domain::feature::Feature;
 use agileplus_domain::domain::work_package::WorkPackage;
+use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
+use std::sync::Arc;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 struct TestValue {
@@ -14,7 +17,8 @@ struct TestValue {
 
 #[tokio::test]
 async fn test_in_memory_cache_set_and_get() {
-    let store = InMemoryCacheStore::new(3600);
+    let base_store = InMemoryCacheStore::new(3600);
+    let store = TypedCacheStore::new(base_store);
     let value = TestValue {
         name: "test".to_string(),
         value: 42,
@@ -125,7 +129,7 @@ fn test_cache_config_default() {
 
 #[test]
 fn test_cache_config_builder() {
-    let config = CacheConfig::new("127.0.0.1".to_string(), 6380)
+    let config = CacheConfig::new("127.0.0.1", 6380)
         .with_pool_size(32)
         .with_default_ttl(7200);
     assert_eq!(config.host, "127.0.0.1");
@@ -136,29 +140,29 @@ fn test_cache_config_builder() {
 
 #[test]
 fn test_cache_config_redis_url() {
-    let config = CacheConfig::new("localhost".to_string(), 6379);
+    let config = CacheConfig::new("localhost", 6379);
     assert_eq!(config.redis_url(), "redis://localhost:6379");
 }
 
 #[test]
 fn test_cache_config_redis_url_custom() {
-    let config = CacheConfig::new("192.168.1.1".to_string(), 6380);
+    let config = CacheConfig::new("192.168.1.1", 6380);
     assert_eq!(config.redis_url(), "redis://192.168.1.1:6380");
 }
 
 #[test]
 fn test_cache_error_display() {
     let err = CacheError::NotFound;
-    assert_eq!(err.to_string(), "Key not found");
+    assert_eq!(err.to_string(), "Cache error: Key not found");
 
     let err = CacheError::SerializationError("json error".to_string());
-    assert_eq!(err.to_string(), "Serialization error: json error");
+    assert_eq!(err.to_string(), "Cache error: Serialization error: json error");
 
     let err = CacheError::RedisError("connection failed".to_string());
-    assert_eq!(err.to_string(), "Redis error: connection failed");
+    assert_eq!(err.to_string(), "Cache error: Redis error: connection failed");
 
     let err = CacheError::ConnectionError("timeout".to_string());
-    assert_eq!(err.to_string(), "Connection error: timeout");
+    assert_eq!(err.to_string(), "Cache error: Connection error: timeout");
 }
 
 #[test]
@@ -217,9 +221,8 @@ async fn test_concurrent_cache_access() {
     };
 
     let store_clone = store.clone();
-    let value_clone = value.clone();
     let handle = tokio::spawn(async move {
-        store_clone.set("concurrent_key", &value_clone, None).await
+        store_clone.set("concurrent_key", &value, None).await
     });
 
     store.set("concurrent_key", &value, None).await.unwrap();
@@ -237,8 +240,9 @@ async fn test_in_memory_health_check() {
 
 #[tokio::test]
 async fn test_projection_cache_with_in_memory_store() {
-    let store = InMemoryCacheStore::new(60);
-    let cache = ProjectionCache::new(store);
+    use std::sync::Arc;
+    let store = Arc::new(InMemoryCacheStore::new(60));
+    let cache = ProjectionCache::new(store.clone());
 
     let feature = Feature::new(
         "test-feature",
@@ -256,8 +260,9 @@ async fn test_projection_cache_with_in_memory_store() {
 
 #[tokio::test]
 async fn test_projection_cache_invalidate() {
-    let store = InMemoryCacheStore::new(60);
-    let cache = ProjectionCache::new(store);
+    use std::sync::Arc;
+    let store = Arc::new(InMemoryCacheStore::new(60));
+    let cache = ProjectionCache::new(store.clone());
 
     let feature = Feature::new(
         "test-feature-2",
@@ -275,8 +280,9 @@ async fn test_projection_cache_invalidate() {
 
 #[tokio::test]
 async fn test_projection_cache_workpackage() {
-    let store = InMemoryCacheStore::new(60);
-    let cache = ProjectionCache::new(store);
+    use std::sync::Arc;
+    let store = Arc::new(InMemoryCacheStore::new(60));
+    let cache = ProjectionCache::new(store.clone());
 
     let wp = WorkPackage::new(
         1,
@@ -308,7 +314,7 @@ fn test_projection_error_display() {
 
 #[test]
 fn test_cache_config_clone() {
-    let config = CacheConfig::new("localhost".to_string(), 6379);
+    let config = CacheConfig::new("localhost", 6379);
     let cloned = config.clone();
     assert_eq!(cloned.host, "localhost");
     assert_eq!(cloned.port, 6379);

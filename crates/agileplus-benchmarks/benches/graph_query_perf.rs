@@ -56,21 +56,21 @@ fn bench_get_feature_node(c: &mut Criterion) {
     let rt = Runtime::new().unwrap();
     let store = make_store();
     let feature_ids: Vec<Uuid> = rt.block_on(async {
-        (1..=100_u64)
-            .map(|i| {
-                let node = Node::new(
-                    NodeType::Feature,
-                    serde_json::json!({
-                        "id": i,
-                        "slug": format!("feat-{}", i),
-                        "state": "Created",
-                        "friendly_name": format!("Feature {}", i)
-                    }),
-                );
-                store.upsert_node(&node).await.unwrap();
-                node.id
-            })
-            .collect()
+        let mut ids = Vec::new();
+        for i in 1..=100_u64 {
+            let node = Node::new(
+                NodeType::Feature,
+                serde_json::json!({
+                    "id": i,
+                    "slug": format!("feat-{}", i),
+                    "state": "Created",
+                    "friendly_name": format!("Feature {}", i)
+                }),
+            );
+            store.upsert_node(&node).await.unwrap();
+            ids.push(node.id);
+        }
+        ids
     });
 
     c.bench_function("graph_get_feature_node", |b| {
@@ -208,6 +208,7 @@ criterion_main!(benches);
 #[cfg(test)]
 mod tests {
     use super::*;
+    #![allow(unused_imports)]
 
     #[tokio::test]
     async fn create_and_get_feature_smoke() {

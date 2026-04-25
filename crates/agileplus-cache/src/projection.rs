@@ -4,7 +4,6 @@ use crate::store::CacheStore;
 use agileplus_domain::domain::feature::Feature;
 use agileplus_domain::domain::work_package::WorkPackage;
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 use std::time::Duration;
 
 const PROJECTION_TTL_SECS: u64 = 60;
@@ -27,12 +26,12 @@ pub struct WorkPackageProjection {
     pub cached_at: chrono::DateTime<chrono::Utc>,
 }
 
-pub struct ProjectionCache {
-    store: Arc<dyn CacheStore>,
+pub struct ProjectionCache<S: CacheStore> {
+    store: S,
 }
 
-impl ProjectionCache {
-    pub fn new(store: Arc<dyn CacheStore>) -> Self {
+impl<S: CacheStore> ProjectionCache<S> {
+    pub fn new(store: S) -> Self {
         Self { store }
     }
 

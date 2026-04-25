@@ -10,7 +10,6 @@ use plugin_integration::{PluginConfig, PluginError, PluginMetadata, UnifiedPlugi
 struct TestPlugin {
     name: String,
     version: String,
-    initialized: bool,
 }
 
 #[async_trait::async_trait]
@@ -54,7 +53,6 @@ async fn test_plugin_load_and_list() {
     let plugin = Arc::new(TestPlugin {
         name: "test-plugin".to_string(),
         version: "1.0.0".to_string(),
-        initialized: false,
     });
 
     let config = PluginConfig::default();
@@ -72,7 +70,6 @@ async fn test_plugin_get() {
     let plugin = Arc::new(TestPlugin {
         name: "get-test".to_string(),
         version: "2.0.0".to_string(),
-        initialized: false,
     });
 
     let config = PluginConfig::default();
@@ -98,7 +95,6 @@ async fn test_plugin_shutdown() {
     let plugin = Arc::new(TestPlugin {
         name: "shutdown-test".to_string(),
         version: "1.0.0".to_string(),
-        initialized: false,
     });
 
     let config = PluginConfig::default();
@@ -118,7 +114,6 @@ async fn test_plugin_unload() {
     let plugin = Arc::new(TestPlugin {
         name: "unload-test".to_string(),
         version: "1.0.0".to_string(),
-        initialized: false,
     });
 
     let config = PluginConfig::default();
@@ -138,7 +133,6 @@ async fn test_multiple_plugins() {
         let plugin = Arc::new(TestPlugin {
             name: format!("plugin-{}", i),
             version: "1.0.0".to_string(),
-            initialized: false,
         });
         let config = PluginConfig::default();
         registry.load_plugin(plugin, config).await.unwrap();
@@ -155,7 +149,6 @@ async fn test_duplicate_plugin_rejected() {
     let plugin = Arc::new(TestPlugin {
         name: "duplicate-test".to_string(),
         version: "1.0.0".to_string(),
-        initialized: false,
     });
 
     let config = PluginConfig::default();
@@ -182,7 +175,6 @@ async fn test_plugin_metadata() {
     let plugin = Arc::new(TestPlugin {
         name: "metadata-test".to_string(),
         version: "3.0.0".to_string(),
-        initialized: false,
     });
 
     let config = PluginConfig::default();
