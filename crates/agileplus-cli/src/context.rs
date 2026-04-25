@@ -28,7 +28,7 @@ pub enum OutputFormat {
 
 impl OutputFormat {
     /// Parse from string (case-insensitive).
-    pub fn from_str(s: &str) -> Result<Self> {
+    pub fn parse(s: &str) -> Result<Self> {
         match s.to_lowercase().as_str() {
             "json" => Ok(OutputFormat::Json),
             "table" => Ok(OutputFormat::Table),
@@ -117,7 +117,7 @@ impl<'a, S: StoragePort, V: VcsPort> CommandContext<'a, S, V> {
 
     /// Parse and set output format from a string argument.
     pub fn with_format_str(mut self, format_str: &str) -> Result<Self> {
-        self.output_format = OutputFormat::from_str(format_str)?;
+        self.output_format = OutputFormat::parse(format_str)?;
         Ok(self)
     }
 
@@ -272,7 +272,7 @@ impl<'a, S: StoragePort> StorageOnlyContext<'a, S> {
 
     /// Parse and set output format from a string argument.
     pub fn with_format_str(mut self, format_str: &str) -> Result<Self> {
-        self.output_format = OutputFormat::from_str(format_str)?;
+        self.output_format = OutputFormat::parse(format_str)?;
         Ok(self)
     }
 
@@ -361,25 +361,25 @@ mod tests {
 
     #[test]
     fn output_format_from_str_json() {
-        assert_eq!(OutputFormat::from_str("json").unwrap(), OutputFormat::Json);
-        assert_eq!(OutputFormat::from_str("JSON").unwrap(), OutputFormat::Json);
+        assert_eq!(OutputFormat::parse("json").unwrap(), OutputFormat::Json);
+        assert_eq!(OutputFormat::parse("JSON").unwrap(), OutputFormat::Json);
     }
 
     #[test]
     fn output_format_from_str_table() {
         assert_eq!(
-            OutputFormat::from_str("table").unwrap(),
+            OutputFormat::parse("table").unwrap(),
             OutputFormat::Table
         );
         assert_eq!(
-            OutputFormat::from_str("TABLE").unwrap(),
+            OutputFormat::parse("TABLE").unwrap(),
             OutputFormat::Table
         );
     }
 
     #[test]
     fn output_format_from_str_invalid() {
-        assert!(OutputFormat::from_str("xml").is_err());
+        assert!(OutputFormat::parse("xml").is_err());
     }
 
     #[test]

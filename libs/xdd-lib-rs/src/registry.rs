@@ -65,7 +65,7 @@ impl DialectRegistry {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::dialect::{JsonDialect, TomlDialect};
+    use crate::dialect::JsonDialect;
 
     #[test]
     fn register_and_get() {

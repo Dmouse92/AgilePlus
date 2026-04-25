@@ -20,8 +20,10 @@ use crate::resolution::{apply_resolution, ResolutionResult, ResolutionStrategy};
 use crate::store::SyncMappingStore;
 
 pub struct SyncOrchestrator {
+    #[allow(dead_code)]
     plane: Arc<PlaneClient>,
     sqlite: Arc<dyn EventStore>,
+    #[allow(dead_code)]
     mapper: PlaneStateMapper,
     mapping_store: Arc<dyn SyncMappingStore>,
 }
@@ -81,7 +83,6 @@ impl SyncOrchestrator {
 
         let remote_opt = self.fetch_remote(&mapping.plane_issue_id).await?;
         if let Some(remote_value) = remote_opt {
-            let remote_hash = crate::conflict::hash_value(&remote_value);
             if let Some(conflict) = detect_conflict(entity_type, entity_id, local_value.clone(), remote_value, &mapping.content_hash) {
                 debug!(entity_type, entity_id, "Conflict detected during push");
                 report.conflicts.push(conflict);
@@ -319,7 +320,7 @@ mod tests {
     #[test]
     fn detect_conflict_when_hashes_differ() {
         let orch = make_test_orchestrator();
-        let local = json!({"title": "local change"});
+        let local = serde_json::json!({"title": "local change"});
         let result = orch.detect_conflict(local, "different-hash");
         assert!(result.is_some());
     }
@@ -327,7 +328,7 @@ mod tests {
     #[test]
     fn detect_conflict_when_hashes_match() {
         let orch = make_test_orchestrator();
-        let local = json!({"title": "same"});
+        let local = serde_json::json!({"title": "same"});
         let hash = crate::conflict::hash_value(&local);
         let result = orch.detect_conflict(local, &hash);
         assert!(result.is_none());
@@ -339,8 +340,8 @@ mod tests {
         let conflict = SyncConflict::new(
             "feature",
             1,
-            json!({"title": "local"}),
-            json!({"title": "remote"}),
+            serde_json::json!({"title": "local"}),
+            serde_json::json!({"title": "remote"}),
         );
         let result = orch.resolve_conflict(conflict, &ResolutionStrategy::LocalWins).unwrap();
         assert_eq!(result.resolved_value["title"], "local");
@@ -352,8 +353,8 @@ mod tests {
         let conflict = SyncConflict::new(
             "feature",
             1,
-            json!({"title": "local"}),
-            json!({"title": "remote"}),
+            serde_json::json!({"title": "local"}),
+            serde_json::json!({"title": "remote"}),
         );
         let result = orch.resolve_conflict(conflict, &ResolutionStrategy::RemoteWins).unwrap();
         assert_eq!(result.resolved_value["title"], "remote");

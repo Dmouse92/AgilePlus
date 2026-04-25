@@ -1,8 +1,7 @@
 use std::collections::HashMap;
 
 pub use super::models::{
-    PlaneCreateCycleRequest, PlaneCreateModuleRequest, PlaneCycleResponse, PlaneIssue,
-    PlaneModuleResponse, PlaneWorkItem, PlaneWorkItemResponse,
+    PlaneIssue, PlaneWorkItem, PlaneWorkItemResponse,
 };
 
 #[derive(Debug, Default)]
@@ -10,7 +9,6 @@ pub struct InMemoryPlaneClient {
     pub issues: HashMap<String, PlaneWorkItemResponse>,
     pub created: Vec<PlaneWorkItem>,
     pub updated: Vec<(String, PlaneWorkItem)>,
-    pub labels: Vec<super::labels::PlaneLabel>,
 }
 
 impl InMemoryPlaneClient {

@@ -117,7 +117,6 @@ impl Entity for Task {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::entity::Entity;
 
     #[test]
     fn test_create_task() {

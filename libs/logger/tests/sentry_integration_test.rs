@@ -22,7 +22,7 @@ fn test_sentry_capture_message() {
 fn test_sentry_capture_error() {
     // FR-SENTRY-003: Should be able to capture errors
     let _guard = logger::initialize();
-    let error = std::io::Error::new(std::io::ErrorKind::Other, "Test error for Sentry");
+    let error = std::io::Error::other("Test error for Sentry");
     logger::capture_error(&error);
     // Error captured, test passes
 }

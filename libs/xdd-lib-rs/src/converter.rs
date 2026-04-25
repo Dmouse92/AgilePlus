@@ -50,7 +50,7 @@ fn dialect_for_type(dialect_type: DialectType) -> XddResult<Box<dyn Dialect>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::dialect::{JsonDialect, TomlDialect, YamlDialect};
+    use crate::dialect::{JsonDialect, YamlDialect};
 
     #[test]
     fn json_to_toml() {

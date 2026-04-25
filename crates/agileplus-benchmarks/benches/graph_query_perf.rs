@@ -207,8 +207,8 @@ criterion_main!(benches);
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     #![allow(unused_imports)]
+    use super::*;
 
     #[tokio::test]
     async fn create_and_get_feature_smoke() {

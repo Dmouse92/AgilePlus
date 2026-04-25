@@ -9,3 +9,6 @@ rust-version.workspace = true
 agileplus-domain = { path = "../agileplus-domain" }
 chrono.workspace = true
 serde_json.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["full"] }

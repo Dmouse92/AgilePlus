@@ -134,7 +134,7 @@ mod tests {
             .unwrap();
         assert_eq!(ctx.0, 42);
         assert_eq!(ctx.1, "git");
-        assert_eq!(ctx.2, true);
+        assert!(ctx.2);
     }
 
     #[test]

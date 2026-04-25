@@ -201,8 +201,7 @@ impl CacheStore for InMemoryCacheStore {
             .map_err(|e| CacheError::SerializationError(e.to_string()))?;
         let expires_at = ttl
             .or(Some(self.default_ttl))
-            .map(|d| Instant::now().checked_add(d))
-            .flatten();
+            .and_then(|d| Instant::now().checked_add(d));
         let entry = Entry {
             value: serialized,
             expires_at,

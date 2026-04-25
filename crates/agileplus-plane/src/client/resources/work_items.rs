@@ -7,6 +7,8 @@ use super::{PlaneClient, PlaneIssue, PlaneWorkItem, PlaneWorkItemResponse, trans
 #[derive(Debug, Clone, Deserialize)]
 struct PaginatedResponse<T> {
     results: Vec<T>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[allow(dead_code)]
     next: Option<String>,
 }
 
