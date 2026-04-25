@@ -1,11 +1,15 @@
 //! Error types for agileplus-sync.
 
 use thiserror::Error;
+use agileplus_events::EventError;
 
 #[derive(Debug, Error)]
 pub enum SyncError {
     #[error("Store error: {0}")]
     Store(String),
+
+    #[error("Event error: {0}")]
+    Event(#[from] EventError),
 
     #[error("NATS error: {0}")]
     Nats(#[from] async_nats::Error),

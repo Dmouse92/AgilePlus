@@ -20,8 +20,8 @@ async fn main() -> Result<()> {
     // committed contract used by the (deferred) CI drift check.
     if env::args().any(|a| a == "--dump-openapi") {
         use utoipa::OpenApi;
-        let yaml = agileplus_api::openapi::ApiDoc::openapi()
-            .to_yaml()
+        let openapi = agileplus_api::openapi::ApiDoc::openapi();
+        let yaml = serde_yaml::to_string(&openapi)
             .context("failed to serialize OpenAPI to YAML")?;
         print!("{yaml}");
         return Ok(());
