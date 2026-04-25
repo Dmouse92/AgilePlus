@@ -1,7 +1,7 @@
 use std::time::{Duration, Instant};
 
 #[derive(Debug)]
-pub(super) struct TokenBucket {
+pub struct TokenBucket {
     tokens: f64,
     max_tokens: f64,
     refill_rate: f64, // tokens per second
@@ -9,7 +9,7 @@ pub(super) struct TokenBucket {
 }
 
 impl TokenBucket {
-    pub(super) fn new(max_tokens: f64, refill_rate: f64) -> Self {
+    pub fn new(max_tokens: f64, refill_rate: f64) -> Self {
         Self {
             tokens: max_tokens,
             max_tokens,
@@ -18,7 +18,7 @@ impl TokenBucket {
         }
     }
 
-    pub(super) fn try_acquire(&mut self) -> bool {
+    pub fn try_acquire(&mut self) -> bool {
         let now = Instant::now();
         let elapsed = now.duration_since(self.last_refill).as_secs_f64();
         self.tokens = (self.tokens + elapsed * self.refill_rate).min(self.max_tokens);
@@ -32,7 +32,7 @@ impl TokenBucket {
         }
     }
 
-    pub(super) fn time_until_available(&self) -> Duration {
+    pub fn time_until_available(&self) -> Duration {
         if self.tokens >= 1.0 {
             Duration::ZERO
         } else {

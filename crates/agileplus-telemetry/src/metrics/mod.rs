@@ -215,7 +215,7 @@ impl AgilePlusMetrics {
     pub fn events_processed(&self, labels: &[(&str, &str)]) {
         let kv: Vec<KeyValue> = labels
             .iter()
-            .map(|(k, v)| KeyValue::new(*k, v.to_string()))
+            .map(|(k, v)| KeyValue::new(k.to_string(), v.to_string()))
             .collect();
         self.inner.record_event_processed(&kv);
     }
@@ -223,7 +223,7 @@ impl AgilePlusMetrics {
     pub fn record_sync_duration(&self, duration_ms: f64, labels: &[(&str, &str)]) {
         let kv: Vec<KeyValue> = labels
             .iter()
-            .map(|(k, v)| KeyValue::new(*k, v.to_string()))
+            .map(|(k, v)| KeyValue::new(k.to_string(), v.to_string()))
             .collect();
         self.inner.record_sync_duration(duration_ms, &kv);
     }
@@ -231,7 +231,7 @@ impl AgilePlusMetrics {
     pub fn set_cache_hit_rate(&self, ratio: f64, labels: &[(&str, &str)]) {
         let kv: Vec<KeyValue> = labels
             .iter()
-            .map(|(k, v)| KeyValue::new(*k, v.to_string()))
+            .map(|(k, v)| KeyValue::new(k.to_string(), v.to_string()))
             .collect();
         self.inner.set_cache_hit_rate(ratio, &kv);
     }
@@ -239,7 +239,7 @@ impl AgilePlusMetrics {
     pub fn record_api_request_duration(&self, duration_ms: f64, labels: &[(&str, &str)]) {
         let kv: Vec<KeyValue> = labels
             .iter()
-            .map(|(k, v)| KeyValue::new(*k, v.to_string()))
+            .map(|(k, v)| KeyValue::new(k.to_string(), v.to_string()))
             .collect();
         self.inner.record_api_request_duration(duration_ms, &kv);
     }

@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::Context;
 use reqwest::Method;
 use serde::Deserialize;
 

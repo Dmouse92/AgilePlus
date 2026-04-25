@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use agileplus_domain::ports::observability::{LogEntry, LogLevel, ObservabilityPort, SpanContext};
 use opentelemetry::global;
 use opentelemetry::metrics::MeterProvider as _MeterProvider;
