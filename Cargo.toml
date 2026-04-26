@@ -95,7 +95,6 @@ sentry = { version = "0.33", features = [
 
 # OpenAPI scaffolding (utoipa). See WP: feat/rest-openapi-scaffold (#138, #118).
 utoipa = { version = "5", features = ["axum_extras", "chrono"] }
-utoipa-axum = "0.2"
 
 # Plugin crates (external from separate repos) were removed in #144:
 # the three git remotes (agileplus-plugin-{core,git,sqlite}) all return 404.
