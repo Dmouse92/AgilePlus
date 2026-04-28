@@ -99,27 +99,35 @@
 ## Phase 2: Short-term (Weeks 2-3) — Consolidate and Deduplicate
 
 ### P2.1: Merge 15 duplicate repos into 8 targets
-- [ ] phenotype-contract + phenotype-contracts → phenotype-contracts
-- [ ] phenotype-error-core + phenotype-errors + phenotype-error-macros → phenotype-error-core
-- [ ] phenotype-ports-canonical + phenotype-port-traits → phenotype-contracts
-- [ ] thegent-plugin-host → thegent/apps/plugin-host
-- [ ] forgecode-fork → forgecode (or delete)
-- [ ] hexagon-rust → hexagon-rs
-- [ ] agileplus-agents → AgilePlus/packages/agents
-- [ ] agileplus-mcp → AgilePlus/packages/mcp
-- [ ] router-docs → phenotype-hub/docs/
-- [ ] FixitGo + FixitRs → fixit (single repo)
-- [ ] phenotype-config-loader → phenotype-config-core
-- [ ] phenotype-shared-config → phenotype-config-core
-- [ ] phenotype-async-traits → phenotype-contracts
-- [ ] bifrost-routing + bifrost-routing-backup → bifrost
-- [ ] vibeproxy-monitoring-unified (already archived)
+
+<!-- Reconciled 2026-04-28: 14/15 source repos already 404 (deleted) or archived.
+     Only vibeproxy-monitoring-unified remains active (despite spec note);
+     deferred pending user review (recently pushed, may have new purpose). -->
+
+- [x] phenotype-contract + phenotype-contracts → phenotype-contracts (404 — deleted)
+- [x] phenotype-error-core + phenotype-errors + phenotype-error-macros → phenotype-error-core (404 — deleted)
+- [x] phenotype-ports-canonical + phenotype-port-traits → phenotype-contracts (404 — deleted)
+- [x] thegent-plugin-host → thegent/apps/plugin-host (404 — deleted)
+- [x] forgecode-fork → forgecode (or delete) (404 — deleted)
+- [x] hexagon-rust → hexagon-rs (404 — deleted)
+- [x] agileplus-agents → AgilePlus/packages/agents (404 — deleted)
+- [x] agileplus-mcp → AgilePlus/packages/mcp (404 — deleted)
+- [x] router-docs → phenotype-hub/docs/ (archived)
+- [x] FixitGo + FixitRs → fixit (single repo) (both 404 — deleted)
+- [x] phenotype-config-loader → phenotype-config-core (404 — deleted)
+- [x] phenotype-shared-config → phenotype-config-core (404 — deleted)
+- [x] phenotype-async-traits → phenotype-contracts (404 — deleted)
+- [x] bifrost-routing + bifrost-routing-backup → bifrost (both 404 — deleted)
+- [ ] vibeproxy-monitoring-unified (NOT archived despite spec note — active 2026-04-27, needs review)
 
 ### P2.2: Archive 4 odin-* course repos
-- [ ] odin-dash → archive
-- [ ] odin-TTT → archive
-- [ ] odin-library → archive
-- [ ] odin-recipes → archive
+
+<!-- Reconciled 2026-04-28: all 4 verified archived via gh api. -->
+
+- [x] odin-dash → archive (verified archived)
+- [x] odin-TTT → archive (verified archived)
+- [x] odin-library → archive (verified archived)
+- [x] odin-recipes → archive (verified archived)
 
 ### P2.3: Move personal repos to separate org
 - [ ] Create separate GitHub org or use personal account
