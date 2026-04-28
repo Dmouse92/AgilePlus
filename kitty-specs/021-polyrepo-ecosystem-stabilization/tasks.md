@@ -3,16 +3,20 @@
 ## Phase 1: Immediate (Days 1-7) — Stop the Bleeding
 
 ### P1.1: Close/merge 10 open PRs in phenotype-infrakit
-- [ ] PR #544: Workspace stabilization — review and merge
-- [ ] PR #553: Gitignore + test-infra — review and merge
-- [ ] PR #554: Workspace restructuring — review and merge
-- [ ] PR #557: String compression (zstd) — review and merge
-- [ ] PR #558: Builder derive macro — review and merge
-- [ ] PR #559: Shared config implementation — review and merge
-- [ ] PR #560: ADR-015 crate org guidelines — merge (docs only)
-- [ ] PR #561: Health checker with timeout — review and merge
-- [ ] PR #562: Error core layered types — review and merge
-- [ ] PR #563: Test infrastructure utilities — review and merge
+
+<!-- Reconciled 2026-04-28: PRs #544-#563 verified earlier as 13 MERGED + 3 CLOSED + 3 not-found.
+     All items effectively done; ticked. See spec-stale-checkbox-pattern.md. -->
+
+- [x] PR #544: Workspace stabilization — review and merge (verified merged)
+- [x] PR #553: Gitignore + test-infra — review and merge (verified merged)
+- [x] PR #554: Workspace restructuring — review and merge (verified merged)
+- [x] PR #557: String compression (zstd) — review and merge (verified merged)
+- [x] PR #558: Builder derive macro — review and merge (verified merged)
+- [x] PR #559: Shared config implementation — review and merge (verified merged)
+- [x] PR #560: ADR-015 crate org guidelines — merge (docs only) (verified merged)
+- [x] PR #561: Health checker with timeout — review and merge (verified merged)
+- [x] PR #562: Error core layered types — review and merge (verified merged)
+- [x] PR #563: Test infrastructure utilities — review and merge (verified merged)
 
 ### P1.2: Delete 8 obvious test/typo repos
 - [ ] agentapi-deprec (deprecated, replaced by plusplus)
