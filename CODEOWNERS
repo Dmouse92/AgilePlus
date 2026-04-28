@@ -1,0 +1,6 @@
+# AgilePlus CODEOWNERS
+* @KooshaPari
+
+.github/workflows/* @KooshaPari
+crates/* @KooshaPari
+apps/* @KooshaPari
