@@ -33,6 +33,9 @@ on:
       CARGO_TOKEN:
         required: false
 
+permissions:
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
