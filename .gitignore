@@ -11,6 +11,9 @@
 
 # AgilePlus runtime artifacts
 .agileplus/
+!.agileplus/
+!.agileplus/locks/
+!.agileplus/locks/plane-api-local-requirements.txt
 .worktrees/
 .claude/worktrees/
 
