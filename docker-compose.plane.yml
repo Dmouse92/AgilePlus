@@ -1,5 +1,24 @@
-# Canonical shelf-root Plane stack compose for pheno, HexaKit, and PhenoDevOps mirrors.
-# Update this file first; per-repo copies should stay in sync or become symlinks.
+# =============================================================================
+# Canonical compose file — AgilePlus Plane.so local stack
+# Source of truth: repos/docker-compose.plane.yml
+#
+# Orchestrated services:
+#   plane-db     : PostgreSQL for Plane database
+#   dragonfly    : Redis-compatible cache (used by Plane)
+#   plane-api    : Plane backend API (makeplane/plane-backend:stable)
+#   plane-web    : Plane frontend (makeplane/plane-frontend:stable)
+#   plane-worker : Plane worker process
+#   plane-beat   : Plane scheduler process
+#
+# Mirrored locations (symlinks back to this file):
+#   pheno/docker-compose.plane.yml
+#   pheno/agileplus/docker-compose.plane.yml
+#   HexaKit/docker-compose.plane.yml
+#   HexaKit/agileplus/docker-compose.plane.yml
+#   PhenoDevOps/docker-compose.plane.yml
+#   PhenoDevOps/agileplus/docker-compose.plane.yml
+#
+# Edit ONLY this file. The symlinks propagate changes automatically.
 #
 # Usage (full Plane stack as containers):
 #   docker compose -f docker-compose.plane.yml up -d
@@ -11,6 +30,7 @@
 # talking to OrbStack containers for Dragonfly and PostgreSQL (via orb-up.sh).
 # This file provides the fully-containerized alternative for CI or environments
 # without a Python/Node runtime.
+# =============================================================================
 
 services:
   plane-db:
