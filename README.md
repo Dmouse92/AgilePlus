@@ -45,26 +45,37 @@ This is a curated index of the most active/major repos in this checkout.
 
 | Project | Description |
 |---|---|
-| [thegent](thegent/) | Agent runtime and decomposition framework for multi-actor execution.
-| [thegent-dispatch](thegent-dispatch/) | Dispatch service for routing worker workloads across providers.
-| [thegent-workspace](thegent-workspace/) | Workspace scaffolding and state model for thegent.
-| [cheap-llm-mcp](cheap-llm-mcp/) | MCP server for routing low-cost model usage.
-| [dispatch-mcp](dispatch-mcp/) | Single endpoint MCP dispatch utility.
-| [agentapi-plusplus](agentapi-plusplus/) | API gateway and protocol adapters for agent workflows.
-| [agent-user-status](agent-user-status/) | Presence/status service for user-facing agent interactions.
-| [agent-devops-setups](agent-devops-setups/) | Provisioning and orchestration setup helpers.
+| [thegent](thegent/) | Agent runtime and decomposition framework for multi-actor execution. |
+| [thegent-dispatch](thegent-dispatch/) | Dispatch service for routing worker workloads across providers. |
+| [thegent-workspace](thegent-workspace/) | Workspace scaffolding and state model for thegent. |
+| [thegent-landing](thegent-landing/) | Marketing/landing site for thegent. |
+| [cheap-llm-mcp](cheap-llm-mcp/) | MCP server for routing low-cost model usage. |
+| [dispatch-mcp](dispatch-mcp/) | Single endpoint MCP dispatch utility. |
+| [agentapi-plusplus](agentapi-plusplus/) | API gateway and protocol adapters for agent workflows. |
+| [agent-user-status](agent-user-status/) | Presence/status service for user-facing agent interactions. |
+| [agent-devops-setups](agent-devops-setups/) | Provisioning and orchestration setup helpers. |
+| [agentops-policy-federation](agentops-policy-federation/) | Cross-agent policy federation. |
+| [Agentora](Agentora/) | Agent orchestration product. |
+| [PhenoAgent](PhenoAgent/) | Agent SDK for the Phenotype runtime. |
+| [phenoForge](phenoForge/) | Phenotype-flavored Forge integrations. |
+| [forgecode](forgecode/) | Forge agent integration scaffolding. |
 
 ### MCP, APIs, and routing infrastructure
 
 | Project | Description |
 |---|---|
-| [AgilePlus](AgilePlus/) | AGILEPLUS spec tracker and command surface. |
-| [AgilePlus-mcp](agileplus-mcp/) | MCP integration for AgilePlus.
-| [cliproxyapi-plusplus](cliproxyapi-plusplus/) | Multi-provider CLI proxy and API compatibility surface.
-| [helios-router](helios-router/) | Routing layer for LLM/agent requests.
-| [helios-cli](helios-cli/) | CLI client for Helios workflows.
-| [helioscope](helioscope/) | App manager (formerly heliosCLI).
-| [PhenoMCP](PhenoMCP/) | MCP runtime and plugin scaffolding.
+| [agileplus-mcp](agileplus-mcp/) | MCP integration surface for AgilePlus. |
+| [AgentMCP](AgentMCP/) | Experimental MCP scaffolding repository. |
+| [McpKit](McpKit/) | MCP server scaffolding kit. |
+| [MCPForge](MCPForge/) | MCP server forge tooling. |
+| [cliproxyapi-plusplus](cliproxyapi-plusplus/) | Multi-provider CLI proxy and API compatibility surface. |
+| [helios-router](helios-router/) | Routing layer for LLM/agent requests. |
+| [helios-cli](helios-cli/) | CLI client for Helios workflows. |
+| [helioscope](helioscope/) | App manager (formerly heliosCLI). |
+| [PhenoMCP](PhenoMCP/) | MCP runtime and plugin scaffolding. |
+| [vibeproxy](vibeproxy/) | LLM/dev traffic proxy. |
+| [vibeproxy-monitoring-unified](vibeproxy-monitoring-unified/) | Unified monitoring stack for vibeproxy. |
+| [Httpora](Httpora/) | HTTP utilities/proxy. |
 
 ### Core platform + shared crates
 
