@@ -12,6 +12,9 @@
 ## Phase 1 — Discovery
 
 ### WP-000 — Inventory & Freshness Audit
+**File Scope:**
+- Read: [repos/PhenoObservability/crates/*, repos/PhenoObservability/CHANGELOG.md, repos/PhenoObservability/Cargo.toml, repos/AgilePlus/kitty-specs/014-observability-stack-completion/spec.md, PhenoObservability/crates/]
+- Write: [`kitty-specs/014-observability-stack-completion/research/inventory.md`]
 
 - **State:** planned
 - **Phase:** 1 (Discovery)
@@ -45,6 +48,9 @@
   - Specifies sampling decision propagation rules.
   - Brief pseudocode (3-5 lines) showing extract/inject signature shape — no implementation.
 - **Handoff prompt:** "Author w3c-contract.md per WP-001 acceptance using PhenoObservability inventory."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-000]
+- Write: [`kitty-specs/014-observability-stack-completion/research/w3c-contract.md`]
 
 ---
 
@@ -62,6 +68,9 @@
   - Action plan for residual MED CVE (upgrade path or accept-with-justification).
   - `cargo deny check advisories` exit code recorded.
 - **Handoff prompt:** "Run `cargo deny check advisories` and Snyk scan on PhenoObservability; produce cve-status.md."
+**File Scope:**
+- Read: [`repos/PhenoObservability/Cargo.lock`, `repos/PhenoObservability/deny.toml`, recent SBOM under `repos/PhenoObservability/.sbom/` if present, WP-000]
+- Write: [`kitty-specs/014-observability-stack-completion/research/cve-status.md`]
 
 ---
 
@@ -81,6 +90,9 @@
   - Forbidden label patterns (high-cardinality user IDs, free-text).
   - Conformance check: deterministic label set per metric family.
 - **Handoff prompt:** "Author labeling-scheme.md per WP-003 acceptance; place in phenotype-shared for cross-repo reuse."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-001]
+- Write: [`phenotype-shared/docs/observability/labeling-scheme.md` (cross-repo reuse target)]
 
 ---
 
@@ -98,6 +110,9 @@
   - Propagation rules across async boundaries documented.
   - Failure mode: missing trace_id -> log without it + warn-once metric.
 - **Handoff prompt:** "Author correlation-spec.md per WP-004 acceptance referencing labeling-scheme.md."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-001, WP-003]
+- Write: [`phenotype-shared/docs/observability/correlation-spec.md`]
 
 ---
 
@@ -114,12 +129,18 @@
   - Rules for sampling (do not profile every span; budget-bound).
   - Tracera vs. Profila role split (final state).
 - **Handoff prompt:** "Author profile-span-contract.md per WP-005 acceptance."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-001]
+- Write: [`kitty-specs/014-observability-stack-completion/research/profile-span-contract.md`]
 
 ---
 
 ## Phase 3 — Build (Handoff Packages)
 
 ### WP-006 — `tracely-core` W3C Propagation Handoff
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-001, WP-004]
+- Write: [repos/PhenoObservability-wtrees/wp-006-tracely-w3c/, repos/PhenoObservability/crates/tracely-core/src/]
 
 - **State:** planned
 - **Phase:** 3 (Build)
@@ -140,6 +161,9 @@
 ---
 
 ### WP-007 — `phenotype-observably-logging` Trace-ID Injection Handoff
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-004]
+- Write: [phenotype-observably-logging, repos/PhenoObservability-wtrees/wp-007-logging-traceid/, repos/PhenoObservability/crates/phenotype-observably-logging/src/, repos/PhenoObservability/crates/helix-logging/src/]
 
 - **State:** planned
 - **Phase:** 3 (Build)
@@ -159,6 +183,9 @@
 ---
 
 ### WP-008 — Metrics Correlation Handoff
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-003, WP-004]
+- Write: [repos/PhenoObservability-wtrees/wp-008-metrics-corr/, repos/PhenoObservability/crates/tracely-sentinel/src/, repos/PhenoObservability/crates/phenotype-observably-sentinel/src/]
 
 - **State:** planned
 - **Phase:** 3 (Build)
@@ -178,6 +205,9 @@
 ---
 
 ### WP-009 — Phench Reporting + Observability Emission Handoff
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-003]
+- Write: [repos/Phench-wtrees/wp-009-obs-emission/, src/, tests/]
 
 - **State:** planned
 - **Phase:** 3 (Build)
@@ -196,6 +226,9 @@
 ---
 
 ### WP-010 — Profila / Tracera Profiling Integration Handoff
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-005]
+- Write: [repos/PhenoObservability-wtrees/wp-010-profile-integration/]
 
 - **State:** planned
 - **Phase:** 3 (Build)
@@ -228,6 +261,9 @@
   - Pass criteria: 100% of MUST tests; documented exclusions for SHOULD/MAY.
   - Reference to upstream conformance harness.
 - **Handoff prompt:** "Author W3C conformance test plan per WP-011."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-006]
+- Write: [`repos/PhenoObservability/tests/w3c_conformance/README.md` (test plan, repos/PhenoObservability/tests/w3c_conformance/README.md]
 
 ---
 
@@ -244,6 +280,9 @@
   - Missing-context fallback path.
   - Multi-hop propagation (3 services).
 - **Handoff prompt:** "Author correlation integration test plan per WP-012."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-006, WP-007, WP-008]
+- Write: [`repos/PhenoObservability/tests/correlation/README.md`]
 
 ---
 
@@ -260,6 +299,9 @@
   - SHM read/write latency targets documented.
   - Reproducibility: bench command + environment fingerprint.
 - **Handoff prompt:** "Author overhead benchmark plan per WP-013."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-006, WP-008, WP-009]
+- Write: [`repos/PhenoObservability/benches/README.md`]
 
 ---
 
@@ -277,6 +319,9 @@
   - `cargo deny check advisories` exit 0 (or documented accept-with-justification).
   - SBOM regenerated.
 - **Handoff prompt:** "Run all quality gates on PhenoObservability; record results in quality-gate-report.md."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-006, WP-007, WP-008, WP-009, WP-010]
+- Write: [`kitty-specs/014-observability-stack-completion/research/quality-gate-report.md`]
 
 ---
 
@@ -295,6 +340,9 @@
   - References to existing OSS backends (Grafana, Prometheus, Loki, Tempo).
   - No new visualization code authored in this WP — references file paths to dashboard JSON / Prometheus rule YAML to be produced by implementer.
 - **Handoff prompt:** "Author dashboard + alert spec per WP-015."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-012]
+- Write: [`repos/PhenoObservability/dashboards/README.md`, `repos/PhenoObservability/alerting/README.md`]
 
 ---
 
@@ -310,10 +358,16 @@
   - Migration map: helix-tracing symbol -> tracely-core symbol.
   - GitHub archive action recorded.
 - **Handoff prompt:** "Author helix-tracing archival doc per WP-016 and archive the repo."
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-006, WP-007]
+- Write: [`repos/PhenoObservability/docs/archival/helix-tracing.md`]
 
 ---
 
 ### WP-017 — Runbooks
+**File Scope:**
+- Read: [repos/PhenoObservability/, kitty-specs/014-observability-stack-completion/spec.md, kitty-specs/014-observability-stack-completion/plan.md, WP-015]
+- Write: [`repos/PhenoObservability/docs/runbooks/`, trace-correlation-missing.md, metric-cardinality-explosion.md, sampler-config.md, profile-attach-failure.md]
 
 - **State:** planned
 - **Phase:** 5 (Deploy/Handoff)
@@ -344,6 +398,9 @@
   - Open one PR per consumer repo (or one stacked PR) updating imports.
   - Verify no broken builds post-update.
 - **Handoff prompt:** "Sweep all active repos for legacy observability references per WP-018."
+**File Scope:**
+- Read: [all active repos under `repos/`, kitty-specs/014-observability-stack-completion/research/reference-sweep.md, WP-016]
+- Write: [`kitty-specs/014-observability-stack-completion/research/reference-sweep.md`]
 
 ---
 

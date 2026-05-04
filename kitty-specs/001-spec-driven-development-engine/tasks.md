@@ -16,6 +16,9 @@
 **Independent Test**: `buf lint` passes, `buf generate` produces Rust and Python stubs, both compile.
 **Prompt**: `tasks/WP00-proto-scaffold.md`
 **Estimated**: ~350 lines, 8 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [agileplus-proto, proto/agileplus/common.proto, proto/agileplus/core.proto, proto/agileplus/agents.proto, proto/agileplus/integrations.proto, buf.yaml, buf.gen.yaml, rust/, python/, schemas/mcp-tools.json, schemas/mcp-resources.json, agileplus-proto/]
 
 ### Included Subtasks
 - [x] T000a Initialize `agileplus-proto` repo with README, LICENSE, .gitignore
@@ -52,6 +55,9 @@
 **Independent Test**: `cargo build --workspace` succeeds, `cargo test --workspace` runs (0 tests, 0 errors).
 **Prompt**: `tasks/WP01-rust-workspace-scaffold.md`
 **Estimated**: ~300 lines, 9 subtasks
+**File Scope:**
+- Read: [agileplus-proto, agileplus-grpc]
+- Write: [agileplus-core, Cargo.toml, crates/agileplus-domain/, lib.rs, docker-compose.yml, proto/, agileplus-proto, agileplus-grpc, agileplus-core/]
 
 ### Included Subtasks
 - [x] T001 Create root `Cargo.toml` workspace manifest with all 7 crate members
@@ -91,6 +97,9 @@
 **Independent Test**: `uv run python -m agileplus_mcp` starts without error, MCP server responds to health check.
 **Prompt**: `tasks/WP02-python-mcp-scaffold.md`
 **Estimated**: ~250 lines, 6 subtasks
+**File Scope:**
+- Read: [agileplus-proto]
+- Write: [agileplus-mcp, pyproject.toml, src/agileplus_mcp/__init__.py, server.py, src/agileplus_mcp/grpc_client.py, src/agileplus_mcp/tools/, resources/, prompts/, sampling/, proto/, agileplus-proto, tests/, agileplus-mcp/]
 
 ### Included Subtasks
 - [x] T007 Initialize `agileplus-mcp` repo, create `pyproject.toml` with FastMCP 3.0, grpcio, opentelemetry-sdk deps
@@ -123,6 +132,9 @@
 **Independent Test**: Unit tests pass for Feature creation, all valid state transitions, and skip-with-warning behavior.
 **Prompt**: `tasks/WP03-domain-feature-state-machine.md`
 **Estimated**: ~400 lines, 8 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [agileplus-domain, agileplus-core, crates/agileplus-domain/src/domain/feature.rs, work_package.rs]
 
 ### Included Subtasks
 - [x] T012 Implement `Feature` struct with all fields from data-model.md in `crates/agileplus-domain/src/domain/feature.rs`
@@ -156,6 +168,9 @@
 **Independent Test**: Unit tests pass for hash chain creation, verification, evidence linking, and policy evaluation.
 **Prompt**: `tasks/WP04-domain-governance-audit.md`
 **Estimated**: ~450 lines, 10 subtasks
+**File Scope:**
+- Read: [agileplus-domain, agileplus-core]
+- Write: [agileplus-domain, agileplus-core, governance.rs, audit.rs]
 
 ### Included Subtasks
 - [x] T018 Implement `GovernanceContract` struct with versioned rules (FR-018) in `governance.rs`
@@ -192,6 +207,9 @@
 **Independent Test**: Core crate compiles with all port traits defined, adapter crates can reference them.
 **Prompt**: `tasks/WP05-port-traits.md`
 **Estimated**: ~350 lines, 6 subtasks
+**File Scope:**
+- Read: [ports/review.rs]
+- Write: [agileplus-domain/src/ports/, agileplus-core, ports/storage.rs, ports/vcs.rs, ports/agent.rs, ports/review.rs, ports/observability.rs, mod.rs]
 
 ### Included Subtasks
 - [x] T025 Define `StoragePort` trait in `ports/storage.rs`: CRUD for features, WPs, audit, evidence, policies
@@ -224,6 +242,9 @@
 **Independent Test**: Integration tests pass for all CRUD operations, migration up/down, and rebuild from fixtures.
 **Prompt**: `tasks/WP06-sqlite-adapter.md`
 **Estimated**: ~500 lines, 7 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [crates/agileplus-sqlite/src/migrations/]
 
 ### Included Subtasks
 - [x] T031 Create SQLite migration system in `crates/agileplus-sqlite/src/migrations/` (all tables from data-model.md)
@@ -257,6 +278,9 @@
 **Independent Test**: Integration tests pass for worktree create/cleanup, artifact read/write, branch merge in a temp repo.
 **Prompt**: `tasks/WP07-git-adapter.md`
 **Estimated**: ~400 lines, 6 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [crates/agileplus-git/src/]
 
 ### Included Subtasks
 - [x] T038 Implement `GitVcsAdapter` struct implementing `VcsPort` in `crates/agileplus-git/src/`
@@ -289,6 +313,9 @@
 **Independent Test**: Mock dispatch test passes: agent spawned, PR created with goal context, review loop simulated. gRPC service starts and responds to health check.
 **Prompt**: `tasks/WP08-agent-dispatch-adapter.md`
 **Estimated**: ~550 lines, 8 subtasks
+**File Scope:**
+- Read: [agileplus-agents, agents.proto]
+- Write: [agileplus-agents, agents.proto, crates/agileplus-agent-dispatch/src/, claude_code.rs, codex.rs, dispatch.rs, pr_loop.rs, agileplus-agent-service, agileplus-agents/]
 
 ### Included Subtasks
 - [x] T044 Initialize `agileplus-agents` repo with Cargo workspace (3 crates), proto git submodule, Makefile
@@ -327,6 +354,9 @@
 **Independent Test**: Mock test passes: Coderabbit review fetched, comments parsed, fallback to manual works.
 **Prompt**: `tasks/WP09-review-adapter.md`
 **Estimated**: ~300 lines, 5 subtasks
+**File Scope:**
+- Read: [agileplus-agent-review, agileplus-agents, coderabbit.rs, fallback.rs]
+- Write: [agileplus-agent-review, agileplus-agents, crates/agileplus-agent-review/src/, coderabbit.rs, fallback.rs, agileplus-agents/]
 
 ### Included Subtasks
 - [x] T050 Implement `ReviewAdapter` struct in `crates/agileplus-agent-review/src/`
@@ -358,6 +388,9 @@
 **Independent Test**: Traces and metrics exported to OTLP collector, structured logs written to file.
 **Prompt**: `tasks/WP10-telemetry-adapter.md`
 **Estimated**: ~300 lines, 5 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [crates/agileplus-telemetry/src/, traces.rs, metrics.rs, logs.rs, ~/.agileplus/otel-config.yaml]
 
 ### Included Subtasks
 - [x] T055 Implement `TelemetryAdapter` struct implementing `ObservabilityPort` in `crates/agileplus-telemetry/src/`
@@ -389,6 +422,9 @@
 **Independent Test**: `agileplus specify` creates a spec interactively, stores in git+SQLite. `agileplus research` produces research artifacts.
 **Prompt**: `tasks/WP11-cli-specify-research.md`
 **Estimated**: ~450 lines, 6 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [crates/agileplus-cli/src/main.rs, commands/specify.rs, commands/research.rs]
 
 ### Included Subtasks
 - [x] T060 Create `crates/agileplus-cli/src/main.rs` with clap App, global flags, subcommand routing
@@ -421,6 +457,9 @@
 **Independent Test**: `agileplus plan` generates WPs from spec. `agileplus implement` spawns agents in worktrees.
 **Prompt**: `tasks/WP12-cli-plan-implement.md`
 **Estimated**: ~500 lines, 7 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [commands/plan.rs, commands/implement.rs]
 
 ### Included Subtasks
 - [x] T066 Implement `commands/plan.rs`: WP generation with dependency ordering, governance contract creation (FR-003)
@@ -454,6 +493,9 @@
 **Independent Test**: `agileplus validate` checks governance gates. `agileplus ship` merges + archives. `agileplus retrospective` generates learnings.
 **Prompt**: `tasks/WP13-cli-validate-ship-retro.md`
 **Estimated**: ~450 lines, 6 subtasks
+**File Scope:**
+- Read: [commands/ship.rs]
+- Write: [commands/validate.rs, commands/ship.rs, commands/retrospective.rs]
 
 ### Included Subtasks
 - [x] T073 Implement `commands/validate.rs`: FR-to-evidence tracing, quality gate checks, validation report (FR-005)
@@ -487,6 +529,9 @@
 **Independent Test**: gRPC server starts serving `core.proto`, Python MCP client connects, tool calls route through to Rust core and return results.
 **Prompt**: `tasks/WP14-grpc-mcp-integration.md`
 **Estimated**: ~450 lines, 7 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [agileplus-core, core.proto, agileplus-mcp, agileplus-core/crates/agileplus-grpc/src/server.rs, AgilePlusCoreService, agileplus-mcp/src/agileplus_mcp/grpc_client.py, agileplus-proto, agileplus-mcp/src/agileplus_mcp/tools/]
 
 ### Included Subtasks
 - [x] T079 Implement tonic gRPC server in `agileplus-core/crates/agileplus-grpc/src/server.rs` implementing `AgilePlusCoreService` from `core.proto`
@@ -524,6 +569,9 @@
 **Independent Test**: API endpoints return feature/WP/audit data as JSON. Credentials stored/retrieved from OS keychain.
 **Prompt**: `tasks/WP15-api-credentials.md`
 **Estimated**: ~400 lines, 6 subtasks
+**File Scope:**
+- Read: [~/.agileplus/config.toml]
+- Write: [crates/agileplus-api/src/, ~/.agileplus/config.toml]
 
 ### Included Subtasks
 - [x] T085 Implement axum router in `crates/agileplus-api/src/` with routes for features, WPs, governance, audit
@@ -556,6 +604,9 @@
 **Independent Test**: `make test` runs all unit, BDD, contract, and integration tests with >80% coverage.
 **Prompt**: `tasks/WP16-bdd-integration-tests.md`
 **Estimated**: ~450 lines, 7 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [tests/bdd/, mcp/tests/bdd/, tests/contract/, docker-compose.test.yml, tests/fixtures/]
 
 ### Included Subtasks
 - [x] T091 Create `.feature` files for core user stories: specify.feature, implement.feature, governance.feature, audit.feature
@@ -590,6 +641,9 @@
 **Independent Test**: Triage classifies input correctly (bug/feature/idea), creates backlog entries, generates a valid CLAUDE.md router. gRPC service responds to ClassifyInput.
 **Prompt**: `tasks/WP17-triage-backlog-adapter.md`
 **Estimated**: ~500 lines, 8 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [agileplus-integrations, agileplus-triage, crates/agileplus-triage/src/, classifier.rs, router.rs, agileplus-integrations-service, integrations.proto, agileplus-integrations/]
 
 ### Included Subtasks
 - [x] T098 Initialize `agileplus-integrations` repo with Cargo workspace (4 crates), proto git submodule, Makefile
@@ -618,6 +672,9 @@
 **Independent Test**: Feature state change triggers Plane.so work item creation/update via gRPC. Conflict detection works.
 **Prompt**: `tasks/WP18-plane-sync-adapter.md`
 **Estimated**: ~350 lines, 5 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [agileplus-plane, agileplus-integrations, crates/agileplus-plane/src/, agileplus-integrations/]
 
 ### Included Subtasks
 - [x] T104 Implement `PlaneSyncAdapter` struct with Plane.so REST API client in `crates/agileplus-plane/src/` (FR-043)
@@ -643,6 +700,9 @@
 **Independent Test**: Bug triage via gRPC creates a GitHub issue with labels, cross-references, and metadata.
 **Prompt**: `tasks/WP19-github-sync-adapter.md`
 **Estimated**: ~350 lines, 5 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [agileplus-github, agileplus-integrations, crates/agileplus-github/src/, agileplus-integrations/]
 
 ### Included Subtasks
 - [x] T109 Implement `GitHubSyncAdapter` struct with octocrab GitHub API client in `crates/agileplus-github/src/` (FR-044)
@@ -667,6 +727,9 @@
 **Independent Test**: Each sub-command executes correctly when invoked programmatically; audit log captures all invocations.
 **Prompt**: `tasks/WP20-hidden-subcommands.md`
 **Estimated**: ~500 lines, 7 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [tasks/WP20-hidden-subcommands.md]
 
 ### Included Subtasks
 - [x] T114 Define sub-command registry: enum of all ~25 sub-commands with metadata (category, description, required args)
@@ -688,6 +751,9 @@
 **Independent Test**: `agileplus triage "login is broken"` classifies as bug and creates GitHub issue. Agent auto-triages during implement.
 **Prompt**: `tasks/WP21-cli-triage-queue.md`
 **Estimated**: ~400 lines, 6 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [commands/triage.rs, commands/queue.rs]
 
 ### Included Subtasks
 - [x] T121 Implement `commands/triage.rs`: accept input, classify, route to appropriate store (FR-040)
@@ -710,6 +776,9 @@
 **Independent Test**: `<runner> check` runs full local quality suite on all platforms. CI uses same runner. Windows works without WSL.
 **Prompt**: `tasks/WP22-task-runner-dx-migration.md`
 **Estimated**: ~400 lines, 7 subtasks
+**File Scope:**
+- Read: [kitty-specs/001-spec-driven-development-engine/spec.md, kitty-specs/001-spec-driven-development-engine/plan.md]
+- Write: [tasks/WP22-task-runner-dx-migration.md]
 
 ### Included Subtasks
 - [ ] T128 Research and evaluate modern task runners (just, task, mise, moon, nx) — select best for Rust+Python polyglot, cross-platform, CI integration

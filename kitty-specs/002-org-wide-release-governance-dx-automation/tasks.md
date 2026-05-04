@@ -17,6 +17,9 @@
 **Independent Test**: `pheno --help` shows all subcommands; adapter interface compiles; version calculation unit tests pass.
 **Prompt**: `tasks/WP01-cli-scaffold-adapter-interface.md`
 **Estimated Size**: ~450 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [pheno-cli, internal/adapters/adapter.go, internal/version/calculator.go, internal/detect/detector.go]
 
 ### Included Subtasks
 - [x] T001 Initialize Go module (`pheno-cli`) with Cobra + Viper + Lipgloss deps
@@ -48,6 +51,9 @@
 **Independent Test**: Adapter detects package.json, calculates correct npm pre-release versions, publishes with dist-tags.
 **Prompt**: `tasks/WP02-npm-adapter.md`
 **Estimated Size**: ~350 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [internal/adapters/npm.go]
 
 ### Included Subtasks
 - [x] T007 Implement `internal/adapters/npm.go` — Detect (parse package.json, check private field)
@@ -79,6 +85,9 @@
 **Independent Test**: Adapter detects pyproject.toml, applies correct PEP 440 suffixes, publishes via twine.
 **Prompt**: `tasks/WP03-pypi-adapter.md`
 **Estimated Size**: ~350 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [internal/adapters/pypi.go]
 
 ### Included Subtasks
 - [x] T013 Implement `internal/adapters/pypi.go` — Detect (parse pyproject.toml, check classifiers)
@@ -111,6 +120,9 @@
 **Independent Test**: Adapter detects Cargo.toml (including workspaces), publishes crates in topological order.
 **Prompt**: `tasks/WP04-crates-adapter.md`
 **Estimated Size**: ~400 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [internal/adapters/crates.go]
 
 ### Included Subtasks
 - [x] T019 Implement `internal/adapters/crates.go` — Detect (parse Cargo.toml, workspace members, publish field)
@@ -143,6 +155,9 @@
 **Independent Test**: Go adapter detects go.mod, publishes via git tag. Stub adapters return "not yet supported" gracefully.
 **Prompt**: `tasks/WP05-go-proxy-prewired-adapters.md`
 **Estimated Size**: ~400 lines
+**File Scope:**
+- Read: [internal/adapters/hex.go]
+- Write: [internal/adapters/goproxy.go, internal/adapters/hex.go, internal/adapters/zig.go, internal/adapters/mojo.go]
 
 ### Included Subtasks
 - [x] T025 Implement `internal/adapters/goproxy.go` — Detect (parse go.mod), Version (v-prefix SemVer)
@@ -175,6 +190,9 @@
 **Independent Test**: Given a package and target channel, engine evaluates all gate criteria and returns pass/fail report.
 **Prompt**: `tasks/WP06-gate-evaluation-engine.md`
 **Estimated Size**: ~400 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [internal/gate/criteria.go, internal/gate/evaluator.go]
 
 ### Included Subtasks
 - [x] T032 Define gate criteria data model in `internal/gate/criteria.go` (per-channel requirements)
@@ -210,6 +228,9 @@
 **Independent Test**: `pheno publish` detects packages and publishes to registries. `pheno promote` runs gates then publishes.
 **Prompt**: `tasks/WP07-cli-publish-promote.md`
 **Estimated Size**: ~400 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [cmd/publish.go, cmd/promote.go]
 
 ### Included Subtasks
 - [x] T038 Implement `cmd/publish.go` — detect packages, select adapter, build, publish
@@ -242,6 +263,9 @@
 **Independent Test**: `pheno audit` scans all repos and shows package/channel/version table. `pheno matrix` generates governance-formatted matrix.
 **Prompt**: `tasks/WP08-cli-audit-matrix.md`
 **Estimated Size**: ~350 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [cmd/audit.go, cmd/matrix.go]
 
 ### Included Subtasks
 - [x] T044 Implement `cmd/audit.go` — scan configured repos, detect packages, query registries for current versions
@@ -273,6 +297,9 @@
 **Independent Test**: Running `pheno bootstrap` on a bare repo creates all governance artifacts (task runner config, hooks, CI workflows, release config).
 **Prompt**: `tasks/WP09-cli-bootstrap.md`
 **Estimated Size**: ~450 lines
+**File Scope:**
+- Read: [KooshaPari/phenotypeActions/.github/workflows/<name>.yml@v1]
+- Write: [cmd/bootstrap.go, internal/templates/]
 
 ### Included Subtasks
 - [x] T049 Implement `cmd/bootstrap.go` — orchestrate artifact generation based on detected languages
@@ -308,6 +335,9 @@
 **Independent Test**: Reusable workflows can be called from any repo's CI with correct inputs.
 **Prompt**: `tasks/WP10-centralized-ci-workflows.md`
 **Estimated Size**: ~500 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [phenotypeActions, publish.yml, gate-check.yml, promote.yml, changelog.yml, audit.yml]
 
 ### Included Subtasks
 - [x] T057 Create `publish.yml` reusable workflow (registry-specific publish with retry/backoff)
@@ -343,6 +373,9 @@
 **Independent Test**: Standard tasks (lint, test, build, format) work correctly for Rust, Python, TypeScript, and Go repos.
 **Prompt**: `tasks/WP11-task-runner-standardization.md`
 **Estimated Size**: ~400 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [tasks/WP11-task-runner-standardization.md]
 
 ### Included Subtasks
 - [x] T064 Final evaluation: validate mise monorepo tasks feature stability (or select alternative)
@@ -376,6 +409,9 @@
 **Independent Test**: Non-conventional commit messages are rejected in <5s. Pre-push runs channel-appropriate checks.
 **Prompt**: `tasks/WP12-pre-commit-pre-push-hooks.md`
 **Estimated Size**: ~350 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [pre-commit-config.yaml]
 
 ### Included Subtasks
 - [x] T071 Create pre-commit hook script (conventional commit message validation)
@@ -409,6 +445,9 @@
 **Independent Test**: All 4 repos have governance artifacts, hooks work, CI workflows trigger, a test publish succeeds.
 **Prompt**: `tasks/WP13-pilot-rollout.md`
 **Estimated Size**: ~350 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [tasks/WP13-pilot-rollout.md]
 
 ### Included Subtasks
 - [x] T077 Bootstrap AgilePlus (TypeScript/VitePress) — validate mise.toml, hooks, CI workflows
@@ -441,6 +480,9 @@
 **Independent Test**: Bulk bootstrap script processes all remaining repos, generating appropriate artifacts per language.
 **Prompt**: `tasks/WP14-org-wide-rollout.md`
 **Estimated Size**: ~300 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [tasks/WP14-org-wide-rollout.md, pheno bootstrap --all --repos-dir ~/CodeProjects/Phenotype/repos/]
 
 ### Included Subtasks
 - [x] T083 Create bulk bootstrap script (`pheno bootstrap --all` or directory-scanning mode)
@@ -472,6 +514,9 @@
 **Independent Test**: A new contributor can read the docs and successfully bootstrap a repo, run standard tasks, and publish a pre-release.
 **Prompt**: `tasks/WP15-documentation-polish.md`
 **Estimated Size**: ~300 lines
+**File Scope:**
+- Read: [kitty-specs/002-org-wide-release-governance-dx-automation/spec.md, kitty-specs/002-org-wide-release-governance-dx-automation/plan.md]
+- Write: [tasks/WP15-documentation-polish.md, docs/adr/]
 
 ### Included Subtasks
 - [x] T088 Write pheno CLI README.md (installation, commands, configuration)

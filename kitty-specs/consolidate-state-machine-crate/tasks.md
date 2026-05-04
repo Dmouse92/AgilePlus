@@ -13,6 +13,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable except `Resi
   - Canonical baseline SHA recorded.
 - **Depends on:** none.
 - **Estimate:** 8–12 tool calls / 3–4 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-state-machine/`, none]
+- Write: [`kitty-specs/consolidate-state-machine-crate/research.md`]
 
 ## WP-CSM-02 — Per-host migration ticket authoring + canonical feature-flag plan
 
@@ -24,6 +27,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable except `Resi
   - Per-host dep strategy chosen.
 - **Depends on:** WP-CSM-01.
 - **Estimate:** 5–8 tool calls / 2–3 min.
+**File Scope:**
+- Read: [WP-CSM-01 outputs, WP-CSM-01]
+- Write: [research.md]
 
 ## WP-CSM-03 — Land canonical feature flag on `phenoShared`
 
@@ -37,6 +43,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable except `Resi
   - PR merged before WP-CSM-08 dispatches.
 - **Depends on:** WP-CSM-02.
 - **Estimate:** 6–10 tool calls / 3–4 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-state-machine/`, phenoShared/, WP-CSM-02]
+- Write: [phenoShared/crates/phenotype-state-machine/Cargo.toml, phenoShared]
 
 ## WP-CSM-04 — Migrate host `pheno`
 
@@ -45,6 +54,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable except `Resi
 - **Depends on:** WP-CSM-02.
 - **Parallel with:** WP-CSM-05, WP-CSM-06, WP-CSM-07.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [pheno/Cargo.toml, Cargo.toml, WP-CSM-02]
+- Write: [DEPRECATED.md + banner; `pheno/Cargo.toml` workspace edits; consumer crate `Cargo.toml` edits, pheno]
 
 ## WP-CSM-05 — Migrate host `PhenoProc` (root + nested)
 
@@ -53,6 +65,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable except `Resi
 - **Depends on:** WP-CSM-02.
 - **Parallel with:** WP-CSM-04, WP-CSM-06, WP-CSM-07.
 - **Estimate:** 5–8 tool calls / 3–4 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-state-machine/`, phenoShared/, WP-CSM-02]
+- Write: [kitty-specs/consolidate-state-machine-crate/research.md]
 
 ## WP-CSM-06 — Migrate host `HexaKit/crates`
 
@@ -61,6 +76,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable except `Resi
 - **Depends on:** WP-CSM-02.
 - **Parallel with:** WP-CSM-04, WP-CSM-05, WP-CSM-07.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-state-machine/`, phenoShared/, WP-CSM-02]
+- Write: [HexaKit/crates]
 
 ## WP-CSM-07 — Migrate host `PhenoKits/HexaKit`
 
@@ -69,6 +87,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable except `Resi
 - **Depends on:** WP-CSM-02.
 - **Parallel with:** WP-CSM-04, WP-CSM-05, WP-CSM-06.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-state-machine/`, phenoShared/, WP-CSM-02]
+- Write: [PhenoKits/HexaKit]
 
 ## WP-CSM-08 — Migrate host `ResilienceKit/rust` (special: features-enabled swap)
 
@@ -83,6 +104,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable except `Resi
   - PR body cites ADR + WP-CSM-03.
 - **Depends on:** WP-CSM-03 (canonical feature flag landed).
 - **Estimate:** 5–8 tool calls / 3–4 min.
+**File Scope:**
+- Read: [Cargo.toml, WP-CSM-03 (canonical feature flag landed)]
+- Write: [DEPRECATED.md + banner in `ResilienceKit/rust/crates/phenotype-state-machine/`, ResilienceKit/rust/Cargo.toml, ResilienceKit/rust]
 
 ## WP-CSM-09 — AgilePlus WP closeout
 
@@ -94,6 +118,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable except `Resi
   - 24-hour post-merge probe shows no host re-introduction.
 - **Depends on:** WP-CSM-04 ∧ WP-CSM-05 ∧ WP-CSM-06 ∧ WP-CSM-07 ∧ WP-CSM-08.
 - **Estimate:** 3–5 tool calls / 1–2 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-state-machine/`, phenoShared/, WP-CSM-04 ∧ WP-CSM-05 ∧ WP-CSM-06 ∧ WP-CSM-07 ∧ WP-CSM-08]
+- Write: [kitty-specs/consolidate-state-machine-crate/research.md]
 
 ## Aggregate
 

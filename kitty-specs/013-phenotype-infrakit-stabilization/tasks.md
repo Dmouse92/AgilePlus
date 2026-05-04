@@ -9,6 +9,9 @@
 ---
 
 ## WP-000: Preflight — drain backlog, free disk
+**File Scope:**
+- Read: [spec.md, docs/audit/2026-Q2/preflight.md]
+- Write: [spec.md, docs/audit/2026-Q2/preflight.md]
 
 - **State:** planned
 - **Sequence:** 0
@@ -32,6 +35,9 @@
 ---
 
 ## WP-001: Audit all 19 crates
+**File Scope:**
+- Read: [repos/phenotype-infrakit/, kitty-specs/013-phenotype-infrakit-stabilization/spec.md, kitty-specs/013-phenotype-infrakit-stabilization/plan.md]
+- Write: [spec.md, docs/audit/2026-Q2/depgraph.md, phenotype-logging-zig, phenotype-middleware-py]
 
 - **State:** planned
 - **Sequence:** 1
@@ -56,6 +62,9 @@
 ---
 
 ## WP-002a: Consolidation design ADR
+**File Scope:**
+- Read: [repos/phenotype-infrakit/, kitty-specs/013-phenotype-infrakit-stabilization/spec.md, kitty-specs/013-phenotype-infrakit-stabilization/plan.md]
+- Write: [phenotype-infrakit/docs/adr/0NN-consolidation-design.md]
 
 - **State:** planned
 - **Sequence:** 2a
@@ -78,6 +87,9 @@
 ---
 
 ## WP-002b: Publish-name reservation + metadata template
+**File Scope:**
+- Read: [repos/phenotype-infrakit/, kitty-specs/013-phenotype-infrakit-stabilization/spec.md, kitty-specs/013-phenotype-infrakit-stabilization/plan.md]
+- Write: [phenotype-infrakit/docs/audit/2026-Q2/publish-names.md, Cargo.toml, phenotype-<name>]
 
 - **State:** planned
 - **Sequence:** 2b
@@ -97,6 +109,9 @@
 ---
 
 ## WP-003: Workspace consolidation (Rust)
+**File Scope:**
+- Read: [repos/phenotype-infrakit/, kitty-specs/013-phenotype-infrakit-stabilization/spec.md, kitty-specs/013-phenotype-infrakit-stabilization/plan.md]
+- Write: [phenotype-config, phenotype-gauge, phenotype-nexus, phenotype-forge, phenotype-cipher, phenotype-cli-core]
 
 - **State:** planned
 - **Sequence:** 3
@@ -125,6 +140,9 @@
 ---
 
 ## WP-004: Non-Rust crate handling (Python / TypeScript / Zig)
+**File Scope:**
+- Read: [repos/phenotype-infrakit/, kitty-specs/013-phenotype-infrakit-stabilization/spec.md, kitty-specs/013-phenotype-infrakit-stabilization/plan.md]
+- Write: [package.json]
 
 - **State:** planned
 - **Sequence:** 4
@@ -144,6 +162,9 @@
 ---
 
 ## WP-005: API stabilization, tests, docs, semver
+**File Scope:**
+- Read: [repos/CLAUDE.md, CHANGELOG.md]
+- Write: [repos/CLAUDE.md, phenotype-config, phenotype-cipher, phenotype-gauge, phenotype-nexus, phenotype-forge, phenotype-cli-core]
 
 - **State:** planned
 - **Sequence:** 5
@@ -170,6 +191,9 @@
 ---
 
 ## WP-006: Cross-crate integration tests + coverage report
+**File Scope:**
+- Read: [repos/phenotype-infrakit/, kitty-specs/013-phenotype-infrakit-stabilization/spec.md, kitty-specs/013-phenotype-infrakit-stabilization/plan.md]
+- Write: [phenotype-infrakit/tests/, docs/audit/2026-Q2/coverage.md]
 
 - **State:** planned
 - **Sequence:** 6
@@ -188,6 +212,9 @@
 ---
 
 ## WP-007: Publish to crates.io / PyPI / npm
+**File Scope:**
+- Read: [repos/phenotype-infrakit/, kitty-specs/013-phenotype-infrakit-stabilization/spec.md, kitty-specs/013-phenotype-infrakit-stabilization/plan.md]
+- Write: [github/workflows/]
 
 - **State:** planned
 - **Sequence:** 7
@@ -211,6 +238,9 @@
 ---
 
 ## WP-008: Cross-crate dep audit + dedup
+**File Scope:**
+- Read: [repos/phenotype-infrakit/, kitty-specs/013-phenotype-infrakit-stabilization/spec.md, kitty-specs/013-phenotype-infrakit-stabilization/plan.md]
+- Write: [Cargo.toml, docs/audit/2026-Q2/security.md]
 
 - **State:** planned
 - **Sequence:** 8
@@ -234,6 +264,9 @@
 ---
 
 ## WP-009: Downstream consumer update + smoke
+**File Scope:**
+- Read: [repos/AgilePlus, repos/phenotype-infra, repos/bifrost-extensions, repos/Tokn, plan.md]
+- Write: [repos/AgilePlus, repos/phenotype-infra, repos/bifrost-extensions, repos/Tokn, plan.md]
 
 - **State:** planned
 - **Sequence:** 9

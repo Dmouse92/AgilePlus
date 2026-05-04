@@ -90,6 +90,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP02
 **Priority**: P1 | **Est. lines**: ~450
 **Goal**: Extend `agileplus-sqlite` with event store tables, WAL mode, and new entity persistence.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP02]
+- Write: [agileplus-sqlite]
 
 - [x] T015: Add events table DDL with indexes (entity, timestamp, type)
 - [x] T016: Add snapshots table DDL with unique constraint
@@ -108,6 +111,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP03
 **Priority**: P1 | **Est. lines**: ~350
 **Goal**: Create `agileplus-cache` crate with Dragonfly/Redis connection pool and typed cache operations.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP03]
+- Write: [agileplus-cache]
 
 - [x] T022: Scaffold `agileplus-cache` crate
 - [x] T023: Implement connection pool with bb8-redis (config: host, port, pool size)
@@ -121,6 +127,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP03
 **Priority**: P1 | **Est. lines**: ~400
 **Goal**: Create `agileplus-graph` crate with Neo4j node/relationship CRUD and queries.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP03]
+- Write: [agileplus-graph]
 
 - [x] T028: Scaffold `agileplus-graph` crate with neo4rs
 - [x] T029: Implement connection management (Bolt protocol, connection pool)
@@ -134,6 +143,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP03
 **Priority**: P1 | **Est. lines**: ~350
 **Goal**: Create `agileplus-artifacts` crate with MinIO/S3 operations.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP03]
+- Write: [agileplus-artifacts]
 
 - [x] T034: Scaffold `agileplus-artifacts` crate with aws-sdk-s3
 - [x] T035: Implement bucket management (create, list, exists check for 4 buckets)
@@ -147,6 +159,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP03
 **Priority**: P1 | **Est. lines**: ~300
 **Goal**: Create `process-compose.yml` orchestrating all platform services.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP03]
+- Write: [process-compose.yml]
 
 - [x] T040: Define NATS server process with JetStream, health check on :8222
 - [x] T041: Define Dragonfly process with health check (redis-cli ping)
@@ -164,6 +179,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP03
 **Priority**: P1 | **Est. lines**: ~500
 **Goal**: Extend `agileplus-plane` crate with bidirectional sync, webhook ingestion, state mapping, labels.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP03]
+- Write: [agileplus-plane]
 
 - [x] T046: Add Plane.so state group mapping (5 groups → 8 AgilePlus states, configurable)
 - [x] T047: Implement webhook HTTP endpoint (HMAC-SHA256 verification, event parsing)
@@ -178,6 +196,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP03
 **Priority**: P1 | **Est. lines**: ~400
 **Goal**: Create `agileplus-sync` crate coordinating Plane.so and device sync with conflict resolution.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP03]
+- Write: [agileplus-sync]
 
 - [x] T053: Scaffold `agileplus-sync` crate
 - [x] T054: Implement conflict detection (content hash comparison, timestamp ordering)
@@ -191,6 +212,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP08, WP09
 **Priority**: P1 | **Est. lines**: ~350
 **Goal**: Add `agileplus sync [push|pull|auto]` CLI commands to `agileplus-subcmds`.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP08, WP09]
+- Write: [agileplus-subcmds]
 
 - [x] T059: Add `sync push` subcommand (push all local changes to Plane.so)
 - [x] T060: Add `sync pull` subcommand (pull all Plane.so changes locally)
@@ -207,6 +231,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP03, WP08, WP09
 **Priority**: P2 | **Est. lines**: ~450
 **Goal**: Extend `agileplus-api` with REST endpoints, SSE streams, and API key authentication.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP03, WP08, WP09]
+- Write: [agileplus-api]
 
 - [x] T064: Implement API key generation (SHA-256 hash, store in SQLite, write plaintext to config)
 - [x] T065: Implement API key auth middleware (extract from header/query, validate against DB)
@@ -221,6 +248,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP11
 **Priority**: P2 | **Est. lines**: ~500
 **Goal**: Create `agileplus-dashboard` crate and Askama HTML templates with htmx integration.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP11]
+- Write: [agileplus-dashboard]
 
 - [x] T071: Scaffold `agileplus-dashboard` crate with Askama template registration
 - [x] T072: Create base layout template (navigation, sidebar, keycap palette CSS)
@@ -235,6 +265,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP12
 **Priority**: P2 | **Est. lines**: ~400
 **Goal**: Add Alpine.js interactivity, SSE live updates, and action triggers to dashboard.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP12]
+- Write: [tasks/WP13-dashboard-interactivity.md]
 
 - [x] T078: Implement SSE connection with htmx sse-connect for live board updates
 - [x] T079: Implement Alpine.js kanban drag-drop (move features between state columns)
@@ -248,6 +281,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP07, WP10
 **Priority**: P2 | **Est. lines**: ~400
 **Goal**: Add `agileplus platform`, `events`, and `dashboard` CLI commands.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP07, WP10]
+- Write: [tasks/WP14-cli-platform-commands.md]
 
 - [x] T084: Add `platform up` subcommand (invoke process-compose up, wait for health)
 - [x] T085: Add `platform down` subcommand (invoke process-compose down)
@@ -265,6 +301,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP03
 **Priority**: P2 | **Est. lines**: ~350
 **Goal**: Extend `agileplus-telemetry` with OTLP traces, metrics, and axum middleware.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP03]
+- Write: [agileplus-telemetry]
 
 - [x] T090: Add OTLP exporter setup (HTTP binary protocol, configurable endpoint)
 - [x] T091: Add tracing-opentelemetry layer integration with existing tracing subscriber
@@ -281,6 +320,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP09
 **Priority**: P3 | **Est. lines**: ~400
 **Goal**: Create `agileplus-p2p` crate for Tailscale peer discovery and event replication.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP09]
+- Write: [agileplus-p2p]
 
 - [x] T095: Scaffold `agileplus-p2p` crate with tailscale-localapi
 - [x] T096: Implement peer discovery (query Tailscale local API for peers, filter AgilePlus nodes)
@@ -293,6 +335,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP16
 **Priority**: P3 | **Est. lines**: ~350
 **Goal**: Serialize SQLite state to deterministic, mergeable files for git-backed sync.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP16]
+- Write: [agileplus/]
 
 - [x] T100: Define export format (JSONL events, JSON snapshots, deterministic ordering)
 - [x] T101: Implement state export (SQLite → git-trackable files in `.agileplus/` directory)
@@ -304,6 +349,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP17
 **Priority**: P3 | **Est. lines**: ~250
 **Goal**: Add `agileplus device [discover|sync|status]` CLI commands.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP17]
+- Write: [tasks/WP18-cli-device-commands.md]
 
 - [x] T104: Add `device discover` subcommand (list Tailscale peers running AgilePlus)
 - [x] T105: Add `device sync` subcommand (trigger P2P sync with specific peer or all)
@@ -318,6 +366,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP14
 **Priority**: P3 | **Est. lines**: ~400
 **Goal**: Full pipeline integration tests with all platform services.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP14]
+- Write: [tasks/WP19-e2e-integration-tests.md]
 
 - [x] T107: Create test harness (Process Compose up, wait for health, seed test data)
 - [x] T108: Test feature lifecycle (create → sync → transition → audit → verify events)
@@ -330,6 +381,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP19
 **Priority**: P3 | **Est. lines**: ~300
 **Goal**: Pact contract tests for new crate boundaries.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP19]
+- Write: [tasks/WP20-contract-tests.md]
 
 - [x] T112: Add pact tests for agileplus-events ↔ agileplus-sqlite boundary
 - [x] T113: Add pact tests for agileplus-sync ↔ agileplus-plane boundary
@@ -341,6 +395,9 @@ WP01 → WP02 → WP03
 **Dependencies**: WP20
 **Priority**: P3 | **Est. lines**: ~300
 **Goal**: Verify constitution performance gates with benchmarks.
+**File Scope:**
+- Read: [kitty-specs/003-agileplus-platform-completion/spec.md, kitty-specs/003-agileplus-platform-completion/plan.md, WP20]
+- Write: [tasks/WP21-performance-benchmarks.md]
 
 - [x] T116: Benchmark event append throughput (target: 10K events/sec)
 - [x] T117: Benchmark event replay/snapshot rebuild (target: <10ms for 1K events)

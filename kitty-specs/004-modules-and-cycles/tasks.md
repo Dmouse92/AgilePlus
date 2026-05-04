@@ -31,6 +31,9 @@ WP01 (Domain Entities)
 **Priority**: P1 | **Dependencies**: none
 **FRs**: FR-M01, FR-M02, FR-M03, FR-M04, FR-M07, FR-C01, FR-C02, FR-C03, FR-C04, FR-C05, FR-C07
 **Prompt**: `tasks/WP01-domain-entities.md`
+**File Scope:**
+- Read: [kitty-specs/004-modules-and-cycles/spec.md, kitty-specs/004-modules-and-cycles/plan.md]
+- Write: [tasks/WP01-domain-entities.md]
 
 Subtasks:
 - [ ] T001: Create Module struct with slug, friendly_name, description, parent_module_id
@@ -50,6 +53,9 @@ Subtasks:
 **Priority**: P1 | **Dependencies**: WP01
 **FRs**: FR-S01, FR-S02, FR-S03, FR-S04, FR-M05, FR-M06, FR-C06
 **Prompt**: `tasks/WP02-storage-adapter.md`
+**File Scope:**
+- Read: [kitty-specs/004-modules-and-cycles/spec.md, kitty-specs/004-modules-and-cycles/plan.md, WP01]
+- Write: [tasks/WP02-storage-adapter.md]
 
 Subtasks:
 - [ ] T007: Add Module CRUD methods to StoragePort trait
@@ -70,6 +76,9 @@ Subtasks:
 **Priority**: P1 | **Dependencies**: WP02
 **FRs**: FR-CLI01, FR-CLI03
 **Prompt**: `tasks/WP03-cli-module.md`
+**File Scope:**
+- Read: [kitty-specs/004-modules-and-cycles/spec.md, kitty-specs/004-modules-and-cycles/plan.md, WP02]
+- Write: [tasks/WP03-cli-module.md]
 
 Subtasks:
 - [ ] T014: Create module.rs command module with ModuleArgs enum (create, list, show, assign, tag, untag, delete)
@@ -84,6 +93,9 @@ Subtasks:
 **Priority**: P1 | **Dependencies**: WP02
 **FRs**: FR-CLI02
 **Prompt**: `tasks/WP04-cli-cycle.md`
+**File Scope:**
+- Read: [kitty-specs/004-modules-and-cycles/spec.md, kitty-specs/004-modules-and-cycles/plan.md, WP02]
+- Write: [tasks/WP04-cli-cycle.md]
 
 Subtasks:
 - [ ] T019: Create cycle.rs command module with CycleArgs enum
@@ -102,6 +114,9 @@ Subtasks:
 **Priority**: P3 | **Dependencies**: WP02
 **FRs**: FR-D01, FR-D02, FR-D03, FR-D04
 **Prompt**: `tasks/WP05-dashboard-views.md`
+**File Scope:**
+- Read: [kitty-specs/004-modules-and-cycles/spec.md, kitty-specs/004-modules-and-cycles/plan.md, WP02]
+- Write: [tasks/WP05-dashboard-views.md]
 
 Subtasks:
 - [ ] T024: Add Module and Cycle API routes in agileplus-api (list, show, tree)
@@ -120,6 +135,9 @@ Subtasks:
 **Priority**: P2 | **Dependencies**: WP02
 **FRs**: FR-P01, FR-P02, FR-P03, FR-P04, FR-P05
 **Prompt**: `tasks/WP06-plane-sync.md`
+**File Scope:**
+- Read: [kitty-specs/004-modules-and-cycles/spec.md, kitty-specs/004-modules-and-cycles/plan.md, WP02]
+- Write: [tasks/WP06-plane-sync.md]
 
 Subtasks:
 - [ ] T029: Extend PlaneClient with module CRUD API methods (POST/PUT/DELETE /modules/)
@@ -138,6 +156,9 @@ Subtasks:
 **Priority**: P1 | **Dependencies**: WP03, WP04
 **FRs**: SC-001, SC-002
 **Prompt**: `tasks/WP07-integration-tests.md`
+**File Scope:**
+- Read: [kitty-specs/004-modules-and-cycles/spec.md, kitty-specs/004-modules-and-cycles/plan.md, WP03, WP04]
+- Write: [tasks/WP07-integration-tests.md]
 
 Subtasks:
 - [ ] T034: Test Module hierarchy CRUD lifecycle (create tree, assign features, list --tree, delete guards)

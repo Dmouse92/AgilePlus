@@ -12,6 +12,9 @@ Each Work Package (WP) is independently dispatchable to a subagent. Hosts are pa
   - Canonical API baseline locked to `phenoShared@HEAD` at task start (commit SHA recorded).
 - **Depends on:** none.
 - **Estimate:** 6–10 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-event-sourcing/`, phenoShared@HEAD, none]
+- Write: [`kitty-specs/consolidate-event-sourcing-crate/research.md` (drift matrix table)]
 
 ## WP-CES-02 — Per-host migration ticket authoring
 
@@ -23,8 +26,14 @@ Each Work Package (WP) is independently dispatchable to a subagent. Hosts are pa
   - Per-host dep strategy chosen (`path` to sibling clone, `git = "..."` pin, or shared registry).
 - **Depends on:** WP-CES-01.
 - **Estimate:** 4–6 tool calls / 1–2 min.
+**File Scope:**
+- Read: [WP-CES-01 outputs, WP-CES-01]
+- Write: [`PhenoKits/HexaKit`]
 
 ## WP-CES-03 — Migrate host `pheno`
+**File Scope:**
+- Read: [WP-CES-02 ticket for `pheno`, Cargo.toml, WP-CES-02]
+- Write: [Replace `pheno/crates/phenotype-event-sourcing/src/lib.rs` with `// DEPRECATED — see DEPRECATED.md` banner (transition), Add `pheno/crates/phenotype-event-sourcing/DEPRECATED.md` per ADR template, Edit `pheno/Cargo.toml` `members` and `[workspace.dependencies]`, pheno, pheno/crates/phenotype-event-sourcing/src/lib.rs, // DEPRECATED — see DEPRECATED.md, pheno/crates/phenotype-event-sourcing/DEPRECATED.md, pheno/Cargo.toml, Cargo.toml]
 
 - **Scope (read):** WP-CES-02 ticket for `pheno`.
 - **Scope (write):**
@@ -51,6 +60,9 @@ Each Work Package (WP) is independently dispatchable to a subagent. Hosts are pa
 - **Depends on:** WP-CES-02.
 - **Parallel with:** WP-CES-03, WP-CES-05, WP-CES-06, WP-CES-07.
 - **Estimate:** 5–8 tool calls / 3–4 min (highest complexity due to nesting).
+**File Scope:**
+- Read: [WP-CES-02 ticket for `PhenoProc`, WP-CES-02]
+- Write: [Cargo.toml, Nested `phenotype-shared/Cargo.toml` either retired or repointed]
 
 ## WP-CES-05 — Migrate host `DataKit/rust`
 
@@ -59,6 +71,9 @@ Each Work Package (WP) is independently dispatchable to a subagent. Hosts are pa
 - **Depends on:** WP-CES-02.
 - **Parallel with:** WP-CES-03, WP-CES-04, WP-CES-06, WP-CES-07.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-event-sourcing/`, phenoShared/, WP-CES-02]
+- Write: [DataKit/rust]
 
 ## WP-CES-06 — Migrate host `PhenoKits/HexaKit`
 
@@ -68,6 +83,9 @@ Each Work Package (WP) is independently dispatchable to a subagent. Hosts are pa
 - **Depends on:** WP-CES-02.
 - **Parallel with:** WP-CES-03, WP-CES-04, WP-CES-05, WP-CES-07.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-event-sourcing/`, phenoShared/, WP-CES-02]
+- Write: [PhenoKits/HexaKit]
 
 ## WP-CES-07 — Migrate host `hwLedger/vendor`
 
@@ -77,6 +95,9 @@ Each Work Package (WP) is independently dispatchable to a subagent. Hosts are pa
 - **Depends on:** WP-CES-02.
 - **Parallel with:** WP-CES-03, WP-CES-04, WP-CES-05, WP-CES-06.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-event-sourcing/`, phenoShared/, WP-CES-02]
+- Write: [hwLedger/vendor, phenoShared]
 
 ## WP-CES-08 — Audit-doc supersede pointer + AgilePlus WP closeout
 
@@ -89,6 +110,9 @@ Each Work Package (WP) is independently dispatchable to a subagent. Hosts are pa
   - Post-merge probe subagent confirms no host re-introduces a local copy within 24 hours.
 - **Depends on:** WP-CES-03 ∧ WP-CES-04 ∧ WP-CES-05 ∧ WP-CES-06 ∧ WP-CES-07.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-event-sourcing/`, phenoShared/, WP-CES-03 ∧ WP-CES-04 ∧ WP-CES-05 ∧ WP-CES-06 ∧ WP-CES-07]
+- Write: [One-line trailing pointer added to `repos/docs/governance/cross-project-reuse-audit-2026-04-25.md`]
 
 ## Aggregate
 

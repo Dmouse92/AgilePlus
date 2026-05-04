@@ -12,6 +12,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable.
   - Canonical baseline = `phenoShared@HEAD` SHA recorded.
 - **Depends on:** none.
 - **Estimate:** 6–10 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-cache-adapter/`, phenoShared@HEAD, none]
+- Write: [`kitty-specs/consolidate-cache-adapter-crate/research.md`]
 
 ## WP-CCA-02 — Per-host migration ticket authoring
 
@@ -23,6 +26,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable.
   - Per-host dep strategy chosen.
 - **Depends on:** WP-CCA-01.
 - **Estimate:** 4–6 tool calls / 1–2 min.
+**File Scope:**
+- Read: [WP-CCA-01 outputs, WP-CCA-01]
+- Write: [research.md]
 
 ## WP-CCA-03 — Migrate host `pheno`
 
@@ -38,6 +44,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable.
 - **Depends on:** WP-CCA-02.
 - **Parallel with:** WP-CCA-04, WP-CCA-05, WP-CCA-06.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [Cargo.toml, WP-CCA-02]
+- Write: [DEPRECATED.md + banner in `pheno/crates/phenotype-cache-adapter/`, pheno/Cargo.toml, pheno]
 
 ## WP-CCA-04 — Migrate host `PhenoProc` (both root and nested copies)
 
@@ -49,6 +58,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable.
 - **Depends on:** WP-CCA-02.
 - **Parallel with:** WP-CCA-03, WP-CCA-05, WP-CCA-06.
 - **Estimate:** 5–8 tool calls / 3–4 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-cache-adapter/`, phenoShared/, WP-CCA-02]
+- Write: [Cargo.toml, Nested `phenotype-shared/Cargo.toml` retired or repointed]
 
 ## WP-CCA-05 — Migrate host `DataKit/rust`
 
@@ -57,6 +69,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable.
 - **Depends on:** WP-CCA-02.
 - **Parallel with:** WP-CCA-03, WP-CCA-04, WP-CCA-06.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-cache-adapter/`, phenoShared/, WP-CCA-02]
+- Write: [DataKit/rust]
 
 ## WP-CCA-06 — Migrate host `PhenoKits/HexaKit`
 
@@ -65,6 +80,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable.
 - **Depends on:** WP-CCA-02.
 - **Parallel with:** WP-CCA-03, WP-CCA-04, WP-CCA-05.
 - **Estimate:** 4–6 tool calls / 2–3 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-cache-adapter/`, phenoShared/, WP-CCA-02]
+- Write: [PhenoKits/HexaKit]
 
 ## WP-CCA-07 — Cache-semantics parity verification
 
@@ -75,6 +93,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable.
 - **Depends on:** WP-CCA-01.
 - **Parallel with:** WP-CCA-03..06 in the design phase; gates merge of those WPs.
 - **Estimate:** 6–10 tool calls / 3–4 min.
+**File Scope:**
+- Read: [phenoShared, WP-CCA-01]
+- Write: [phenoShared]
 
 ## WP-CCA-08 — AgilePlus WP closeout + audit-doc pointer
 
@@ -86,6 +107,9 @@ Each WP is independently dispatchable. Hosts are parallel-mergeable.
   - 24-hour post-merge probe shows no host re-introduction.
 - **Depends on:** WP-CCA-03 ∧ WP-CCA-04 ∧ WP-CCA-05 ∧ WP-CCA-06 ∧ WP-CCA-07.
 - **Estimate:** 3–5 tool calls / 1–2 min.
+**File Scope:**
+- Read: [all KooshaPari org repos containing `crates/phenotype-cache-adapter/`, phenoShared/, WP-CCA-03 ∧ WP-CCA-04 ∧ WP-CCA-05 ∧ WP-CCA-06 ∧ WP-CCA-07]
+- Write: [cross-project-reuse-audit-2026-04-25.md]
 
 ## Aggregate
 
