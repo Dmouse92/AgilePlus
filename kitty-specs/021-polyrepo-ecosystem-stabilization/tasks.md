@@ -6,6 +6,7 @@
 
 **File Scope:**
 - Read: [`phenotype-infrakit/` repository metadata, `phenotype-infrakit/.github/pull_request_template.md`, `phenotype-infrakit/docs/`, `phenotype-infrakit/src/`, `phenotype-infrakit/tests/`]
+- Write: [`phenotype-infrakit/` repository metadata, `phenotype-infrakit/.github/pull_request_template.md`, `phenotype-infrakit/docs/`, `phenotype-infrakit/src/`, `phenotype-infrakit/tests/`]
 **Depends on:** none
 **Effort:** M
 
@@ -34,6 +35,7 @@
 
 **File Scope:**
 - Read: [GitHub repositories `agentapi-deprec`, `tehgent`, `BytePort-TestPortfolio`, `Byteport-TestZip`, `P2`, `Tokn`, `argisexec`, `acp`; local clones under `/Users/kooshapari/CodeProjects/Phenotype/repos/`]
+- Write: [GitHub repositories `agentapi-deprec`, `tehgent`, `BytePort-TestPortfolio`, `Byteport-TestZip`, `P2`, `Tokn`, `argisexec`, `acp`; local clones under `/Users/kooshapari/CodeProjects/Phenotype/repos/`]
 **Depends on:** WP-01
 **Effort:** M
 
@@ -57,6 +59,7 @@
 
 **File Scope:**
 - Read: [`heliosCLI/bazel-*`, `*/node_modules`, `*/.venv`, workspace `target/`, shelf-root `*.log`]
+- Write: [`heliosCLI/bazel-*`, `*/node_modules`, `*/.venv`, workspace `target/`, shelf-root `*.log`]
 **Depends on:** WP-02
 **Effort:** S
 
@@ -77,6 +80,7 @@
 
 **File Scope:**
 - Read: [`phenotype-infrakit/.gitignore`, `AgilePlus/.gitignore`, `thegent/.gitignore`, `heliosCLI/.gitignore`, `heliosApp/.gitignore`, `agentapi-plusplus/.gitignore`, `cliproxyapi-plusplus/.gitignore`, `cloud/.gitignore`, `agent-wave/.gitignore`]
+- Write: [`phenotype-infrakit/.gitignore`, `AgilePlus/.gitignore`, `thegent/.gitignore`, `heliosCLI/.gitignore`, `heliosApp/.gitignore`, `agentapi-plusplus/.gitignore`, `cliproxyapi-plusplus/.gitignore`, `cloud/.gitignore`, `agent-wave/.gitignore`]
 **Depends on:** WP-03
 **Effort:** M
 
@@ -101,6 +105,7 @@
 
 **File Scope:**
 - Read: [`github.com/KooshaPari/.github`, `.github/workflows/`, active repo workflow files under `.github/workflows/*.yml`]
+- Write: [`github.com/KooshaPari/.github`, `.github/workflows/`, active repo workflow files under `.github/workflows/*.yml`]
 **Depends on:** WP-04
 **Effort:** L
 
@@ -127,6 +132,7 @@
 
 **File Scope:**
 - Read: [`kitty-specs/*/spec.md`, `kitty-specs/*/plan.md`, `kitty-specs/*/tasks.md`, `kitty-specs/*/research.md`, `worklog.md`]
+- Write: [`kitty-specs/*/spec.md`, `kitty-specs/*/plan.md`, `kitty-specs/*/tasks.md`, `kitty-specs/*/research.md`, `worklog.md`]
 **Depends on:** WP-05
 **Effort:** L
 
@@ -150,6 +156,7 @@
 
 **File Scope:**
 - Read: [`WORKTREES.md`, worktree directories `docs/`, `infrastructure/`, `phenotype-errors/`, `cache-adapter-impl`, `phenotype-crypto-complete`]
+- Write: [`WORKTREES.md`, worktree directories `docs/`, `infrastructure/`, `phenotype-errors/`, `cache-adapter-impl`, `phenotype-crypto-complete`]
 **Depends on:** WP-06
 **Effort:** M
 
@@ -170,6 +177,7 @@
 
 **File Scope:**
 - Read: [`phenotype-infrakit/Cargo.toml`, `phenotype-infrakit/Cargo.lock`, `phenotype-infrakit/crates/**`, `phenotype-infrakit/tests/**`]
+- Write: [`phenotype-infrakit/Cargo.toml`, `phenotype-infrakit/Cargo.lock`, `phenotype-infrakit/crates/**`, `phenotype-infrakit/tests/**`]
 **Depends on:** WP-01, WP-04
 **Effort:** M
 
@@ -189,6 +197,7 @@
 
 **File Scope:**
 - Read: [dirty files in `phenotype-infrakit`, `AgilePlus`, `thegent`, `heliosCLI`, `heliosApp`, `agentapi-plusplus`, `cliproxyapi-plusplus`, and `cloud`]
+- Write: [dirty files in `phenotype-infrakit`, `AgilePlus`, `thegent`, `heliosCLI`, `heliosApp`, `agentapi-plusplus`, `cliproxyapi-plusplus`, and `cloud`]
 **Depends on:** WP-04, WP-08
 **Effort:** M
 
@@ -212,6 +221,7 @@
 
 **File Scope:**
 - Read: [`thegent`, `heliosApp`, `heliosCLI` git branch state]
+- Write: [`thegent`, `heliosApp`, `heliosCLI` git branch state]
 **Depends on:** WP-09
 **Effort:** M
 
@@ -235,6 +245,7 @@
 
 **File Scope:**
 - Read: [duplicate GitHub repositories and target repositories `phenotype-contracts`, `phenotype-error-core`, `thegent/apps/plugin-host`, `forgecode`, `hexagon-rs`, `AgilePlus/packages/agents`, `AgilePlus/packages/mcp`, `phenotype-hub/docs/`, `fixit`, `phenotype-config-core`, `bifrost`, `vibeproxy-monitoring-unified`]
+- Write: [duplicate GitHub repositories and target repositories `phenotype-contracts`, `phenotype-error-core`, `thegent/apps/plugin-host`, `forgecode`, `hexagon-rs`, `AgilePlus/packages/agents`, `AgilePlus/packages/mcp`, `phenotype-hub/docs/`, `fixit`, `phenotype-config-core`, `bifrost`, `vibeproxy-monitoring-unified`]
 **Depends on:** WP-10
 **Effort:** XL
 
@@ -269,6 +280,7 @@
 
 **File Scope:**
 - Read: [GitHub repositories `odin-dash`, `odin-TTT`, `odin-library`, `odin-recipes`]
+- Write: [GitHub repositories `odin-dash`, `odin-TTT`, `odin-library`, `odin-recipes`]
 **Depends on:** WP-11
 **Effort:** S
 
@@ -290,6 +302,7 @@
 
 **File Scope:**
 - Read: [GitHub organization/account settings, `koosha-portfolio`, `dotfiles`, `vibeproxy`, local shelf entries, CI/CD configuration, AgilePlus tracking records]
+- Write: [GitHub organization/account settings, `koosha-portfolio`, `dotfiles`, `vibeproxy`, local shelf entries, CI/CD configuration, AgilePlus tracking records]
 **Depends on:** WP-12
 **Effort:** L
 
@@ -311,6 +324,7 @@
 
 **File Scope:**
 - Read: [`package.json`, `.npmrc`, `.github/workflows/publish*.yml`, `@phenotype/*` packages]
+- Write: [`package.json`, `.npmrc`, `.github/workflows/publish*.yml`, `@phenotype/*` packages]
 **Depends on:** WP-05
 **Effort:** M
 
@@ -330,6 +344,7 @@
 
 **File Scope:**
 - Read: [`pyproject.toml`, `.github/workflows/publish*.yml`, Python package directories matching `phenotype-*`]
+- Write: [`pyproject.toml`, `.github/workflows/publish*.yml`, Python package directories matching `phenotype-*`]
 **Depends on:** WP-05
 **Effort:** M
 
@@ -349,6 +364,7 @@
 
 **File Scope:**
 - Read: [`phenotype-infrakit/benches/`, `phenotype-infrakit/crates/**`, `phenotype-infrakit/docs/**`]
+- Write: [`phenotype-infrakit/benches/`, `phenotype-infrakit/crates/**`, `phenotype-infrakit/docs/**`]
 **Depends on:** WP-08
 **Effort:** L
 
@@ -367,6 +383,7 @@
 
 **File Scope:**
 - Read: [`AgilePlus/`, `AgilePlus/docs/`, `AgilePlus/kitty-specs/`, policy and evidence evaluation modules]
+- Write: [`AgilePlus/`, `AgilePlus/docs/`, `AgilePlus/kitty-specs/`, policy and evidence evaluation modules]
 **Depends on:** WP-06
 **Effort:** L
 
@@ -385,6 +402,7 @@
 
 **File Scope:**
 - Read: [base `AGENTS.md`, `CLAUDE.md`, `README.md` templates and all active repository roots]
+- Write: [base `AGENTS.md`, `CLAUDE.md`, `README.md` templates and all active repository roots]
 **Depends on:** WP-13
 **Effort:** XL
 
@@ -409,6 +427,7 @@
 
 **File Scope:**
 - Read: [`phenotype-sdk/`, `packages/pheno-*`, `python/pheno-*`, workspace configuration, package publishing configuration]
+- Write: [`phenotype-sdk/`, `packages/pheno-*`, `python/pheno-*`, workspace configuration, package publishing configuration]
 **Depends on:** WP-14, WP-15
 **Effort:** XL
 
@@ -429,6 +448,7 @@
 
 **File Scope:**
 - Read: [`phenodocs/`, `thegent/docs/`, `AgilePlus/docs/`, `heliosCLI/docs/`, `phenotype-infrakit/docs/`, deployment configuration for `docs.phenotype.dev`]
+- Write: [`phenodocs/`, `thegent/docs/`, `AgilePlus/docs/`, `heliosCLI/docs/`, `phenotype-infrakit/docs/`, deployment configuration for `docs.phenotype.dev`]
 **Depends on:** WP-18
 **Effort:** L
 
@@ -450,6 +470,7 @@
 
 **File Scope:**
 - Read: [service routes/controllers across active services, health monitoring configuration, `/health` endpoint documentation]
+- Write: [service routes/controllers across active services, health monitoring configuration, `/health` endpoint documentation]
 **Depends on:** WP-18
 **Effort:** L
 
@@ -466,7 +487,9 @@
 
 ## WP-22: Set up Sentry for all production services
 
-**File Scope:** Sentry project settings, service dependency manifests, service runtime configuration, alerting rules
+**File Scope:**
+- Read: [Sentry project settings, service dependency manifests, service runtime configuration, alerting rules]
+- Write: [Sentry project settings, service dependency manifests, service runtime configuration, alerting rules]
 **Depends on:** WP-21
 **Effort:** L
 
@@ -485,6 +508,7 @@
 
 **File Scope:**
 - Read: [`thegent/` memory layer, cross-platform integration code, tests, documentation]
+- Write: [`thegent/` memory layer, cross-platform integration code, tests, documentation]
 **Depends on:** WP-10
 **Effort:** L
 
@@ -503,6 +527,7 @@
 
 **File Scope:**
 - Read: [`heliosCLI/` sandboxing implementation, security review notes, tests, documentation]
+- Write: [`heliosCLI/` sandboxing implementation, security review notes, tests, documentation]
 **Depends on:** WP-10
 **Effort:** L
 
@@ -521,6 +546,7 @@
 
 **File Scope:**
 - Read: [GitHub repositories `heliosBench`, `QuadSGM`, `Kogito`, `Tossy`, `Frostify`, `AppGen`, `TripleM`, `Project-Spyn`, `ssToCal-front`, `BytePortfolio`, `agentapi`]
+- Write: [GitHub repositories `heliosBench`, `QuadSGM`, `Kogito`, `Tossy`, `Frostify`, `AppGen`, `TripleM`, `Project-Spyn`, `ssToCal-front`, `BytePortfolio`, `agentapi`]
 **Depends on:** WP-13
 **Effort:** M
 
@@ -547,6 +573,7 @@
 
 **File Scope:**
 - Read: [`phenotype-infrakit/`, core workspace, runtime workspace, tools workspace, downstream consumer manifests]
+- Write: [`phenotype-infrakit/`, core workspace, runtime workspace, tools workspace, downstream consumer manifests]
 **Depends on:** WP-16
 **Effort:** XL
 
@@ -570,6 +597,7 @@
 
 **File Scope:**
 - Read: [`thegent/` cross-platform integration code, platform test configuration, documentation]
+- Write: [`thegent/` cross-platform integration code, platform test configuration, documentation]
 **Depends on:** WP-23
 **Effort:** L
 
@@ -588,6 +616,7 @@
 
 **File Scope:**
 - Read: [`phenotype-infrakit/` enterprise features, performance optimization code, documentation]
+- Write: [`phenotype-infrakit/` enterprise features, performance optimization code, documentation]
 **Depends on:** WP-16
 **Effort:** L
 
@@ -606,6 +635,7 @@
 
 **File Scope:**
 - Read: [`.github/workflows/`, GitHub Actions cache settings, GitHub Releases, GHCR, S3/GitHub Pages benchmark storage]
+- Write: [`.github/workflows/`, GitHub Actions cache settings, GitHub Releases, GHCR, S3/GitHub Pages benchmark storage]
 **Depends on:** WP-05
 **Effort:** L
 
@@ -623,7 +653,9 @@
 
 ## WP-30: Implement template versioning and distribution
 
-**File Scope:** template versioning documentation, template registry, scaffolding CLI, template testing CI
+**File Scope:**
+- Read: [template versioning documentation, template registry, scaffolding CLI, template testing CI]
+- Write: [template versioning documentation, template registry, scaffolding CLI, template testing CI]
 **Depends on:** WP-18
 **Effort:** L
 
@@ -643,6 +675,7 @@
 
 **File Scope:**
 - Read: [all GitHub repositories not yet cloned locally, repository root `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/sessions/`, git health metadata]
+- Write: [all GitHub repositories not yet cloned locally, repository root `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/sessions/`, git health metadata]
 **Depends on:** WP-18
 **Effort:** XL
 
@@ -662,6 +695,7 @@
 
 **File Scope:**
 - Read: [active repo `.github/workflows/`, branch protection rules, required status checks]
+- Write: [active repo `.github/workflows/`, branch protection rules, required status checks]
 **Depends on:** WP-05, WP-31
 **Effort:** XL
 
@@ -681,6 +715,7 @@
 
 **File Scope:**
 - Read: [active repository roots, `AGENTS.md`, `CLAUDE.md`, `docs/sessions/`, CI/CD status, git working trees, compliance report output]
+- Write: [active repository roots, `AGENTS.md`, `CLAUDE.md`, `docs/sessions/`, CI/CD status, git working trees, compliance report output]
 **Depends on:** WP-32
 **Effort:** XL
 
@@ -700,7 +735,9 @@
 
 ## WP-34: Performance benchmarks and optimization report
 
-**File Scope:** benchmark suites across crates, performance documentation, optimization roadmap
+**File Scope:**
+- Read: [benchmark suites across crates, performance documentation, optimization roadmap]
+- Write: [benchmark suites across crates, performance documentation, optimization roadmap]
 **Depends on:** WP-16, WP-28
 **Effort:** L
 

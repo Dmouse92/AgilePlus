@@ -1,77 +1,150 @@
 # Architecture
 
-## System overview
-Phenotype repos is a polyrepo workspace, not a single application. It combines product repos, shared Rust foundations, language-specific app surfaces, docs/governance, and automation tooling that are meant to evolve together.
+## System Overview
 
-The main layers are:
-- Product and workflow repos: end-user CLIs, MCP services, dashboards, and local workflow tools.
-- Shared foundations: reusable Rust crates and support packages that encode domain, transport, storage, and orchestration primitives.
-- Docs and governance: specs, plans, ADRs, worklogs, and repo-local READMEs that define intent and release rules.
+`CodeProjects/Phenotype/repos` is a **polyrepo shelf**: a single directory containing independent Git repositories that together form the Phenotype engineering portfolio. It is not a single deployable application and not a conventional monorepo; each project owns its own code, tests, CI, releases, and README.
 
-## Component ownership
+The shelf groups four kinds of systems:
 
-### Shared Rust foundations
-- `phenoShared/` owns the reusable Rust workspace that most Phenotype Rust crates build on.
-- `phenoShared/crates/` contains the core reusable layers: domain, application, ports, config, error, event-sourcing, cache, policy, state-machine, health, HTTP, PostgreSQL, Redis, and NanoVMs client support.
-- `crates/` at the workspace root provides AgilePlus-specific Rust crates for domain logic, CLI, API, gRPC, storage adapters, telemetry, sync, import, triage, and test fixtures.
+- **Product repos**: CLIs, MCP services, dashboards, web apps, and local workflow tools.
+- **Shared foundations**: reusable Rust crates and language-specific support packages used across products.
+- **Agent automation**: MCP servers, model gateways, status services, and workflow agents.
+- **Governance and release infrastructure**: specs, ADRs, worklogs, CI templates, security scans, and org-wide release automation.
 
-### Product and app surfaces
-- `AgilePlus/` owns the spec-driven work-tracking product and its root Rust workspace.
-- `pheno-cli/` owns the org-wide release governance CLI.
-- `thegent/` owns the Rust/Python task runner and agent-oriented orchestration surface.
-- `phenoData/` owns the data-layer workspace.
-- `PhenoMCP/` owns MCP-facing integration surfaces.
-- `PhenoRuntime/` owns runtime orchestration and execution primitives.
-- `FocalPoint/` owns the operational platform and supporting Rust tooling.
-- `helioscope/` owns the helios CLI/app surface.
-- `cheap-llm-mcp/` owns the low-cost MCP model gateway used for bulk reasoning and subagents.
-- `agileplus-agents/` owns AgilePlus agent orchestration helpers.
-- `agileplus-mcp/` owns the MCP service surface for AgilePlus integrations.
+AgilePlus is the work-tracking spine for this shelf: work is described as specs and work packages, implemented in repo-specific worktrees, then merged back to the owning canonical repo.
 
-### Docs and governance
-- `docs/`, `kitty-specs/`, `worklogs/`, and repo-local root docs (`README.md`, `PRD.md`, `PLAN.md`, `ADR.md`, `USER_JOURNEYS.md`) own design intent, implementation specs, and delivery history.
-- Repo READMEs are the canonical entry point for per-project details; this document only records cross-repo boundaries.
+## Component Ownership
 
-## Runtime data flow
+### Work tracking: AgilePlus
+
+| Component | Location | Ownership |
+|-----------|----------|-----------|
+| AgilePlus product | `AgilePlus/` | Local-first, spec-driven project-management CLI and service workspace. |
+| Core Rust crates | `AgilePlus/crates/agileplus-*` | Domain model, CLI, API, gRPC, SQLite, Git/GitHub sync, events, telemetry, p2p, dashboard, import, triage, and tests. |
+| Live specs | `AgilePlus/kitty-specs/` and shelf `kitty-specs/` | Feature specs, work packages, and acceptance criteria. |
+| OpenAPI surface | `AgilePlus/openapi.yaml` | REST contract for feature, work-package, event, audit, and governance APIs. |
+| MCP bridge | `agileplus-mcp/` | Python FastMCP bridge from LLM tools to the AgilePlus gRPC/API surface. |
+| Agent helpers | `agileplus-agents/` | Rust helpers for agent orchestration and workspace automation. |
+| Landing site | `agileplus-landing/` | Public/marketing web surface. |
+
+### Shared foundations
+
+| Component | Location | Ownership |
+|-----------|----------|-----------|
+| Shared Rust toolkit | `phenoShared/` | Cross-project Rust crates for common infrastructure and reusable contracts. |
+| Infrastructure crates | `phenotype-infrakit/` | Shared error, health, config, metrics, tracing, hexagonal architecture, plugin, and utility crates. |
+| Shelf-level Rust placeholders | `crates/` | AgilePlus/shelf-local shared crates that have not yet moved into a named repo. |
+| Protocol definitions | `proto/`, `buf.yaml`, `buf.gen.yaml` | Protobuf/gRPC contracts shared by Rust, Go, Python, and MCP layers. |
+
+Shared behavior should move into `phenoShared` or `phenotype-infrakit` before it is duplicated across product repos.
+
+### Product and application surfaces
+
+| Component | Location | Ownership |
+|-----------|----------|-----------|
+| Org CLI | `pheno-cli/` | Go CLI for org-wide release governance and workflow automation. |
+| Federated app workspace | `pheno/` | Multi-product Rust workspace for app/platform surfaces such as Logify, Metron, Tasken, Stashly, Settly, and Authvault. |
+| Dotfiles/environment manager | `thegent/` | Rust/Python agent-oriented task runner and developer environment manager. |
+| Helios app manager | `helios-cli/`, `heliosApp/`, `HeliosLab/` | Helios CLI/app surfaces and lab tooling. |
+| Agent API gateway | `agentapi-plusplus/` | HTTP/WebSocket API surface for agent integrations. |
+| CLI proxy API | `cliproxyapi-plusplus/` | Authenticated CLI proxy/API service. |
+| Data and platform projects | `DataKit/`, `FocalPoint/`, `PolicyStack/`, `BytePort/`, `Configra/`, `Conft/`, `hwLedger/`, `phenoAI/` | Product-specific data, policy, platform, file/artifact, config, hardware-ledger, and AI integration surfaces. |
+
+### Agent automation
+
+| Component | Location | Ownership |
+|-----------|----------|-----------|
+| MCP integration hub | `AgentMCP/`, `PhenoMCP/` | MCP-facing integration surfaces. |
+| Cheap model gateway | `cheap-llm-mcp/` | Python FastMCP gateway for Kimi/Minimax/Codex-style bulk reasoning. |
+| Agent status | `agent-user-status/` | Presence/status signalling for local agents. |
+| Agent experiments | `Agentora/`, `bare-cua/`, `agent-devops-setups/`, `agentops-policy-federation/` | Agent orchestration, computer-use, devops setup, and policy federation experiments. |
+
+### Docs, governance, and release infrastructure
+
+| Component | Location | Ownership |
+|-----------|----------|-----------|
+| Cross-project docs | `docs/` | Engineering standards, governance, and reference material. |
+| Worklogs | `worklogs/` | Architecture, governance, duplication, dependency, performance, integration, and research decisions. |
+| Specs | `kitty-specs/` | Shelf-level AgilePlus specs and stabilization work packages. |
+| CI templates | `.github/workflows/` and per-repo `.github/workflows/` | Security, quality, release, SBOM, and documentation checks. |
+| Web landings | `*-landing/`, `projects-landing/`, `phenokits-landing/` | Independently deployed marketing and portfolio sites. |
+
+## Runtime Data Flow
+
+### AgilePlus runtime
+
 ```text
-user intent
-  -> CLI / MCP / app surface
-  -> repo-specific orchestration layer
-  -> shared Rust or support libraries
-  -> storage, VCS, network, or model adapters
-  -> external systems and persisted artifacts
+User or agent
+  -> agileplus CLI / dashboard / REST / gRPC / MCP tool
+  -> agileplus-domain and agileplus-subcmds
+  -> adapters: agileplus-sqlite, agileplus-git, agileplus-github, agileplus-nats, agileplus-p2p
+  -> persisted specs, SQLite state, Git worktrees, GitHub Issues, NATS events, or peer sync
+  -> telemetry through agileplus-telemetry and OTEL exporters
 ```
 
-Typical examples:
-- `pheno-cli` drives release, publish, and audit workflows across repositories.
-- `AgilePlus` collects feature specs and work-package state, then updates local files and optional sync targets.
-- `thegent`, `agileplus-agents`, and `cheap-llm-mcp` route agent requests through task execution, model access, and tool orchestration.
-- Shared crates in `phenoShared` keep domain rules, transport contracts, and infrastructure adapters aligned across products.
+`agileplus-mcp` lets LLM agents call AgilePlus workflows without shelling into the CLI directly: the MCP service validates tool input, bridges to the Rust service/API layer, and returns structured tool results.
 
-## Release flow
-1. Work starts in the owning repo or shared crate, with intent captured in the repo README/specs and the relevant AgilePlus or governance artifact.
-2. Implementation changes are made in a branch or worktree, with shared crates updated first when multiple repos depend on the same behavior.
-3. Local quality checks run in the owning repo before integration.
-4. Release metadata, changelogs, and worklogs are updated in the repo that owns the shipped surface.
-5. Changes merge back to the canonical branch, then downstream repos consume the new version or commit via dependency updates, workspace member changes, or synchronized follow-up PRs.
+### Cross-repo product runtime
 
-## Repository detail map
-- `README.md` — workspace-level overview and release discipline for AgilePlus.
-- `phenoShared/README.md` — shared Rust infrastructure toolkit and crate catalog.
-- `pheno-cli/README.md` — org-wide release governance CLI.
-- `phenoData/README.md` — data-layer workspace and storage-oriented components.
-- `thegent/README.md` — Rust/Python task runner and orchestration platform.
-- `cheap-llm-mcp/README.md` — cheap model gateway for agent subtasks.
-- `FocalPoint/README.md` — platform and tooling surface for broader Phenotype operations.
-- `helioscope/README.md` — helios CLI/app surface.
-- `PhenoMCP/README.md` — MCP integration surface.
-- `PhenoRuntime/README.md` — runtime execution surface.
-- `pheno/README.md` — release governance CLI lineage and workflow automation.
-- `phenoForge/README.md` — build/task orchestration runtime.
-- `PhenoKits/`, `PhenoPlugins/`, `PhenoProc/`, `PhenoVCS/`, and related repos own specialized platform capabilities; see each repo README for local boundaries.
+```text
+User / automation / agent
+  -> product surface (CLI, MCP server, web app, API, or dashboard)
+  -> repo-local orchestration layer
+  -> shared crates/packages from phenoShared or phenotype-infrakit
+  -> adapters for GitHub, filesystem, SQLite/Postgres/Redis, LLM providers, or deployment targets
+  -> traces/logs/events emitted through repo-local telemetry conventions
+```
 
-## Key invariants
-- Shared behavior belongs in shared crates before it is duplicated in product repos.
-- Repo READMEs/specs define the owning repo’s contract; this file only explains how the repos relate.
-- Release flow should stay forward-only: update the owner, validate locally, then propagate downstream consumers.
-- Keep language-specific surfaces thin and let shared libraries carry the stable contracts.
+Examples:
+
+- `pheno-cli` drives org-wide governance, release, and audit operations across repositories.
+- `cheap-llm-mcp` brokers agent requests to lower-cost model providers and returns MCP tool results.
+- `agentapi-plusplus` and `cliproxyapi-plusplus` expose service/API boundaries for agent and CLI workflows.
+- Product repos consume shared Rust infrastructure rather than copying error/config/health/telemetry logic.
+
+## Release Flow
+
+1. **Specify**: work starts in the relevant AgilePlus spec under `kitty-specs/` or the owning repo's `AgilePlus/kitty-specs/`.
+2. **Implement in a worktree**: feature work happens in `<project>-wtrees/<topic>/`; canonical repo directories stay on `main`.
+3. **Validate locally**: run the owning repo's quality gate (`task quality`, `cargo test`, `cargo clippy`, Ruff, Vale, TruffleHog, cargo-deny, or repo-specific equivalents).
+4. **Open PR**: branches use `feat/`, `fix/`, `chore/`, `ci/`, or `docs/` prefixes. Keep PRs focused to the owning component.
+5. **Merge and publish**: merge to `main`, generate changelog/release notes from `cliff.toml` or repo-specific release tooling, then publish crates, binaries, web deploys, or container artifacts as appropriate.
+6. **Propagate**: downstream repos consume new crate versions, package versions, generated clients, or commit references in follow-up PRs.
+7. **Record**: update AgilePlus work-package state and add worklog entries for architecture, governance, dependency, integration, or research decisions.
+
+GitHub Actions billing is constrained for this org, so CI failures caused only by runner billing limits are not treated as product failures; local quality gates remain authoritative.
+
+## Key Invariants
+
+- The shelf is a **polyrepo collection**; repo-local READMEs are authoritative for local build/run instructions.
+- Shared behavior belongs in `phenoShared` or `phenotype-infrakit` before duplication is accepted in product repos.
+- AgilePlus specs and work packages are first-class implementation inputs.
+- Worktrees isolate feature work; canonical directories should remain integration/main checkouts.
+- Cross-language boundaries should use explicit protocols: OpenAPI, Protobuf/gRPC, MCP schemas, or typed shared crates.
+- UTF-8 markdown and documented release evidence are required for docs and governance artifacts.
+
+## Per-repo Detail
+
+Use this document for cross-repo boundaries. Use each repo README for local architecture, setup, and release commands:
+
+| Project | Detail |
+|---------|--------|
+| AgilePlus | [AgilePlus/README.md](AgilePlus/README.md) |
+| phenoShared | [phenoShared/README.md](phenoShared/README.md) |
+| phenotype-infrakit | [phenotype-infrakit/README.md](phenotype-infrakit/README.md) |
+| pheno-cli | [pheno-cli/README.md](pheno-cli/README.md) |
+| pheno | [pheno/README.md](pheno/README.md) |
+| thegent | [thegent/README.md](thegent/README.md) |
+| helios-cli | [helios-cli/README.md](helios-cli/README.md) |
+| heliosApp | [heliosApp/README.md](heliosApp/README.md) |
+| AgentMCP | [AgentMCP/README.md](AgentMCP/README.md) |
+| PhenoMCP | [PhenoMCP/README.md](PhenoMCP/README.md) |
+| cheap-llm-mcp | [cheap-llm-mcp/README.md](cheap-llm-mcp/README.md) |
+| agentapi-plusplus | [agentapi-plusplus/README.md](agentapi-plusplus/README.md) |
+| cliproxyapi-plusplus | [cliproxyapi-plusplus/README.md](cliproxyapi-plusplus/README.md) |
+| BytePort | [BytePort/README.md](BytePort/README.md) |
+| FocalPoint | [FocalPoint/README.md](FocalPoint/README.md) |
+| hwLedger | [hwLedger/README.md](hwLedger/README.md) |
+| PolicyStack | [PolicyStack/README.md](PolicyStack/README.md) |
+| phenoAI | [phenoAI/README.md](phenoAI/README.md) |
+| tooling | [tooling/README.md](tooling/README.md) |

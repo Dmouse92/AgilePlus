@@ -39,7 +39,7 @@ This is a curated index of the most active/major repos in this checkout.
 
 | Project | Description |
 |---|---|
-| [AgilePlus](AgilePlus/) | Spec-driven agile work-tracking platform used to manage shelf work and project tracking. |
+| [AgilePlus](AgilePlus/) | Local-first spec-driven agile work-tracking CLI/platform for AI-agent and human teams; manages feature specs, work packages, acceptance criteria, optional GitHub sync, dashboards, and P2P merge. Install from `AgilePlus/` with `cargo install --path crates/agileplus-cli`; see `AgilePlus/docs/guide/quick-start.md`. |
 
 ### Agent orchestration and LLM execution
 
@@ -81,52 +81,113 @@ This is a curated index of the most active/major repos in this checkout.
 
 | Project | Description |
 |---|---|
-| [pheno](pheno/) | Core Phenotype platform workspace (multiple subproducts).
-| [phenoShared](phenoShared/) | Shared cross-repo Rust crates and helpers.
-| [PhenoRuntime](PhenoRuntime/) | Runtime abstractions used across Phenotype components.
-| [PhenoControl](PhenoControl/) | Control-plane primitives and policy wiring.
-| [PhenoSchema](PhenoSchema/) | Shared schema and contract types.
-| [PhenoPlugins](PhenoPlugins/) | Plugin framework and extension points.
-| [PhenoKitS](PhenoKits/) | Kit-level tool and artifact collection (umbrella).
-| [PhenoEvents](PhenoEvents/) | Event bus and signal model.
-| [PhenoLang](PhenoLang/) | Language/tooling support.
-| [PhenoCompose](PhenoCompose/) | Composition and orchestration helpers.
-| [phenoShared alias: phenotype-shared](phenotype-shared/) | Historical alias path for shared crates.
+| [pheno](pheno/) | Core Phenotype platform workspace (multiple subproducts). |
+| [phenoShared](phenoShared/) | Shared cross-repo Rust crates and helpers. |
+| [PhenoRuntime](PhenoRuntime/) | Runtime abstractions used across Phenotype components. |
+| [PhenoControl](PhenoControl/) | Control-plane primitives and policy wiring. |
+| [PhenoSchema](PhenoSchema/) | Shared schema and contract types. |
+| [PhenoPlugins](PhenoPlugins/) | Plugin framework and extension points. |
+| [PhenoKits](PhenoKits/) | Kit-level tool and artifact collection (umbrella). |
+| [PhenoEvents](PhenoEvents/) | Event bus and signal model. |
+| [PhenoLang](PhenoLang/) | Language/tooling support. |
+| [PhenoCompose](PhenoCompose/) | Composition and orchestration helpers. |
+| [phenotype-shared](phenotype-shared/) | Historical alias path for shared crates (same repo as phenoShared). |
 
 ### Product applications
 
 | Project | Description |
 |---|---|
-| [heliosApp](heliosApp/) | Product application workspace for helios.
-| [HeliosLab](HeliosLab/) | Experimentation and analytics workspace for helios.
-| [heliosBench](heliosBench/) | Benchmarking project for helios execution performance.
-| [BytePort](BytePort/) | Network transport and endpoint-oriented product.
-| [Tokn](Tokn/) | Token operations and pricing governance.
-| [Tracera](Tracera/) | Traceability system for event and execution history.
-| [Observably](Observably/) | Product-level observability surface.
-| [hwLedger](hwLedger/) | Hardware and capacity ledger for fleet/operations planning.
-| [PolicyStack](PolicyStack/) | Governance/policy engine and compliance tooling.
-| [Planify](Planify/) | Planning utilities and work lifecycle helpers.
-| [Sidekick](Sidekick/) | Assistant-side operational helper.
-| [Eidolon](Eidolon/) | Phenotype's Eidolon domain project.
+| [heliosApp](heliosApp/) | Product application workspace for helios. |
+| [HeliosLab](HeliosLab/) | Experimentation and analytics workspace for helios. |
+| [heliosBench](heliosBench/) | Benchmarking project for helios execution performance. |
+| [BytePort](BytePort/) | Network transport and endpoint-oriented product. |
+| [Tokn](Tokn/) | Token operations and pricing governance. |
+| [Tracera](Tracera/) | Traceability system for event and execution history. |
+| [Observably](Observably/) | Product-level observability surface. |
+| [hwLedger](hwLedger/) | Hardware and capacity ledger for fleet/operations planning. |
+| [PolicyStack](PolicyStack/) | Governance/policy engine and compliance tooling. |
+| [Planify](Planify/) | Planning utilities and work lifecycle helpers. |
+| [Sidekick](Sidekick/) | Assistant-side operational helper. |
+| [Eidolon](Eidolon/) | Phenotype's Eidolon domain project. |
 
 ### Tooling and infrastructure
 
 | Project | Description |
 |---|---|
-| [FocalPoint](FocalPoint/) | Central operations tooling, including target-pruner utilities.
-| [Configra](Configra/) | Configuration management framework.
-| [Conft](Conft/) | Flag/config control service.
-| [PhenoObservability](PhenoObservability/) | Logging, tracing, telemetry, and monitoring stack.
-| [ObservabilityKit](ObservabilityKit/) | Reusable observability building blocks.
-| [platformKit](PlatformKit/) | Cross-platform platform utilities.
-| [HexaKit](HexaKit/) | Architecture and scaffolding utilities.
-| [phenotype-infra](phenotype-infra/) | Infrastructure-as-code and org automation.
-| [phenoAI](phenoAI/) | AI service integrations and helpers.
-| [ValidationKit](ValidationKit/) | Validation and policy checks.
-| [TestingKit](TestingKit/) | Test scaffolding and quality helpers.
-| [rich-cli-kit](rich-cli-kit/) | Rich terminal UX helpers.
-| [FocalPoint](FocalPoint/) | Workflow + observability coordination tooling.
+| [FocalPoint](FocalPoint/) | Central operations tooling, including target-pruner utilities. |
+| [Configra](Configra/) | Configuration management framework. |
+| [Conft](Conft/) | Flag/config control service. |
+| [PhenoObservability](PhenoObservability/) | Logging, tracing, telemetry, and monitoring stack. |
+| [ObservabilityKit](ObservabilityKit/) | Reusable observability building blocks. |
+| [PlatformKit](PlatformKit/) | Cross-platform platform utilities. |
+| [HexaKit](HexaKit/) | Architecture and scaffolding utilities. |
+| [phenotype-infra](phenotype-infra/) | Infrastructure-as-code and org automation. |
+| [phenoAI](phenoAI/) | AI service integrations and helpers. |
+| [ValidationKit](ValidationKit/) | Validation and policy checks. |
+| [TestingKit](TestingKit/) | Test scaffolding and quality helpers. |
+| [rich-cli-kit](rich-cli-kit/) | Rich terminal UX helpers. |
+| [ResilienceKit](ResilienceKit/) | Resilience patterns library. |
+| [Tracely](Tracely/) | Trace explorer. |
+| [Metron](Metron/) | Metric collection service. |
+| [Tasken](Tasken/) | Task scheduler. |
+| [Civis](Civis/) | Civis project. |
+| [Benchora](Benchora/) | Benchmarking service. |
+| [QuadSGM](QuadSGM/) | QuadSGM project. |
+| [localbase3](localbase3/) | Local DB / storage layer. |
+| [KDesktopVirt](KDesktopVirt/) | Desktop virtualization. |
+| [bare-cua](bare-cua/) | Bare computer-use-agent harness. |
+| [PlayCua](PlayCua/) | Computer-use agent playground. |
+| [AppGen](AppGen/) | App generator. |
+| [DevHex](DevHex/) | DevHex product. |
+| [Dino](Dino/) | Dinoforge core. |
+| [dinoforge-packs](dinoforge-packs/) | Dinoforge governance packs. |
+| [DINOForge-UnityDoorstop](DINOForge-UnityDoorstop/) | Unity Doorstop integration. |
+| [KlipDot](KlipDot/) | KlipDot product. |
+| [Pine](Pine/) | Pine project. |
+| [Parpoura](Parpoura/) | Parpoura project. |
+| [Paginary](Paginary/) | Pagination service. |
+| [netweave-final2](netweave-final2/) | Netweave experiment. |
+| [foqos-private](foqos-private/) | Foqos (private). |
+| [argis-extensions](argis-extensions/) | Argis editor extensions. |
+| [AtomsBot](AtomsBot/) | Atoms bot (archived; retained for history). |
+| [chatta](chatta/) | Chatta workspace. |
+| [portage](portage/) | Portage workspace. |
+| [portage-adapter-core](portage-adapter-core/) | Portage adapter core. |
+| [nanovms](nanovms/) | NanoVM integration. |
+| [GDK](GDK/) | Game/graphics dev kit. |
+| [DataKit](DataKit/) | Data-pipeline kit. |
+| [AuthKit](AuthKit/) | Auth kit. |
+| [kwality](kwality/) | Quality / scorecard tooling. |
+| [phenoUtils](phenoUtils/) | Shared utilities. |
+| [phenoDesign](phenoDesign/) | Design system primitives. |
+| [phenodocs](phenodocs/) | Phenotype documentation site. |
+| [phenodocs-scorecard-remediation](phenodocs-scorecard-remediation/) | Doc scorecard remediation harness. |
+| [PhenoHandbook](PhenoHandbook/) | Phenotype handbook. |
+| [phenotype-auth-ts](phenotype-auth-ts/) | TypeScript auth client. |
+| [phenotype-bus](phenotype-bus/) | Message bus. |
+| [phenotype-hub](phenotype-hub/) | Discovery / registry hub. |
+| [phenotype-registry](phenotype-registry/) | Artifact registry. |
+| [phenotype-journeys](phenotype-journeys/) | User-journey traceability. |
+| [phenotype-omlx](phenotype-omlx/) | OMLX integration. |
+| [phenotype-ops-mcp](phenotype-ops-mcp/) | Ops MCP surface. |
+| [phenotype-org-audits](phenotype-org-audits/) | Org-wide audit reports. |
+| [phenotype-tooling](phenotype-tooling/) | Cross-repo tool chest. |
+| [phenotype-icons](phenotype-icons/) | Icon set. |
+| [phenotype-previews-smoketest](phenotype-previews-smoketest/) | Preview/smoketest harness. |
+| [phenotype-skills](phenotype-skills/) | Claude skill definitions. |
+| [phenoXdd](phenoXdd/) | XDD (cross-document development) tooling. |
+| [phenoResearchEngine](phenoResearchEngine/) | Research automation engine. |
+
+### Landing pages and web surfaces
+
+| Project | Description |
+|---|---|
+| [agileplus-landing](agileplus-landing/) | Marketing/landing site for AgilePlus. |
+| [byteport-landing](byteport-landing/) | Marketing/landing site for BytePort. |
+| [hwledger-landing](hwledger-landing/) | Marketing/landing site for hwLedger. |
+| [phenokits-landing](phenokits-landing/) | Marketing/landing site for PhenoKits. |
+| [projects-landing](projects-landing/) | Organization-wide projects landing page. |
+| [frontend](frontend/) | Shelf-level frontend app surface. |
 
 ### Cross-cutting shelves and references
 

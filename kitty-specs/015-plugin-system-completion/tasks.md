@@ -10,7 +10,9 @@
 
 - **State:** planned
 - **Sequence:** 1
-- **File Scope:** agileplus-plugin-core repository (src/, tests/, docs/)
+- **File Scope:**
+- Read: [agileplus-plugin-core repository (src/, tests/, docs/)]
+- Write: [agileplus-plugin-core repository (src/, tests/, docs/)]
 - **Acceptance Criteria:**
   - Stable plugin interface contract with versioning guarantees (semver)
   - Plugin lifecycle states defined: unloaded, loading, loaded, starting, running, stopping, stopped, error
@@ -23,8 +25,8 @@
 Define the stable plugin interface contract that all plugin backends must implement. This includes lifecycle management, versioning guarantees, and a plugin registry for discovery and loading. This is the foundation that WP-002, WP-003, and WP-004 build upon.
 
 ### Subtasks
-- [ ] T001 Audit existing plugin interfaces in agileplus-plugin-core
-- [ ] T002 Design stable plugin interface contract: Plugin trait with lifecycle methods
+- [x] T001 Audit existing plugin interfaces in agileplus-plugin-core
+- [x] T002 Design stable plugin interface contract: Plugin trait with lifecycle methods
 - [ ] T003 Define plugin lifecycle state machine: unloaded → loading → loaded → running → stopping → stopped
 - [ ] T004 Implement versioning system: plugin declares supported API version, registry checks compatibility
 - [ ] T005 Implement PluginRegistry: register, discover, load, unload, version compatibility check
@@ -49,7 +51,9 @@ Define the stable plugin interface contract that all plugin backends must implem
 
 - **State:** planned
 - **Sequence:** 2
-- **File Scope:** agileplus-plugin-git repository (src/, tests/, docs/)
+- **File Scope:**
+- Read: [agileplus-plugin-git repository (src/, tests/, docs/)]
+- Write: [agileplus-plugin-git repository (src/, tests/, docs/)]
 - **Acceptance Criteria:**
   - Complete git backend implementing all plugin-core interface traits
   - Git operations: clone, fetch, commit, push, branch management, worktree operations
@@ -88,7 +92,9 @@ Complete the git VCS adapter plugin that implements the plugin-core interface fo
 
 - **State:** planned
 - **Sequence:** 3
-- **File Scope:** agileplus-plugin-sqlite repository (src/, tests/, docs/)
+- **File Scope:**
+- Read: [agileplus-plugin-sqlite repository (src/, tests/, docs/)]
+- Write: [agileplus-plugin-sqlite repository (src/, tests/, docs/)]
 - **Acceptance Criteria:**
   - Complete SQLite backend implementing all plugin-core interface traits
   - Migration support for schema changes (up/down migrations)
@@ -127,7 +133,9 @@ Complete the SQLite storage adapter plugin that implements the plugin-core inter
 
 - **State:** planned
 - **Sequence:** 4
-- **File Scope:** thegent-plugin-host repository (src/, tests/, docs/), thegent main repository
+- **File Scope:**
+- Read: [thegent-plugin-host repository (src/, tests/, docs/), thegent main repository]
+- Write: [thegent-plugin-host repository (src/, tests/, docs/), thegent main repository]
 - **Acceptance Criteria:**
   - thegent-plugin-host integrated with plugin-core interfaces (Rust/Go FFI boundary)
   - Plugin discovery mechanism: scan plugin directories, load compatible plugins

@@ -10,7 +10,9 @@
 
 - **State:** planned
 - **Sequence:** 1
-- **File Scope:** cliproxyapi-plusplus repository (src/, tests/, docs/)
+- **File Scope:**
+- Read: [cliproxyapi-plusplus repository (src/, tests/, docs/)]
+- Write: [cliproxyapi-plusplus repository (src/, tests/, docs/)]
 - **Acceptance Criteria:**
   - LLM proxy supporting 8+ providers (OpenAI, Anthropic, Google, Mistral, Cohere, Groq, Ollama, local)
   - Request routing, rate limiting, and retry logic per provider
@@ -24,8 +26,8 @@
 Complete cliproxyapi-plusplus as the LLM proxy with support for 8+ providers. This serves as the unified interface for all LLM API calls, handling provider-specific quirks, rate limiting, retries, and streaming. It integrates with agentapi-plusplus for agent-facing API access.
 
 ### Subtasks
-- [ ] T001 Audit current cliproxyapi-plusplus: existing providers, gaps, architecture
-- [ ] T002 Design provider abstraction: unified request/response types, provider-specific adapters
+- [x] T001 Audit current cliproxyapi-plusplus: existing providers, gaps, architecture
+- [x] T002 Design provider abstraction: unified request/response types, provider-specific adapters
 - [ ] T003 Implement OpenAI provider adapter (chat completions, embeddings, streaming)
 - [ ] T004 Implement Anthropic provider adapter (messages, streaming)
 - [ ] T005 Implement Google, Mistral, Cohere provider adapters
@@ -53,7 +55,9 @@ Complete cliproxyapi-plusplus as the LLM proxy with support for 8+ providers. Th
 
 - **State:** planned
 - **Sequence:** 2
-- **File Scope:** agentapi-plusplus repository (src/, tests/, docs/)
+- **File Scope:**
+- Read: [agentapi-plusplus repository (src/, tests/, docs/)]
+- Write: [agentapi-plusplus repository (src/, tests/, docs/)]
 - **Acceptance Criteria:**
   - Complete HTTP API for CLI agent interactions (dispatch, status, results)
   - No functionality duplication with cliproxyapi-plusplus (clear boundary: proxy vs. agent API)
@@ -93,7 +97,9 @@ Complete agentapi-plusplus as the HTTP API for CLI agent interactions. This API 
 
 - **State:** planned
 - **Sequence:** 3
-- **File Scope:** Cmdra repository (src/, tests/, docs/)
+- **File Scope:**
+- Read: [Cmdra repository (src/, tests/, docs/)]
+- Write: [Cmdra repository (src/, tests/, docs/)]
 - **Acceptance Criteria:**
   - Complete CLI framework with command registration, argument parsing, and help generation
   - Plugin system for CLI extensions
@@ -131,7 +137,9 @@ Complete Cmdra as the universal CLI framework adopted by all CLI tools in this c
 
 - **State:** planned
 - **Sequence:** 4
-- **File Scope:** forgecode repository (src/, tests/, docs/)
+- **File Scope:**
+- Read: [forgecode repository (src/, tests/, docs/)]
+- Write: [forgecode repository (src/, tests/, docs/)]
 - **Acceptance Criteria:**
   - Complete git workflow framework: branch management, PR creation, review loops
   - Integrated with Cmdra CLI framework (forgecode commands use Cmdra)
@@ -169,7 +177,9 @@ Complete forgecode as the git workflow framework, integrated with Cmdra. forgeco
 
 - **State:** planned
 - **Sequence:** 5
-- **File Scope:** thegent-sharecli repository, thegent-cli-share repository
+- **File Scope:**
+- Read: [thegent-sharecli repository, thegent-cli-share repository]
+- Write: [thegent-sharecli repository, thegent-cli-share repository]
 - **Acceptance Criteria:**
   - Decision documented: which repo is kept, which is archived, rationale
   - All functionality from both repos preserved in the kept implementation
@@ -207,7 +217,9 @@ Resolve the duplication between thegent-sharecli and thegent-cli-share by auditi
 
 - **State:** planned
 - **Sequence:** 6
-- **File Scope:** thegent-subprocess repository (src/, tests/, docs/), thegent main repository
+- **File Scope:**
+- Read: [thegent-subprocess repository (src/, tests/, docs/), thegent main repository]
+- Write: [thegent-subprocess repository (src/, tests/, docs/), thegent main repository]
 - **Acceptance Criteria:**
   - Complete subprocess management library: spawn, monitor, communicate, cleanup
   - Integrated with Cmdra CLI framework (subprocess commands via Cmdra)
