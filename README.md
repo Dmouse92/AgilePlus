@@ -1,85 +1,136 @@
+# Phenotype Polyrepo Shelf
+
 > **Pinned references (Phenotype-org)**
-> - MSRV: see rust-toolchain.toml
-> - cargo-deny config: see deny.toml
-> - cargo-audit: rustsec/audit-check@v2 weekly
+> - MSRV: see `rust-toolchain.toml`
+> - cargo-deny config: see `deny.toml`
+> - cargo-audit: `rustsec/audit-check@v2` weekly
 > - Branch protection: 1 reviewer required, no force-push
-> - Authority: phenotype-org-governance/SUPERSEDED.md
+> - Branching baseline: canonical repo checkout should stay on `main` unless doing merge/pull
+> - Governance authority: `phenotype-org-governance/SUPERSEDED.md` when present in the relevant repo
 
-# AgilePlus
+This root is a **polyrepo shelf** for the Phenotype organization: one workspace directory containing many independent repositories, landing pages, shared libraries, and operational runbooks. It is intentionally a central index, not a replacement for each project's README.
 
-[![Build](https://img.shields.io/github/actions/workflow/status/KooshaPari/AgilePlus/ci.yml?branch=main&label=build)](https://github.com/KooshaPari/AgilePlus/actions)
-[![Release](https://img.shields.io/github/v/release/KooshaPari/AgilePlus?include_prereleases&sort=semver)](https://github.com/KooshaPari/AgilePlus/releases)
-[![License](https://img.shields.io/github/license/KooshaPari/AgilePlus)](LICENSE)
-[![Phenotype](https://img.shields.io/badge/Phenotype-org-blueviolet)](https://github.com/KooshaPari)
-[![AI Slop Inside](https://sladge.net/badge.svg)](https://sladge.net)
+`projects/INDEX.md` has been checked and is currently missing, so this README acts as the shelf index.
 
-**AgilePlus is a local-first, spec-driven agile work-tracking CLI for AI-agent and human teams.** It models features, work packages, and acceptance criteria as versioned specs on disk, with optional sync to GitHub Issues, dashboards, and P2P merge for multi-actor collaboration.
+## About this shelf
 
-## Quick Start
+- **Canonical repository layout:** each first-level directory ending in a normal project name is the canonical checkout for that project.
+- **Feature work:** perform feature work in project worktrees under `*-wtrees/` and keep canonical directories aligned to `main`.
+- **Cross-project standards:** quality, spec, and governance expectations are documented in shelf-level docs and project-specific AGENTS/CLAUDE files.
+- **Per-repo docs first:** the README in each project folder is authoritative for setup, build, and workflow.
 
-Install (from this repo):
+## Getting Started
 
-```bash
-cargo install --path crates/agileplus-cli
-```
+1. Pick a project directory from the table below.
+2. Open that project's own README (`<project>/README.md`).
+3. For any active implementation, use the project worktree under `<project>-wtrees/`.
+4. Track implementation work in this shelf's AgilePlus feature specs:
+   - [AgilePlus specs](AgilePlus/kitty-specs/) (spec index)
+   - [Shelf worklogs](worklogs/README.md)
+5. Use shelf docs for cross-project context:
+   - `docs/governance/` for org policies and process references
+   - `worklogs/` for ADR-like decisions, research notes, and issue findings
 
-Three-step flow:
+## Major repos and project index
 
-```bash
-# 1. Create a feature spec (slug-based, kebab-case)
-agileplus specify --feature my-feature-slug
+This is a curated index of the most active/major repos in this checkout.
 
-# 2. Generate work packages and tasks for the feature
-agileplus tasks --feature my-feature-slug
+### AgilePlus (shelf tracking)
 
-# 3. Update work-package state as you progress
-agileplus status my-feature-slug --wp wp-001 --state doing
-```
+| Project | Description |
+|---|---|
+| [AgilePlus](AgilePlus/) | Spec-driven agile work-tracking platform used to manage shelf work and project tracking. |
 
-See **[`docs/guide/quick-start.md`](docs/guide/quick-start.md)** for the full quickstart, including project init, dashboard, and GitHub sync.
+### Agent orchestration and LLM execution
 
-## Documentation
+| Project | Description |
+|---|---|
+| [thegent](thegent/) | Agent runtime and decomposition framework for multi-actor execution.
+| [thegent-dispatch](thegent-dispatch/) | Dispatch service for routing worker workloads across providers.
+| [thegent-workspace](thegent-workspace/) | Workspace scaffolding and state model for thegent.
+| [cheap-llm-mcp](cheap-llm-mcp/) | MCP server for routing low-cost model usage.
+| [dispatch-mcp](dispatch-mcp/) | Single endpoint MCP dispatch utility.
+| [agentapi-plusplus](agentapi-plusplus/) | API gateway and protocol adapters for agent workflows.
+| [agent-user-status](agent-user-status/) | Presence/status service for user-facing agent interactions.
+| [agent-devops-setups](agent-devops-setups/) | Provisioning and orchestration setup helpers.
 
-The canonical user guide lives under **[`docs/guide/`](docs/guide/)**:
+### MCP, APIs, and routing infrastructure
 
-| Topic | File |
-|-------|------|
-| Quick start | [`docs/guide/quick-start.md`](docs/guide/quick-start.md) |
-| Getting started (concepts) | [`docs/guide/getting-started.md`](docs/guide/getting-started.md) |
-| `agileplus init` | [`docs/guide/init.md`](docs/guide/init.md) |
-| Workflow | [`docs/guide/workflow.md`](docs/guide/workflow.md) |
-| Configuration | [`docs/guide/configuration.md`](docs/guide/configuration.md) |
-| Sync (GitHub) | [`docs/guide/sync.md`](docs/guide/sync.md) |
-| Triage | [`docs/guide/triage.md`](docs/guide/triage.md) |
-| Local-first deployment | [`docs/guide/local-first-deployment.md`](docs/guide/local-first-deployment.md) |
+| Project | Description |
+|---|---|
+| [AgilePlus](AgilePlus/) | AGILEPLUS spec tracker and command surface. |
+| [AgilePlus-mcp](agileplus-mcp/) | MCP integration for AgilePlus.
+| [cliproxyapi-plusplus](cliproxyapi-plusplus/) | Multi-provider CLI proxy and API compatibility surface.
+| [helios-router](helios-router/) | Routing layer for LLM/agent requests.
+| [helios-cli](helios-cli/) | CLI client for Helios workflows.
+| [helioscope](helioscope/) | App manager (formerly heliosCLI).
+| [PhenoMCP](PhenoMCP/) | MCP runtime and plugin scaffolding.
 
-> **Note on `docs/guide/` vs `docs/guides/`:** `docs/guide/` (singular) is the **canonical** product user guide. `docs/guides/` (plural) holds supplementary contributor/developer references (e.g. `DEV_STACK.md`, `FR_ANNOTATION_GUIDE.md`). When linking from external docs, prefer `docs/guide/`.
+### Core platform + shared crates
 
-## Repository Layout
+| Project | Description |
+|---|---|
+| [pheno](pheno/) | Core Phenotype platform workspace (multiple subproducts).
+| [phenoShared](phenoShared/) | Shared cross-repo Rust crates and helpers.
+| [PhenoRuntime](PhenoRuntime/) | Runtime abstractions used across Phenotype components.
+| [PhenoControl](PhenoControl/) | Control-plane primitives and policy wiring.
+| [PhenoSchema](PhenoSchema/) | Shared schema and contract types.
+| [PhenoPlugins](PhenoPlugins/) | Plugin framework and extension points.
+| [PhenoKitS](PhenoKits/) | Kit-level tool and artifact collection (umbrella).
+| [PhenoEvents](PhenoEvents/) | Event bus and signal model.
+| [PhenoLang](PhenoLang/) | Language/tooling support.
+| [PhenoCompose](PhenoCompose/) | Composition and orchestration helpers.
+| [phenoShared alias: phenotype-shared](phenotype-shared/) | Historical alias path for shared crates.
 
-```
-crates/                  # Rust workspace (CLI, dashboard, sqlite, p2p, grpc, ...)
-docs/
-  guide/                 # Canonical user guide (start here)
-  guides/                # Contributor/developer references
-  adr/                   # Architecture Decision Records
-  reference/             # API and CLI reference
-kitty-specs/             # Live AgilePlus feature specs (eat-our-own-dogfood)
-.work-audit/             # Worklog and audit trail
-```
+### Product applications
 
-## Governance
+| Project | Description |
+|---|---|
+| [heliosApp](heliosApp/) | Product application workspace for helios.
+| [HeliosLab](HeliosLab/) | Experimentation and analytics workspace for helios.
+| [heliosBench](heliosBench/) | Benchmarking project for helios execution performance.
+| [BytePort](BytePort/) | Network transport and endpoint-oriented product.
+| [Tokn](Tokn/) | Token operations and pricing governance.
+| [Tracera](Tracera/) | Traceability system for event and execution history.
+| [Observably](Observably/) | Product-level observability surface.
+| [hwLedger](hwLedger/) | Hardware and capacity ledger for fleet/operations planning.
+| [PolicyStack](PolicyStack/) | Governance/policy engine and compliance tooling.
+| [Planify](Planify/) | Planning utilities and work lifecycle helpers.
+| [Sidekick](Sidekick/) | Assistant-side operational helper.
+| [Eidolon](Eidolon/) | Phenotype's Eidolon domain project.
 
-- `GOVERNANCE.md` — project governance
-- `AGENTS.md` — agent interaction rules
-- `CLAUDE.md` — Claude Code settings
+### Tooling and infrastructure
 
-## Contributing
+| Project | Description |
+|---|---|
+| [FocalPoint](FocalPoint/) | Central operations tooling, including target-pruner utilities.
+| [Configra](Configra/) | Configuration management framework.
+| [Conft](Conft/) | Flag/config control service.
+| [PhenoObservability](PhenoObservability/) | Logging, tracing, telemetry, and monitoring stack.
+| [ObservabilityKit](ObservabilityKit/) | Reusable observability building blocks.
+| [platformKit](PlatformKit/) | Cross-platform platform utilities.
+| [HexaKit](HexaKit/) | Architecture and scaffolding utilities.
+| [phenotype-infra](phenotype-infra/) | Infrastructure-as-code and org automation.
+| [phenoAI](phenoAI/) | AI service integrations and helpers.
+| [ValidationKit](ValidationKit/) | Validation and policy checks.
+| [TestingKit](TestingKit/) | Test scaffolding and quality helpers.
+| [rich-cli-kit](rich-cli-kit/) | Rich terminal UX helpers.
+| [FocalPoint](FocalPoint/) | Workflow + observability coordination tooling.
 
-1. Read [`docs/guide/quick-start.md`](docs/guide/quick-start.md).
-2. Create a feature spec: `agileplus specify --feature <your-slug>`.
-3. Open a PR referencing the spec.
+### Cross-cutting shelves and references
 
-## License
+| Path | Purpose |
+|---|---|
+| `worklogs/` | Shelf-wide worklog index by category (`ARCHITECTURE`, `RESEARCH`, `GOVERNANCE`, etc.). |
+| `kitty-specs/` | Feature specs and task packages used by AgilePlus. |
+| `docs/governance/` | Governance references and standards. |
+| `docs/` | Shared references, ADRs, and reusable docs. |
+| `worktrees/`, `.worktrees/` | Project worktree registry and archive for feature branches. |
+| `tooling/`, `scripts/` | Shared utility tooling and maintenance scripts. |
+| `references/`, `prompts/` | Internal references and reusable prompts. |
 
-See [`LICENSE`](LICENSE).
+## Notes
+
+- Some directories are placeholders/landing/utility trees and may not represent standalone canonical products.
+- This README is intentionally a shelf-level index; source-of-truth setup for each project stays in that project's own `README.md`.
+- This index does not remove information from previous versions; it reorganizes it for polyrepo orientation and easier navigation.

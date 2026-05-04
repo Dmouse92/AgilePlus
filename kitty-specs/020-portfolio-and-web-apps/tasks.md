@@ -138,23 +138,23 @@ Complete phenodocs as the VitePress federation hub that aggregates documentation
 Complete both FixitGo and FixitRs as bug tracking tools, then decide whether to keep both implementations or consolidate into one. FixitGo uses Go/HTMX for a server-rendered approach, while FixitRs uses Rust/Leptos for a WASM-based approach.
 
 ### Subtasks
-- [ ] T034 Audit FixitGo: existing bug tracking features, HTMX integration, gaps
-- [ ] T035 Complete FixitGo: bug creation, assignment, status tracking, search
-- [ ] T036 Complete FixitGo UI: HTMX-based forms, real-time updates, responsive design
-- [ ] T037 Audit FixitRs: existing bug tracking features, Leptos integration, gaps
-- [ ] T038 Complete FixitRs: bug creation, assignment, status tracking, search
-- [ ] T039 Complete FixitRs UI: Leptos-based components, WASM rendering
-- [ ] T040 Compare both tools: feature parity, performance, maintainability
-- [ ] T041 Make keep/merge/archive decision with documented rationale
-- [ ] T042 Write tests for both tools (target: ≥80% coverage each)
-- [ ] T043 Add documentation for both tools
-- [ ] T044 Run quality checks across both repos
+- [ ] T035 Audit FixitGo: existing bug tracking features, HTMX integration, gaps
+- [ ] T036 Complete FixitGo: bug creation, assignment, status tracking, search
+- [ ] T037 Complete FixitGo UI: HTMX-based forms, real-time updates, responsive design
+- [ ] T038 Audit FixitRs: existing bug tracking features, Leptos integration, gaps
+- [ ] T039 Complete FixitRs: bug creation, assignment, status tracking, search
+- [ ] T040 Complete FixitRs UI: Leptos-based components, WASM rendering
+- [ ] T041 Compare both tools: feature parity, performance, maintainability
+- [ ] T042 Make keep/merge/archive decision with documented rationale
+- [ ] T043 Write tests for both tools (target: ≥80% coverage each)
+- [ ] T044 Add documentation for both tools
+- [ ] T045 Run quality checks across both repos
 
 ### Dependencies
 - None (can start independently)
 
 ### Risks & Mitigations
-- Maintaining two implementations: Decision at T041 should favor one unless both serve distinct purposes
+- Maintaining two implementations: The keep/merge/archive decision should favor one unless both serve distinct purposes
 - Leptos maturity: Test WASM compatibility, document any limitations
 
 ---
@@ -176,19 +176,19 @@ Complete both FixitGo and FixitRs as bug tracking tools, then decide whether to 
 Evaluate the 7 external repositories and decide whether to keep, archive, or integrate each. This includes portage (package manager UI), colab (collaboration tool), vibeproxy (vibe coding proxy), Planify (planning tool), MCPForge (MCP web interface), Synthia (AI assistant UI), and Tossy (utility app).
 
 ### Subtasks
-- [ ] T045 Audit portage: purpose, completion status, strategic value
-- [ ] T046 Audit colab: purpose, completion status, strategic value
-- [ ] T047 Audit vibeproxy: purpose, completion status, strategic value
-- [ ] T048 Audit Planify: purpose, completion status, strategic value
-- [ ] T049 Audit MCPForge: purpose, completion status, strategic value, integration with agent framework
-- [ ] T050 Audit Synthia: purpose, completion status, strategic value
-- [ ] T051 Audit Tossy: purpose, completion status, strategic value
-- [ ] T052 Evaluate each repo: keep, archive, or integrate with rationale
-- [ ] T053 Plan integrations for approved repos: migration path, timeline
-- [ ] T054 Archive non-strategic repos: Dino, portage, colab, Tossy (per spec)
-- [ ] T055 Complete strategic repos: phenodocs (WP-003), MCPForge
-- [ ] T056 Establish maintenance strategy for kept repos: update cadence, ownership
-- [ ] T057 Document all decisions with rationale in portfolio documentation
+- [ ] T046 Audit portage: purpose, completion status, strategic value
+- [ ] T047 Audit colab: purpose, completion status, strategic value
+- [ ] T048 Audit vibeproxy: purpose, completion status, strategic value
+- [ ] T049 Audit Planify: purpose, completion status, strategic value
+- [ ] T050 Audit MCPForge: purpose, completion status, strategic value, integration with agent framework
+- [ ] T051 Audit Synthia: purpose, completion status, strategic value
+- [ ] T052 Audit Tossy: purpose, completion status, strategic value
+- [ ] T053 Evaluate each repo: keep, archive, or integrate with rationale
+- [ ] T054 Plan integrations for approved repos: migration path, timeline
+- [ ] T055 Archive non-strategic repos: Dino, portage, colab, Tossy (per spec)
+- [ ] T056 Complete strategic repos: phenodocs (WP-003), MCPForge
+- [ ] T057 Establish maintenance strategy for kept repos: update cadence, ownership
+- [ ] T058 Document all decisions with rationale in portfolio documentation
 
 ### Dependencies
 - WP-001 through WP-004 (understanding of completed apps informs external repo decisions)
