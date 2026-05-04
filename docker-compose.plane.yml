@@ -1,4 +1,5 @@
-# docker-compose.plane.yml — Plane.so + Dragonfly via OrbStack containers
+# Canonical shelf-root Plane stack compose for pheno, HexaKit, and PhenoDevOps mirrors.
+# Update this file first; per-repo copies should stay in sync or become symlinks.
 #
 # Usage (full Plane stack as containers):
 #   docker compose -f docker-compose.plane.yml up -d
