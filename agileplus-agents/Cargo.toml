@@ -20,6 +20,7 @@ tokio-stream = "0.1"
 # gRPC / proto
 tonic = { version = "0.12", features = ["transport"] }
 tonic-health = "0.12"
+tonic-build = "0.12"
 prost = "0.13"
 
 # Concurrency utilities
