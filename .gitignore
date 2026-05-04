@@ -19,3 +19,6 @@ data/safari/
 docs/research/gemini_export.html
 docs/research/*_export.html
 docs/research/*_export.json
+
+# Rust build artifacts
+/target
