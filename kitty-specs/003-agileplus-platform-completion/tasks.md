@@ -52,6 +52,9 @@ WP01 → WP02 → WP03
 ## Group 1: Foundation (P1, Sequential)
 
 ### WP01 — Domain Model Extensions
+**File Scope:**
+- Read: `crates/agileplus-domain/src/lib.rs`, `crates/agileplus-domain/src/domain/`
+- Write: `crates/agileplus-domain/src/domain.rs`, `crates/agileplus-domain/src/entities/`, `crates/agileplus-domain/tests/`
 **File**: `tasks/WP01-domain-model-extensions.md`
 **Dependencies**: none
 **Priority**: P1 | **Est. lines**: ~400
@@ -66,6 +69,9 @@ WP01 → WP02 → WP03
 - [x] T007: Add Serialize/Deserialize, validation, and builder patterns for all new entities
 
 ### WP02 — Event Sourcing Engine
+**File Scope:**
+- Read: `crates/agileplus-domain/src/`, `crates/agileplus-events/src/`, `tasks/WP01-domain-model-extensions.md`
+- Write: `crates/agileplus-events/src/`, `crates/agileplus-events/tests/`
 **File**: `tasks/WP02-event-sourcing-engine.md`
 **Dependencies**: WP01
 **Priority**: P1 | **Est. lines**: ~500
