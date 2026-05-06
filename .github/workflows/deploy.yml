@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    uses: KooshaPari/phenoShared/.github/workflows/vitepress-pages.yml@bf9d385002ba36c4bba4ff1b17c49212bea42d74
+    uses: KooshaPari/phenoShared/.github/workflows/vitepress-pages.yml@3041385
     with:
       concurrency_group: agileplus-vitepress-pages
       custom_domain: "true"
