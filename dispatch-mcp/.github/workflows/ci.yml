@@ -24,6 +24,13 @@ jobs:
         with:
           python-version: "3.13"
 
+      - name: Cache uv packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/uv
+          key: uv-packages-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: uv-packages-${{ runner.os }}-
+
       - name: Install uv
         uses: astral-sh/setup-uv@v3
         with:
@@ -39,7 +46,7 @@ jobs:
           else
             uv pip install --system -e . || true
           fi
-          uv pip install --system ruff pytest
+          uv pip install --system ruff pytest pytest-cov mypy bandit safety
 
       - name: Ruff format check
         run: ruff format --check .
@@ -47,5 +54,14 @@ jobs:
       - name: Ruff lint
         run: ruff check .
 
-      - name: Pytest
-        run: pytest -q
+      - name: Mypy strict
+        run: mypy src/ --strict
+
+      - name: Bandit security scan
+        run: bandit -r src/ -f txt 2>&1 || true
+
+      - name: Safety dependency check
+        run: safety check --output text 2>&1 || true
+
+      - name: Pytest + coverage
+        run: pytest --cov=src/dispatch_mcp --cov-fail-under=80 -q
