@@ -18,20 +18,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          sparse-checkout: |
-            .github
-            agileplus
-            kitty-specs
-            .work-audit
-          sparse-checkout-cone-mode: false
-
-      - name: Fetch docs content
-        run: |
-          git clone --depth 1 --branch agileplus/feat/docs-site https://github.com/KooshaPari/AgilePlus.git /tmp/agileplus-docs
-          cp -r /tmp/agileplus-docs/docs .
-
-      - name: Checkout phenodocs
+      - name: Clone phenodocs
         run: |
           git clone --depth 1 https://github.com/KooshaPari/phenodocs.git /tmp/phenodocs
 
@@ -46,10 +33,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "@phenotype:registry=https://npm.pkg.github.com" >> ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> ~/.npmrc
+          # Link @phenotype/docs from phenodocs
           mkdir -p docs/node_modules/@phenotype
-          ln -s /tmp/phenodocs/packages/docs docs/node_modules/@phenotype/docs
+          ln -sf /tmp/phenodocs/packages/docs docs/node_modules/@phenotype/docs
+          # Configure npm for GitHub Packages
+          echo "@phenotype:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=\${GITHUB_TOKEN}" >> ~/.npmrc
           bun install
 
       - name: Build VitePress site
