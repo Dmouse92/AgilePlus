@@ -20,6 +20,7 @@ tokio.workspace = true
 axum.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+serde_yaml = "0.9"
 tracing.workspace = true
 tracing-subscriber.workspace = true
 chrono.workspace = true
@@ -33,4 +34,3 @@ tokio-stream = { version = "0.1", features = ["sync"] }
 askama       = "0.12"
 rand         = "0.8"
 base64       = "0.22"
-serde_yaml   = "0.9"
