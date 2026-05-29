@@ -26,19 +26,17 @@ pub(crate) async fn setup_test_server_with_storage(storage: MockStorage) -> Test
     let storage = Arc::new(storage);
     let vcs = Arc::new(MockVcs);
     let telemetry = Arc::new(MockObs);
-    let config = Arc::new(AppConfig::default());
+    let mut config = AppConfig::default();
+    config.api.api_keys = Some(TEST_API_KEY.to_string());
+    let config = Arc::new(config);
 
     let creds_inner = InMemoryCredentialStore::new();
     creds_inner
         .set("agileplus", cred_keys::API_KEYS, TEST_API_KEY)
         .expect("setting test API key should succeed");
     let creds: Arc<dyn CredentialStore> = Arc::new(creds_inner);
-    let token_verifier: Arc<dyn agileplus_api::middleware::auth::TokenVerifier> =
-        Arc::new(agileplus_api::middleware::auth::SharedSecretTokenVerifier::new([
-            TEST_API_KEY,
-        ]));
 
-    let state = AppState::new(storage, vcs, telemetry, config, creds, token_verifier);
+    let state = AppState::new(storage, vcs, telemetry, config, creds);
     let app = create_router(state);
     TestServer::new(app)
 }

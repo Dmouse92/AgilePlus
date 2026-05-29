@@ -14,7 +14,6 @@ use std::sync::Arc;
 
 use agileplus_api::{AppState, create_router};
 use agileplus_domain::config::AppConfig;
-use agileplus_domain::credentials::CredentialStore;
 use agileplus_domain::credentials::InMemoryCredentialStore;
 use agileplus_domain::domain::audit::{AuditEntry, hash_entry};
 use agileplus_domain::domain::backlog::{
@@ -856,16 +855,13 @@ async fn setup_test_server() -> TestServer {
     let storage = Arc::new(MockStorage::with_test_data());
     let vcs = Arc::new(MockVcs);
     let telemetry = Arc::new(MockObs);
-    let config = Arc::new(AppConfig::default());
+    let mut config = AppConfig::default();
+    config.api.api_keys = Some(TEST_API_KEY.to_string());
+    let config = Arc::new(config);
 
     let creds_inner = InMemoryCredentialStore::new(vec![TEST_API_KEY.to_string()]);
     let creds: Arc<dyn agileplus_domain::credentials::CredentialStore> = Arc::new(creds_inner);
-    let token_verifier: Arc<dyn agileplus_api::middleware::auth::TokenVerifier> =
-        Arc::new(agileplus_api::middleware::auth::SharedSecretTokenVerifier::new(
-            [TEST_API_KEY],
-        ));
-
-    let state = AppState::new(storage, vcs, telemetry, config, creds, token_verifier);
+    let state = AppState::new(storage, vcs, telemetry, config, creds);
     let app = create_router(state);
     TestServer::new(app)
 }

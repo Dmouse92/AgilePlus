@@ -11,7 +11,6 @@ use agileplus_domain::ports::observability::{LogEntry, ObservabilityPort, SpanCo
 use agileplus_git::GitVcsAdapter;
 use agileplus_sqlite::SqliteStorageAdapter;
 use anyhow::{Context, Result, anyhow};
-use tracing::warn;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -35,18 +34,7 @@ async fn main() -> Result<()> {
     let vcs = Arc::new(GitVcsAdapter::from_current_dir()?);
     let telemetry = Arc::new(NoOpObservability);
     let credentials = Arc::from(create_credential_store(&config));
-    let token_verifier: Arc<dyn agileplus_api::middleware::auth::TokenVerifier> =
-        Arc::new(agileplus_api::middleware::auth::SharedSecretTokenVerifier::from_csv(
-            config.api.api_keys.clone(),
-        ));
-    let state = AppState::new(
-        storage,
-        vcs,
-        telemetry,
-        Arc::new(config),
-        credentials,
-        token_verifier,
-    );
+    let state = AppState::new(storage, vcs, telemetry, Arc::new(config), credentials);
 
     agileplus_api::router::start_api(addr, state)
         .await
