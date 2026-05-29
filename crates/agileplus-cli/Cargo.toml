@@ -21,6 +21,7 @@ agileplus-github = { path = "../agileplus-github" }
 agileplus-sqlite = { path = "../agileplus-sqlite" }
 rusqlite = { version = "0.32", features = ["bundled"] }
 async-trait.workspace = true
+serde_json.workspace = true
 
 [dev-dependencies]
 tokio-test = "0.4"

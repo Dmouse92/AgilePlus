@@ -96,6 +96,7 @@ dependencies = [
  "chrono",
  "clap",
  "rusqlite",
+ "serde_json",
  "tokio",
  "tokio-test",
  "tracing",

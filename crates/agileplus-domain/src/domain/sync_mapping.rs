@@ -36,3 +36,25 @@ pub struct SyncMapping {
     pub sync_direction: SyncDirection,
     pub conflict_count: i32,
 }
+
+impl SyncMapping {
+    /// Convenience constructor — sets defaults for `id`, `last_synced_at`,
+    /// `sync_direction`, and `conflict_count`.
+    pub fn new(
+        entity_type: &str,
+        entity_id: i64,
+        plane_issue_id: &str,
+        content_hash: &str,
+    ) -> Self {
+        Self {
+            id: 0,
+            entity_type: entity_type.to_string(),
+            entity_id,
+            plane_issue_id: plane_issue_id.to_string(),
+            content_hash: content_hash.to_string(),
+            last_synced_at: Utc::now(),
+            sync_direction: SyncDirection::Bidirectional,
+            conflict_count: 0,
+        }
+    }
+}
