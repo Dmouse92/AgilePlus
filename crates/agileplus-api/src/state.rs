@@ -15,7 +15,7 @@ use agileplus_domain::ports::{
 };
 use tokio::sync::broadcast;
 
-use crate::middleware::auth::TokenVerifier;
+use crate::middleware::token_verifier::{DynTokenVerifier, SharedSecretVerifier};
 
 /// Broadcast channel capacity for SSE event streaming.
 const EVENT_CHANNEL_CAPACITY: usize = 256;
@@ -32,7 +32,7 @@ where
     pub telemetry: Arc<O>,
     pub config: Arc<AppConfig>,
     pub credentials: Arc<dyn CredentialStore>,
-    pub token_verifier: Arc<dyn TokenVerifier>,
+    pub token_verifier: DynTokenVerifier,
     /// Broadcast sender for real-time SSE event streaming (T069).
     /// Publish JSON objects with `event_type` and `data` keys.
     pub event_tx: broadcast::Sender<serde_json::Value>,
@@ -81,18 +81,9 @@ where
         telemetry: Arc<O>,
         config: Arc<AppConfig>,
         credentials: Arc<dyn CredentialStore>,
-        token_verifier: Arc<dyn TokenVerifier>,
     ) -> Self {
         let (event_tx, _) = broadcast::channel(EVENT_CHANNEL_CAPACITY);
-        Self::with_event_tx(
-            storage,
-            vcs,
-            telemetry,
-            config,
-            credentials,
-            token_verifier,
-            event_tx,
-        )
+        Self::with_event_tx(storage, vcs, telemetry, config, credentials, event_tx)
     }
 
     /// Create state with an explicit broadcast sender (allows sharing the channel
@@ -103,9 +94,10 @@ where
         telemetry: Arc<O>,
         config: Arc<AppConfig>,
         credentials: Arc<dyn CredentialStore>,
-        token_verifier: Arc<dyn TokenVerifier>,
         event_tx: broadcast::Sender<serde_json::Value>,
     ) -> Self {
+        let token_verifier = shared_secret_verifier_from_config(&config);
+
         // Composition root: wire use-cases with no-op publisher by default.
         // Production callers can swap in a NATS publisher by constructing the
         // use-cases manually before calling `with_event_tx`.
@@ -135,6 +127,21 @@ where
             transition_story_uc,
             create_epic_uc,
         }
+    }
+}
+
+fn shared_secret_verifier_from_config(config: &AppConfig) -> DynTokenVerifier {
+    match config.api.api_keys.clone() {
+        Some(raw) if !raw.trim().is_empty() => {
+            let tokens = raw
+                .split(',')
+                .map(str::trim)
+                .filter(|token| !token.is_empty())
+                .map(String::from)
+                .collect::<Vec<_>>();
+            Arc::new(SharedSecretVerifier::new(tokens))
+        }
+        _ => Arc::new(SharedSecretVerifier::from_env()),
     }
 }
 

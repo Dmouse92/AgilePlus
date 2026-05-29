@@ -65,7 +65,10 @@ impl AppConfig {
             config.core.database_path = PathBuf::from(db);
         }
 
-        if let Ok(keys) = std::env::var("API_KEYS").or_else(|_| std::env::var("AGILEPLUS_API_KEYS")) {
+        if let Ok(keys) = std::env::var("AGILEPLUS_API_KEY")
+            .or_else(|_| std::env::var("API_KEYS"))
+            .or_else(|_| std::env::var("AGILEPLUS_API_KEYS"))
+        {
             config.api.api_keys = Some(keys);
         }
 

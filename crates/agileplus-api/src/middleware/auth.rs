@@ -4,73 +4,34 @@
 //! constant-time comparison. JWT and Authvault integration remain follow-up
 //! work once the token-verifier port is exercised in production.
 
-use std::sync::Arc;
-
 use axum::extract::{Request, State};
 use axum::http::header;
 use axum::middleware::Next;
 use axum::response::Response;
-use subtle::ConstantTimeEq;
 use tracing::warn;
 
 use crate::error::ApiError;
-
-/// Port for validating bearer tokens or API keys on protected routes.
-pub trait TokenVerifier: Send + Sync {
-    fn verify(&self, token: &str) -> bool;
-}
-
-/// Default token verifier backed by one or more shared secrets.
-#[derive(Clone, Debug)]
-pub struct SharedSecretTokenVerifier {
-    allowed_tokens: Arc<[String]>,
-}
-
-impl SharedSecretTokenVerifier {
-    pub fn new(tokens: impl IntoIterator<Item = impl Into<String>>) -> Self {
-        Self {
-            allowed_tokens: tokens.into_iter().map(Into::into).collect(),
-        }
-    }
-
-    pub fn from_csv(raw: Option<String>) -> Self {
-        let raw_str = raw.unwrap_or_default();
-        let tokens: Vec<&str> = raw_str
-            .split(',')
-            .map(str::trim)
-            .filter(|token| !token.is_empty())
-            .collect();
-        Self::new(tokens)
-    }
-}
-
-impl TokenVerifier for SharedSecretTokenVerifier {
-    fn verify(&self, token: &str) -> bool {
-        let candidate = token.as_bytes();
-        self.allowed_tokens
-            .iter()
-            .any(|expected| expected.as_bytes().ct_eq(candidate).into())
-    }
-}
+use crate::middleware::token_verifier::DynTokenVerifier;
 
 /// axum middleware that authorizes protected routes.
 ///
 /// Accepts either `Authorization: Bearer <token>` or `X-API-Key: <token>`.
 /// Returns `401 Unauthorized` when the credential is missing or invalid.
 pub async fn authorize(
-    State(verifier): State<Arc<dyn TokenVerifier>>,
+    State(verifier): State<DynTokenVerifier>,
     request: Request,
     next: Next,
 ) -> Result<Response, ApiError> {
-    let token = extract_token(request.headers()).ok_or_else(|| {
-        ApiError::Unauthorized("Missing bearer token or API key".to_string())
-    })?;
+    let token = extract_token(request.headers())
+        .ok_or_else(|| ApiError::Unauthorized("Missing bearer token or API key".to_string()))?;
 
-    if verifier.verify(&token) {
-        Ok(next.run(request).await)
-    } else {
-        warn!(token_hint = %token_hint(&token), "API authorization failed");
-        Err(ApiError::Unauthorized("Invalid bearer token or API key".to_string()))
+    match verifier.verify(&token) {
+        Ok(true) => Ok(next.run(request).await),
+        Ok(false) => {
+            warn!(token_hint = %token_hint(&token), "API authorization failed");
+            Err(ApiError::Unauthorized("Invalid bearer token or API key".to_string()))
+        }
+        Err(err) => Err(ApiError::Internal(format!("token verification failed: {err}"))),
     }
 }
 
@@ -91,34 +52,39 @@ fn extract_token(headers: &axum::http::HeaderMap) -> Option<String> {
 
 fn token_hint(token: &str) -> String {
     let prefix = token.chars().take(4).collect::<String>();
-    format!("{prefix}…")
+    format!("{prefix}...")
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::sync::Arc;
+    use crate::middleware::token_verifier::TokenVerifier;
+    use crate::middleware::token_verifier::SharedSecretVerifier;
 
     #[test]
     fn shared_secret_verifier_accepts_matching_token() {
-        let verifier = SharedSecretTokenVerifier::new(["alpha"]);
-        assert!(verifier.verify("alpha"));
+        let verifier = Arc::new(SharedSecretVerifier::new(vec!["alpha".to_string()]));
+        assert!(verifier.verify("alpha").unwrap());
     }
 
     #[test]
     fn shared_secret_verifier_rejects_non_matching_token() {
-        let verifier = SharedSecretTokenVerifier::new(["alpha"]);
-        assert!(!verifier.verify("omega"));
+        let verifier = Arc::new(SharedSecretVerifier::new(vec!["alpha".to_string()]));
+        assert!(!verifier.verify("omega").unwrap());
     }
 
     #[test]
     fn shared_secret_verifier_rejects_length_mismatch() {
-        let verifier = SharedSecretTokenVerifier::new(["alpha"]);
-        assert!(!verifier.verify("alph"));
+        let verifier = Arc::new(SharedSecretVerifier::new(vec!["alpha".to_string()]));
+        assert!(!verifier.verify("alph").unwrap());
     }
 
     #[test]
     fn shared_secret_verifier_parses_csv_tokens() {
-        let verifier = SharedSecretTokenVerifier::from_csv(Some("alpha, beta".to_string()));
-        assert!(verifier.verify("beta"));
+        let verifier = Arc::new(SharedSecretVerifier::new(vec![
+            "alpha".to_string(),
+            "beta".to_string(),
+        ]));
+        assert!(verifier.verify("beta").unwrap());
     }
 }
