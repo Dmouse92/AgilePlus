@@ -1,5 +1,6 @@
 //! Hexagonal-architecture ports — async traits implemented by adapters.
 
+pub mod agent;
 pub mod epic;
 pub mod events;
 pub mod observability;
