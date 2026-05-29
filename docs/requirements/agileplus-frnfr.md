@@ -208,6 +208,19 @@ AgilePlus is a hexagonal-architecture Rust workspace providing an agile project 
 
 ---
 
+### FR-AGP-016 — CLI Read/List Subcommands
+
+| Field | Value |
+|---|---|
+| **ID** | FR-AGP-016 |
+| **Title** | CLI `list` subcommands for projects, epics, and stories |
+| **Description** | The system shall provide three read-only `list` subcommands in `agileplus-cli`: `list-projects` (all projects), `list-epics [--project <id>]` (all epics, optionally filtered by project), and `list-stories [--epic <id>] [--status <s>]` (stories filtered by epic and/or lifecycle status). Each subcommand defaults to a human-readable table and accepts `--json` to emit pretty-printed JSON. Storage is read from the SQLite adapter via the `StoragePort` port; the database path is resolved from the `AGILEPLUS_DB` environment variable (default: `agileplus.db`). |
+| **Acceptance Criteria** | AC1: `agileplus list-projects` prints a table of all projects or "No projects found." AC2: `agileplus list-epics --project <id>` returns only epics for that project. AC3: `agileplus list-stories --epic <id> --status <s>` filters by both dimensions independently. AC4: `--json` flag emits valid JSON on all three subcommands. AC5: Invalid `--status` value exits with a non-zero code and an error message. AC6: All five acceptance criteria are covered by in-memory unit tests (no real I/O). |
+| **Status** | SHIPPED |
+| **Traceability** | feat/cli-list-commands; `crates/agileplus-cli/src/commands/list_projects.rs`; `crates/agileplus-cli/src/commands/list_epics.rs`; `crates/agileplus-cli/src/commands/list_stories.rs`; `crates/agileplus-cli/src/commands/list_tests.rs` (10 unit tests); `crates/agileplus-domain/src/ports/agent.rs` (new port stub); `crates/agileplus-domain/src/domain/governance.rs` (`BuiltinPolicy`); `crates/agileplus-domain/src/domain/sync_mapping.rs` (`SyncMapping::new`). |
+
+---
+
 ### FR-AGP-015 — OpenTelemetry Observability
 
 | Field | Value |
@@ -315,7 +328,7 @@ AgilePlus is a hexagonal-architecture Rust workspace providing an agile project 
 | FR-AGP-012 | API bearer-token authentication | SHIPPED |
 | FR-AGP-013 | End-to-end sync → SQLite wiring | SHIPPED |
 | FR-AGP-014 | Live dashboard frontend | PLANNED |
-| — | CLI `list` subcommands (stories, epics, features) | PLANNED |
+| FR-AGP-016 | CLI `list` subcommands (projects, epics, stories) | SHIPPED |
 | FR-AGP-015 | Observability: OpenTelemetry traces + metrics export | SHIPPED (feat/opentelemetry) |
 | — | Plane.so integration adapter | PLANNED (`agileplus-plane` crate stubbed) |
 | — | Graph/dependency analysis for work items | PLANNED (`agileplus-graph` crate stubbed) |
@@ -355,3 +368,4 @@ AgilePlus is a hexagonal-architecture Rust workspace providing an agile project 
 | #607 | config_builder! macro | FR-AGP-010, NFR-AGP-003 |
 | feat/sync-sqlite-persistence | PersistSyncedStories use case + 5 tests | FR-AGP-013, NFR-AGP-005 |
 | feat/opentelemetry | OTel subscriber init + OTLP adapter + request-span middleware + 35 tests | FR-AGP-015, NFR-AGP-004 |
+| feat/cli-list-commands | CLI list-projects / list-epics / list-stories subcommands + 10 unit tests + domain stubs (AgentPort, BuiltinPolicy, SyncMapping::new) | FR-AGP-016, NFR-AGP-005 |

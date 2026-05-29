@@ -4,6 +4,8 @@ mod sync_cmd;
 
 pub mod commands;
 
+use std::path::PathBuf;
+
 use clap::{Parser, Subcommand};
 
 use agileplus_domain::domain::{
@@ -52,6 +54,12 @@ enum Command {
     Sync(SyncArgs),
     /// Seed FR/NFR catalogs as Epics + Stories (Tracera traceability)
     SeedRequirements(commands::seed_requirements::SeedRequirementsArgs),
+    /// List projects stored in the local database
+    ListProjects(commands::list_projects::ListProjectsArgs),
+    /// List epics, optionally filtered by project
+    ListEpics(commands::list_epics::ListEpicsArgs),
+    /// List stories, optionally filtered by epic and/or status
+    ListStories(commands::list_stories::ListStoriesArgs),
 }
 
 #[derive(Subcommand)]
@@ -194,6 +202,16 @@ fn cmd_version() {
     println!("agileplus-cli {}", env!("CARGO_PKG_VERSION"));
 }
 
+// ── helpers ──────────────────────────────────────────────────────────────────
+
+/// Resolve the SQLite database path from `AGILEPLUS_DB` env var or fall back
+/// to `./agileplus.db` in the current directory.
+fn db_path_from_env() -> PathBuf {
+    std::env::var("AGILEPLUS_DB")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| PathBuf::from("agileplus.db"))
+}
+
 // ── entry point ──────────────────────────────────────────────────────────────
 
 #[tokio::main]
@@ -219,6 +237,24 @@ async fn main() {
             }
             Command::SeedRequirements(args) => {
                 commands::seed_requirements::run(&args)?;
+            }
+            Command::ListProjects(args) => {
+                let db_path = db_path_from_env();
+                let storage = agileplus_sqlite::SqliteStorageAdapter::new(&db_path)
+                    .map_err(|e| anyhow::anyhow!("open db: {e}"))?;
+                commands::list_projects::run(&args, &storage).await?;
+            }
+            Command::ListEpics(args) => {
+                let db_path = db_path_from_env();
+                let storage = agileplus_sqlite::SqliteStorageAdapter::new(&db_path)
+                    .map_err(|e| anyhow::anyhow!("open db: {e}"))?;
+                commands::list_epics::run(&args, &storage).await?;
+            }
+            Command::ListStories(args) => {
+                let db_path = db_path_from_env();
+                let storage = agileplus_sqlite::SqliteStorageAdapter::new(&db_path)
+                    .map_err(|e| anyhow::anyhow!("open db: {e}"))?;
+                commands::list_stories::run(&args, &storage).await?;
             }
         }
         Ok(())
