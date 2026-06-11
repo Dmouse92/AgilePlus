@@ -90,6 +90,7 @@ dependencies = [
 name = "agileplus-cli"
 version = "0.1.0"
 dependencies = [
+ "agileplus-application",
  "agileplus-domain",
  "agileplus-github",
  "agileplus-sqlite",

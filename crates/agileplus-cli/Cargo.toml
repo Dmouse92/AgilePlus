@@ -16,6 +16,7 @@ tracing.workspace = true
 tracing-subscriber.workspace = true
 clap = { version = "4", features = ["derive", "env"] }
 chrono.workspace = true
+agileplus-application = { path = "../agileplus-application" }
 agileplus-domain = { path = "../agileplus-domain" }
 agileplus-github = { path = "../agileplus-github" }
 agileplus-sqlite = { path = "../agileplus-sqlite" }

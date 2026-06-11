@@ -9,6 +9,7 @@ pub mod list_projects;
 pub mod list_stories;
 pub mod list_tests;
 pub mod seed_requirements;
+pub mod version;
 pub mod worklog;
 
 // ── stub modules (excluded until upstream deps are resolved) ──────────────────
