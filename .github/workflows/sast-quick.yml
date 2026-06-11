@@ -1,4 +1,5 @@
 name: SAST Quick Check
+permissions: read-all
 on:
   pull_request:
   push:
@@ -10,7 +11,7 @@ jobs:
   semgrep:
     name: Semgrep Scan
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
 
@@ -33,7 +34,7 @@ jobs:
   secrets:
     name: Secret Scanning
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
         with:
@@ -48,6 +49,7 @@ jobs:
   lint-rust:
     name: Rust Lint
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
@@ -63,6 +65,7 @@ jobs:
   license-check:
     name: License Compliance
     runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
