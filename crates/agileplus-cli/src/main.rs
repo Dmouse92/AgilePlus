@@ -60,6 +60,8 @@ enum Command {
     ListEpics(commands::list_epics::ListEpicsArgs),
     /// List stories, optionally filtered by epic and/or status
     ListStories(commands::list_stories::ListStoriesArgs),
+    /// Worklog schema management (validate/convert/schema/list)
+    Worklog(commands::worklog::WorklogArgs),
 }
 
 #[derive(Subcommand)]
@@ -220,10 +222,39 @@ fn db_path_from_env() -> PathBuf {
         .unwrap_or_else(|_| PathBuf::from("agileplus.db"))
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn mock_store_seed_contains_cli_fixtures() {
+        let store = MockStore::seed();
+
+        assert_eq!(store.features.len(), 3);
+        assert_eq!(store.modules.len(), 2);
+        assert_eq!(store.cycles.len(), 1);
+        assert_eq!(store.cycles[0].state, CycleState::Active);
+    }
+
+    #[test]
+    fn db_path_defaults_when_env_missing() {
+        std::env::remove_var("AGILEPLUS_DB");
+        assert_eq!(db_path_from_env(), PathBuf::from("agileplus.db"));
+    }
+
+    #[test]
+    fn db_path_uses_env_override() {
+        std::env::set_var("AGILEPLUS_DB", "/tmp/agileplus-test.db");
+        assert_eq!(db_path_from_env(), PathBuf::from("/tmp/agileplus-test.db"));
+        std::env::remove_var("AGILEPLUS_DB");
+    }
+}
+
 // ── entry point ──────────────────────────────────────────────────────────────
 
 #[tokio::main]
 async fn main() {
+    let _telemetry = agileplus_telemetry::init_subscriber().ok();
     let cli = Cli::parse();
     let store = MockStore::seed();
 
@@ -263,6 +294,9 @@ async fn main() {
                 let storage = agileplus_sqlite::SqliteStorageAdapter::new(&db_path)
                     .map_err(|e| anyhow::anyhow!("open db: {e}"))?;
                 commands::list_stories::run(&args, &storage).await?;
+            }
+            Command::Worklog(args) => {
+                commands::worklog::run(&args)?;
             }
         }
         Ok(())
