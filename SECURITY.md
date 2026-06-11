@@ -28,144 +28,107 @@ security updates:
 > latest two minor lines. We will publish a CVE and a GHSA for every
 > security fix landed on `main`.
 
+We take the security of our projects seriously. This document explains how to
+report a vulnerability, what to expect from us, and how we coordinate
+disclosure.
+
+## Supported Versions
+
+The following versions of this project receive security updates:
+
+| Version | Supported          |
+| ------- | ------------------ |
+| Latest  | :white_check_mark: |
+| < Latest | :x:                |
+
+Only the most recent release line (and `main` / the default branch) is
+actively maintained. Older releases will not receive backported patches
+unless a critical CVE is involved; please upgrade.
+
 ## Reporting a Vulnerability
 
-**Please do not file a public GitHub issue for security bugs.**
+**Please do not file a public GitHub issue for security vulnerabilities.**
 
-The fastest, most private way to report a vulnerability is via one of
-the channels below. Choose the one you are most comfortable with:
+Report privately via one of the following channels (in order of preference):
 
-1. **GitHub private vulnerability reporting** —
-   *Repository → Security → Advisories → "New draft security advisory"*.
-   This is the preferred channel; it gives you a private thread with
-   the maintainers, a CVE assignment, and a coordinated disclosure
-   workflow.
-2. **Email** — `security@phenotype.internal` (PGP key fingerprint:
-   `B5C7 1F2E 9D44 8A6B 7E3C  4F2A 19AB 6C3D 8E1F 0A2B`). The mailbox
-   is monitored 24/7 and triaged within 24 hours.
-3. **Signal** — `@koosha.42` on Signal. Ask for our Signal safety
-   number out-of-band before sharing details.
+1. **GitHub Security Advisories** — open a
+   [private security advisory](../../security/advisories/new) on this
+   repository. This routes directly to the maintainers and keeps the
+   discussion out of the public bug tracker.
+2. **Email** — send a report to the maintainer listed in
+   [`CODEOWNERS`](../CODEOWNERS) / repository metadata. Use this channel for
+   vulnerabilities you believe are time-sensitive or that touch multiple
+   repositories in the organization.
 
-When you write in, please include (to the extent you can):
+A good report includes:
 
-- A clear description of the issue and its impact.
-- A reproducer — minimal shell / `ap-fleet` invocation, agent
-  config, JSONL event excerpt, or a screenshot of a malicious
-  spec-kitty work-package.
-- The affected commit SHA, tag, or release version.
-- Any known workarounds or mitigations.
-- Your name / handle for credit (optional; we will not credit by
-  default if you request anonymity).
+- A clear description of the vulnerability and its impact
+- A reproducer (proof-of-concept, curl transcript, test case, or steps to
+  reproduce)
+- Affected versions, commit SHAs, and components
+- Any known mitigations or workarounds
+- Whether you intend to disclose publicly and on what timeline
 
-### What *not* to send
-
-- Do not include real customer data, tokens, or PII in a report.
-- Do not exploit the issue beyond what is necessary to demonstrate it.
-- Do not publish details, screenshots, or PoCs publicly until we have
-  agreed a disclosure date (see §4).
+Please **do not** include real user data, production secrets, or exploit
+payloads in the initial report. A redacted, minimal reproducer is
+sufficient.
 
 ## Response Timeline
 
-We commit to the following SLOs. "Business hours" = 09:00–18:00 UTC,
-Mon–Fri excluding Phenotype holidays.
+We aim to handle every report in a predictable, time-bounded way:
 
-| Stage                            | SLO                             |
-|----------------------------------|---------------------------------|
-| **Acknowledgement**              | ≤ 24 hours, every report        |
-| **Triage & severity assignment** | ≤ 3 business days               |
-| **Patch for Critical / High**    | ≤ 7 days                        |
-| **Patch for Medium**             | ≤ 30 days                       |
-| **Patch for Low / Informational**| ≤ 90 days (or accepted-risk)    |
-| **CVE / GHSA assignment**        | ≤ 24 hours after triage         |
-| **Disclosure coordination**      | Per §4                          |
+| Stage                                | Target SLA       |
+| ------------------------------------ | ---------------- |
+| Initial acknowledgement              | within 2 business days |
+| Triage & impact assessment           | within 7 business days |
+| Status update to reporter            | at least every 7 business days until resolution |
+| Patch released for critical issues   | within 30 days of triage confirmation |
+| Patch released for high / medium     | within 60–90 days, depending on complexity |
+| CVE / GHSA assignment                | coordinated with the reporter |
 
-We will keep you informed at every step. If we cannot meet an SLO we
-will tell you why, and we will agree a new date with you.
+A "critical" issue is one that is remotely exploitable with low
+attacker effort and significant impact (auth bypass, RCE, secret
+exposure, supply-chain compromise). Severity is determined at our
+discretion using the CVSS v3.1 base score as a guide.
 
-## Coordinated Disclosure
+If we are unable to meet a timeline, we will tell you — silence does
+not mean your report is being ignored.
 
-We follow a 90-day coordinated disclosure window from the date of
-acknowledgement, modelled on
-[Google's project-zero timeline](https://googleprojectzero.blogspot.com/p/vulnerability-disclosure-faq.html).
-Concretely:
+## Disclosure Policy
 
-- **Day 0** — you report the issue.
-- **Day 0–7** — we triage, agree severity, and start a fix branch.
-- **Day 7–60** — we develop, test, and backport the fix on a private
-  advisory branch.
-- **Day 60–75** — we prepare the advisory, CVE, and release notes.
-- **Day 75–90** — embargo; we agree a release date with you and
-  downstream consumers.
-- **Day 90** — public disclosure: advisory + CVE + release tags +
-  blog post. We credit you in the advisory unless you opted out.
+We follow **coordinated disclosure** (a.k.a. responsible disclosure):
 
-We are happy to negotiate the disclosure date, especially for
-issues that affect the agent-routing layer or that require
-coordinated rollout across the Phenotype mesh. Just tell us your
-constraints.
+- The reporter agrees to keep the vulnerability confidential until a
+  fix is published or a mutually agreed embargo expires.
+- We agree to credit the reporter in the public advisory (unless they
+  prefer to remain anonymous) and to set a release date that is no
+  later than **90 days** after the initial acknowledgement, except
+  when an earlier release is warranted (e.g. active exploitation) or
+  when the reporter asks for additional time.
+- We publish a GitHub Security Advisory plus a CVE (via GHSA / MITRE
+  CNA) describing the issue, affected versions, severity, and fix.
+- We do not pursue legal action against researchers who make a good
+  faith effort to follow this policy.
 
-## Severity Rating
+Out-of-band disclosures (blog posts, tweets, conference talks before a
+fix is ready) are not authorized and may put users at risk. If you are
+unsure whether something is in scope, ask first.
 
-We use CVSS v3.1 base scores as a starting point:
+## Acknowledgements
 
-| Severity     | CVSS range  | Examples                                       |
-|--------------|-------------|------------------------------------------------|
-| **Critical** | 9.0 – 10.0  | RCE via malicious spec-kitty worktree, fleet-  |
-|              |             | wide credential exfiltration, sandbox escape   |
-| **High**     | 7.0 – 8.9   | Privilege escalation inside the daemon,        |
-|              |             | unauthenticated RPC, persisted supply-chain    |
-|              |             | backdoor                                        |
-| **Medium**   | 4.0 – 6.9   | Information disclosure, targeted DoS, partial  |
-|              |             | auth bypass                                    |
-| **Low**      | 0.1 – 3.9   | Local-only info leaks, hardening recommendations |
-| **Info**     | 0.0         | Best-practice deviations, no direct impact     |
+We are grateful to the security researchers and community members who
+help keep this project safe. Reporters who follow this policy will be
+credited in the published advisory (with their consent) and may be
+listed below in chronological order.
 
-## Security Tooling
+- _No reports have been acknowledged yet._
 
-AgilePlus is scanned continuously by:
+A full historical list of advisories for this project is available
+under the repository's **Security** tab → "Advisories".
 
-- `cargo audit` + `cargo deny` (RustSec + license).
-- `osv-scanner` across lockfiles (Rust, Python, npm).
-- `pip-audit` for the Python adapter.
-- `pnpm audit --prod` in CI.
-- GitHub CodeQL (Rust, Python, JavaScript/TypeScript).
-- OpenSSF Scorecard (weekly).
-- `trivy` filesystem scan in the release pipeline.
-- Sigstore `cosign verify` for released binaries.
+---
 
-Reproduce locally with:
-
-```bash
-just security-scan
-```
-
-## Out of Scope
-
-The following are **not** considered security vulnerabilities in
-AgilePlus and should be filed as regular bugs:
-
-- Reports about a coding agent misbehaving when given a malicious
-  prompt by the operator — that's the operator's threat model.
-- Findings that require physical access to the host running
-  `agileplusd`.
-- Findings against third-party plugins that have not been installed
-  via the official registry.
-- "Theoretical" issues without a concrete attack path.
-- Reports against unsupported (EOL) release lines.
-
-## Bug Bounty
-
-AgilePlus is not currently running a paid bug bounty programme. We do
-publicly credit researchers in the GitHub Security Advisory and in
-the release notes, and we are happy to coordinate a joint blog post
-with you after disclosure.
-
-## Recognition
-
-We are grateful to the following researchers for responsible
-disclosures (most recent first):
-
-- _Awaiting first advisory._
-
-Thank you for helping keep AgilePlus — and the fleets that depend on
-it — safe.
+If you believe you have found a security issue in a different
+Phenotype repository, please follow that repository's `SECURITY.md` or
+contact the organization security team at the address listed in
+`/SECURITY.md` of the relevant project.
