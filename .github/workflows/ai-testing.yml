@@ -21,6 +21,7 @@ jobs:
   bdd-tests:
     name: BDD Feature Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -38,6 +39,7 @@ jobs:
   vitest-tests:
     name: Vitest Unit Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -55,6 +57,7 @@ jobs:
   playwright-tests:
     name: Playwright Visual Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -72,6 +75,7 @@ jobs:
   spec-traceability:
     name: FR Traceability Validation
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
