@@ -41,10 +41,7 @@ pub struct SyncArgs {
 fn split_repo(repo: &str) -> Result<(&str, &str)> {
     match repo.split_once('/') {
         Some((owner, name)) if !owner.is_empty() && !name.is_empty() => Ok((owner, name)),
-        _ => bail!(
-            "invalid repo format '{}': expected owner/repo (e.g. KooshaPari/AgilePlus)",
-            repo
-        ),
+        _ => bail!("invalid repo format '{repo}': expected owner/repo (e.g. KooshaPari/AgilePlus)"),
     }
 }
 
