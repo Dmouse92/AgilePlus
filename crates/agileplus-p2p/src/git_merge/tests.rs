@@ -14,8 +14,9 @@ fn make_event_line(seq: i64) -> String {
     serde_json::to_string(&e).unwrap()
 }
 
+#[allow(clippy::uninlined_format_args)]
 fn conflict_block(ours: &str, theirs: &str) -> String {
-    format!("<<<<<<< HEAD\n{ours}\n=======\n{theirs}\n>>>>>>> branch\n")
+    format!("<<<<<<< HEAD\n{ours}\n=======\n{theirs}\n>>>>>>> branch\n",)
 }
 
 #[test]
