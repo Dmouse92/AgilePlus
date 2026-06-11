@@ -1,0 +1,25 @@
+{
+  "status": "complete",
+  "task_id": "L1-001",
+  "agent_id": "codex-exec",
+  "files_changed": [
+    "crates/agileplus-cli/Cargo.toml",
+    "crates/agileplus-cli/src/commands/list.rs",
+    "crates/agileplus-cli/src/commands/list_projects.rs",
+    "crates/agileplus-cli/src/commands/mod.rs",
+    "crates/agileplus-cli/src/commands/triage.rs"
+  ],
+  "commit_sha": "chore/L1-001-sota-testing-2026-06-11",
+  "verification_result": {
+    "status": "passed_with_root_npm_build_not_applicable",
+    "commands": [
+      "cargo check -p agileplus-cli --offline",
+      "cargo test -p agileplus-cli --offline",
+      "cargo test --offline",
+      "npm run build"
+    ],
+    "notes": "Cargo offline checks passed. Root npm build is not applicable because the repo root has no package.json."
+  },
+  "started_at": "2026-06-11T19:48:16Z",
+  "completed_at": "2026-06-11T19:48:16Z"
+}
