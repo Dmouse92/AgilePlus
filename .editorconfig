@@ -27,20 +27,3 @@ trim_trailing_whitespace = false
 
 [Makefile]
 indent_style = tab
-
-# --- appended by L2 #28 on 2026-06-11 ---
-[*.{ts,tsx,js,jsx,mjs,cjs}]
-indent_size = 2
-
-[*.{toml,yaml,yml,json,html,css,scss}]
-indent_size = 2
-
-[*.md]
-trim_trailing_whitespace = false
-# trailing spaces in Markdown denote hard line breaks
-
-[*.{zsh,sh,bash}]
-indent_size = 2
-
-[*.{diff,patch}]
-trim_trailing_whitespace = false
