@@ -6,13 +6,15 @@
 use std::collections::HashMap;
 use std::env;
 
+use agileplus_domain::ports::StoragePort;
+use agileplus_sqlite::SqliteStorageAdapter;
 use askama::Template;
 use axum::{
+    Router,
     extract::{Path, Query, State},
     http::{HeaderMap, StatusCode},
     response::{Html, IntoResponse, Response},
     routing::{get, post},
-    Router,
 };
 
 use agileplus_domain::domain::{
@@ -23,13 +25,13 @@ use crate::app_state::{ServiceHealth, SharedState};
 use crate::health;
 use crate::process_detector;
 use crate::templates::{
-    all_feature_states, AgentActivityPartial, AgentSettingsPage, AgentView, CiLinkView,
-    DashboardPage, EcosystemProject, EventTimelinePartial, EventsPage, EvidenceBundleView,
-    FeatureDetailPage, FeatureEvidencePartial, FeatureView, FeaturesPage, GenerateEvidenceResponse,
-    GitCommitView, HealthPage, HealthPanelPartial, HomePage, HubPage, KanbanPartial,
-    MediaAssetView, PlaneHealthEndpointView, PlaneSettingsPage, PrLinkView, ProjectSummaryView,
+    AgentActivityPartial, AgentSettingsPage, AgentView, CiLinkView, DashboardPage,
+    EcosystemProject, EventTimelinePartial, EventsPage, EvidenceBundleView, FeatureDetailPage,
+    FeatureEvidencePartial, FeatureView, FeaturesPage, GenerateEvidenceResponse, GitCommitView,
+    HealthPage, HealthPanelPartial, HomePage, HubPage, KanbanPartial, MediaAssetView,
+    PlaneHealthEndpointView, PlaneSettingsPage, PrLinkView, ProjectSummaryView,
     ProjectSwitcherPartial, ProjectView, ReportArtifactView, ServiceHealthView,
-    ServicesSettingsPage, SettingsPage, ToastPartial, WpListPartial, WpView,
+    ServicesSettingsPage, SettingsPage, ToastPartial, WpListPartial, WpView, all_feature_states,
 };
 
 use chrono::Utc;
@@ -1636,7 +1638,7 @@ pub async fn feature_evidence_json(
 
 use axum::response::sse::{Event, Sse};
 use std::convert::Infallible;
-use tokio::time::{interval, Duration};
+use tokio::time::{Duration, interval};
 
 pub async fn sse_stream(
     State(state): State<SharedState>,
@@ -2227,73 +2229,98 @@ pub async fn all_work_packages_json(State(state): State<SharedState>) -> impl In
 /// Reads Epics + Stories directly from the SQLite database and returns them
 /// as a flat JSON payload. Used by the React dashboard at port 5176.
 pub async fn epics_stories_json() -> impl IntoResponse {
-    // Resolve db path: DATABASE_URL env → DATABASE_PATH env → default agileplus.db
-    let db_path: PathBuf = if let Ok(url) = std::env::var("DATABASE_URL") {
-        url.strip_prefix("sqlite:").unwrap_or(&url).into()
-    } else if let Ok(p) = std::env::var("DATABASE_PATH") {
-        PathBuf::from(p)
-    } else {
-        PathBuf::from("agileplus.db")
-    };
-
-    let conn = match rusqlite::Connection::open(&db_path) {
-        Ok(c) => c,
+    let db = match SqliteStorageAdapter::new(&resolve_dashboard_db_path()) {
+        Ok(db) => db,
         Err(e) => {
             return axum::Json(serde_json::json!({
                 "epics": [],
                 "stories": [],
                 "epic_count": 0,
                 "story_count": 0,
-                "error": format!("db open failed: {e}"),
+                "error": format!("db init failed: {e}"),
             }));
         }
     };
 
-    // Query epics
-    let epics: Vec<serde_json::Value> = {
-        let mut stmt = conn
-            .prepare("SELECT id, title, status, requirement_id FROM epics ORDER BY id")
-            .unwrap_or_else(|_| conn.prepare("SELECT 1 WHERE 0").unwrap());
-        stmt.query_map([], |row| {
-            Ok(serde_json::json!({
-                "id": row.get::<_, i64>(0).unwrap_or(0),
-                "title": row.get::<_, String>(1).unwrap_or_default(),
-                "status": row.get::<_, String>(2).unwrap_or_default(),
-                "requirement_id": row.get::<_, Option<String>>(3).unwrap_or(None),
-            }))
-        })
-        .map(|rows| rows.filter_map(|r| r.ok()).collect())
-        .unwrap_or_default()
+    let projects = match db.list_all_projects().await {
+        Ok(projects) => projects,
+        Err(e) => {
+            return axum::Json(serde_json::json!({
+                "epics": [],
+                "stories": [],
+                "epic_count": 0,
+                "story_count": 0,
+                "error": format!("project query failed: {e}"),
+            }));
+        }
     };
 
-    // Query stories
-    let stories: Vec<serde_json::Value> = {
-        let mut stmt = conn
-            .prepare("SELECT id, epic_id, title, status, requirement_id FROM stories ORDER BY id")
-            .unwrap_or_else(|_| conn.prepare("SELECT 1 WHERE 0").unwrap());
-        stmt.query_map([], |row| {
-            Ok(serde_json::json!({
-                "id": row.get::<_, i64>(0).unwrap_or(0),
-                "epic_id": row.get::<_, Option<i64>>(1).unwrap_or(None),
-                "title": row.get::<_, String>(2).unwrap_or_default(),
-                "status": row.get::<_, String>(3).unwrap_or_default(),
-                "requirement_id": row.get::<_, Option<String>>(4).unwrap_or(None),
-            }))
-        })
-        .map(|rows| rows.filter_map(|r| r.ok()).collect())
-        .unwrap_or_default()
-    };
+    let mut epics = Vec::new();
+    let mut stories = Vec::new();
 
-    let epic_count = epics.len();
-    let story_count = stories.len();
+    for project in projects {
+        match db.list_epics_by_project(project.id).await {
+            Ok(project_epics) => epics.extend(project_epics.into_iter().map(|epic| {
+                serde_json::json!({
+                    "id": epic.id,
+                    "title": epic.title,
+                    "status": epic.status.to_string(),
+                    "requirement_id": epic.requirement_id,
+                })
+            })),
+            Err(e) => {
+                return axum::Json(serde_json::json!({
+                    "epics": [],
+                    "stories": [],
+                    "epic_count": 0,
+                    "story_count": 0,
+                    "error": format!("epic query failed: {e}"),
+                }));
+            }
+        }
+
+        match db.list_stories_by_project(project.id).await {
+            Ok(project_stories) => stories.extend(project_stories.into_iter().map(|story| {
+                serde_json::json!({
+                    "id": story.id,
+                    "epic_id": story.epic_id,
+                    "title": story.title,
+                    "status": story.status.to_string(),
+                    "requirement_id": story.requirement_id,
+                })
+            })),
+            Err(e) => {
+                return axum::Json(serde_json::json!({
+                    "epics": [],
+                    "stories": [],
+                    "epic_count": 0,
+                    "story_count": 0,
+                    "error": format!("story query failed: {e}"),
+                }));
+            }
+        }
+    }
+
+    epics.sort_by_key(|epic| epic["id"].as_i64().unwrap_or_default());
+    stories.sort_by_key(|story| story["id"].as_i64().unwrap_or_default());
 
     axum::Json(serde_json::json!({
-        "epics": epics,
-        "stories": stories,
-        "epic_count": epic_count,
-        "story_count": story_count,
+        "epics": &epics,
+        "stories": &stories,
+        "epic_count": epics.len(),
+        "story_count": stories.len(),
         "timestamp": chrono::Utc::now().to_rfc3339(),
     }))
+}
+
+fn resolve_dashboard_db_path() -> PathBuf {
+    if let Ok(url) = std::env::var("DATABASE_URL") {
+        url.strip_prefix("sqlite:").unwrap_or(&url).into()
+    } else if let Ok(path) = std::env::var("DATABASE_PATH") {
+        PathBuf::from(path)
+    } else {
+        PathBuf::from("agileplus.db")
+    }
 }
 
 pub fn router(state: SharedState) -> Router {
@@ -2387,7 +2414,12 @@ pub fn router(state: SharedState) -> Router {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::app_state::{default_health, DashboardStore};
+    use crate::app_state::{DashboardStore, default_health};
+    use agileplus_domain::domain::{
+        epic::{Epic, EpicStatus},
+        project::Project,
+        story::{Story, StoryStatus},
+    };
     use std::sync::Arc;
     use tokio::sync::RwLock;
     use tower::util::ServiceExt;
@@ -2476,6 +2508,58 @@ mod tests {
         assert!(body_text.contains("\"status\":\"ok\""));
         assert!(body_text.contains("\"service\":\"NATS\""));
         assert!(body_text.contains("restarted NATS"));
+    }
+
+    #[tokio::test]
+    async fn epics_stories_json_uses_storage_adapter_data() {
+        let db_path = std::env::temp_dir().join(format!(
+            "agileplus-dashboard-epics-stories-{}-{}.db",
+            std::process::id(),
+            Utc::now().timestamp_nanos_opt().unwrap_or_default()
+        ));
+        let _ = std::fs::remove_file(&db_path);
+
+        let db = SqliteStorageAdapter::new(&db_path).expect("db initializes");
+
+        let project = Project::new("Cleanup Project", "cleanup-project").unwrap();
+        let project_id = db.create_project(&project).await.unwrap();
+
+        let mut epic = Epic::new(project_id, "Cleanup Epic").unwrap();
+        epic.status = EpicStatus::Active;
+        epic.requirement_id = Some("FR-L5-046".to_string());
+        let epic_id = db.create_epic(&epic).await.unwrap();
+
+        let mut story = Story::new(epic_id, project_id, "Cleanup Story", Some(3)).unwrap();
+        story.status = StoryStatus::InProgress;
+        story.requirement_id = Some("WP-L5-046".to_string());
+        db.create_story(&story).await.unwrap();
+
+        unsafe {
+            std::env::set_var("DATABASE_PATH", &db_path);
+            std::env::remove_var("DATABASE_URL");
+        }
+
+        let response = epics_stories_json().await.into_response();
+        assert_eq!(response.status(), StatusCode::OK);
+
+        let body_bytes = axum::body::to_bytes(response.into_body(), usize::MAX)
+            .await
+            .unwrap();
+        let json: serde_json::Value = serde_json::from_slice(&body_bytes).expect("valid JSON");
+
+        assert_eq!(json["epic_count"], 1);
+        assert_eq!(json["story_count"], 1);
+        assert_eq!(json["epics"][0]["id"], epic_id);
+        assert_eq!(json["epics"][0]["title"], "Cleanup Epic");
+        assert_eq!(json["epics"][0]["status"], "active");
+        assert_eq!(json["stories"][0]["epic_id"], epic_id);
+        assert_eq!(json["stories"][0]["title"], "Cleanup Story");
+        assert_eq!(json["stories"][0]["status"], "in_progress");
+
+        unsafe {
+            std::env::remove_var("DATABASE_PATH");
+        }
+        let _ = std::fs::remove_file(&db_path);
     }
 
     // ── Pure-function unit tests ──────────────────────────────────────────

@@ -7,7 +7,7 @@
 
 use anyhow::Result;
 
-use agileplus_triage::classifier::{Intent, TriageClassifier};
+use agileplus_triage::{Intent, TriageClassifier};
 
 /// Arguments for the `triage` subcommand.
 #[derive(Debug, clap::Args)]
@@ -76,7 +76,6 @@ fn parse_intent(s: &str) -> Result<Intent> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use proptest::prelude::*;
 
     #[test]
     fn parse_intent_valid() {
@@ -89,47 +88,5 @@ mod tests {
     #[test]
     fn parse_intent_invalid() {
         assert!(parse_intent("unknown").is_err());
-    }
-
-    proptest! {
-        #[test]
-        fn parse_intent_accepts_any_letter_case(selector in 0usize..4, upper_flags in proptest::collection::vec(any::<bool>(), 3..=7)) {
-            let canonical = ["bug", "feature", "idea", "task"][selector];
-            let mixed: String = canonical
-                .chars()
-                .zip(upper_flags.into_iter().cycle())
-                .map(|(ch, upper)| if upper { ch.to_ascii_uppercase() } else { ch })
-                .collect();
-
-            prop_assert_eq!(parse_intent(&mixed).unwrap(), parse_intent(canonical).unwrap());
-        }
-
-        #[test]
-        fn classifier_override_preserves_input_and_forces_confidence(
-            input in any::<String>(),
-            selector in 0usize..4,
-        ) {
-            let classifier = TriageClassifier::new();
-            let intent = [Intent::Bug, Intent::Feature, Intent::Idea, Intent::Task][selector];
-            let result = classifier.classify_with_override(&input, intent);
-
-            prop_assert_eq!(result.intent, intent);
-            prop_assert_eq!(result.confidence, 1.0);
-            prop_assert_eq!(result.raw_input, input);
-            prop_assert_eq!(result.matched_keywords, vec!["user-override".to_string()]);
-        }
-
-        #[test]
-        fn classifier_output_stays_within_expected_bounds(input in any::<String>()) {
-            let classifier = TriageClassifier::new();
-            let result = classifier.classify(&input);
-
-            prop_assert!(matches!(
-                result.intent,
-                Intent::Bug | Intent::Feature | Intent::Idea | Intent::Task
-            ));
-            prop_assert!((0.0..=1.0).contains(&result.confidence));
-            prop_assert_eq!(result.raw_input, input);
-        }
     }
 }

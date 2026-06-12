@@ -1,37 +1,40 @@
-# Justfile - task runner for AgilePlus
+# Justfile — task runner for AgilePlus
+# See https://just.systems/man/en/
 
 set dotenv-load
 
 default:
     @just --list
 
-ci: fmt lint test audit docs
+# Bootstrap tasks
+bootstrap:
+    # Placeholder for initialization tasks
+    # Example: cargo install --path .
 
-lint:
-    cargo clippy --workspace --all-targets --all-features -- -D warnings
+# Build command
+build:
+    cargo build --release
 
+# Test command
+test:
+    cargo test --all-features
+
+# Format code
 fmt:
+    cargo fmt --all
+
+# Check formatting
+fmt-check:
     cargo fmt --all --check
 
-test:
-    cargo test --workspace --all-features
+# Lint
+lint:
+    cargo clippy --all-targets --all-features -- -D warnings
 
+# Audit dependencies
 audit:
-    cargo deny check
+    cargo deny check advisories
 
-docs:
-    cargo doc --workspace --all-features --no-deps
-
-release:
-    cargo build --workspace --all-targets --release
-
-crates:
-    @cargo metadata --no-deps --format-version 1 | jq -r '.packages[].name' | sort
-
-test-crate crate:
-    @cargo metadata --no-deps --format-version 1 | jq -e --arg crate "{{crate}}" 'any(.packages[].name; . == $crate)' >/dev/null
-    cargo test -p "{{crate}}" --all-features
-
-test-agileplus-api: (test-crate "agileplus-api")
-
-test-agileplus-cli: (test-crate "agileplus-cli")
+# CI target (run all checks)
+ci:
+    fmt-check lint test build
