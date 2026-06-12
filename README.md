@@ -3,6 +3,8 @@
 
 # AgilePlus
 
+![Scorecard](https://api.securityscorecards.dev/projects/github.com/KooshaPari/AgilePlus/badge)
+
 > **Pinned references (Phenotype-org)**
 > - MSRV: see `rust-toolchain.toml`
 > - cargo-deny config: see `deny.toml`
