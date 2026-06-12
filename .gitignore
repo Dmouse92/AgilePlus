@@ -75,6 +75,9 @@ target/
 **/.cache/
 **/coverage/
 **/tsconfig.tsbuildinfo
+.astro/
+_stub/bin/
+_stub/obj/
 .DS_Store
 .AppleDouble
 .LSOverride
