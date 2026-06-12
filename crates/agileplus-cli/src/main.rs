@@ -63,6 +63,8 @@ enum Command {
     ListStories(commands::list_stories::ListStoriesArgs),
     /// Worklog schema management (validate/convert/schema/list)
     Worklog(commands::worklog::WorklogArgs),
+    /// Pull the next triage ticket and record an outcome.
+    Triage(commands::triage::TriageArgs),
 }
 
 #[derive(Subcommand)]
@@ -300,6 +302,12 @@ async fn main() {
                 args.execute(&mut ctx)
                     .await
                     .map_err(|e| anyhow::anyhow!(e))?;
+            }
+            Command::Triage(args) => {
+                let db_path = db_path_from_env();
+                let triage = agileplus_sqlite::SqliteTriageAdapter::new(&db_path)
+                    .map_err(|e| anyhow::anyhow!("open triage db: {e}"))?;
+                commands::triage::run_triage(&args, &triage).await?;
             }
         }
         Ok(())

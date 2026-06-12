@@ -1,6 +1,3 @@
-//! Shared runtime helpers for the agileplus-cli binary crate.
+//! agileplus-cli library surface for command integration tests.
 
 pub mod commands;
-pub mod runtime;
-
-pub use runtime::{Context, SubcommandAsync};

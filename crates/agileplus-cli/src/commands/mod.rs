@@ -16,7 +16,7 @@ pub mod list_tests;
 pub mod run_record;
 pub mod scope_status;
 pub mod seed_requirements;
-pub mod version;
+pub mod triage;
 pub mod worklog;
 
 // ── stub modules (excluded until upstream deps are resolved) ──────────────────
