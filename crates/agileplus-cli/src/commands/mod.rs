@@ -27,5 +27,5 @@ pub mod worklog;
 // pub mod scope;           // STUB: incomplete
 // pub mod ship;            // STUB: agileplus_events dep missing
 // pub mod specify;         // STUB: similar dep missing
-// pub mod triage;          // STUB: agileplus_triage dep missing
+pub mod triage;
 // pub mod validate;        // STUB: agileplus_events dep missing

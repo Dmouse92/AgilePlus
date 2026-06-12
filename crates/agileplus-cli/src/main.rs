@@ -62,6 +62,8 @@ enum Command {
     ListStories(commands::list_stories::ListStoriesArgs),
     /// Worklog schema management (validate/convert/schema/list)
     Worklog(commands::worklog::WorklogArgs),
+    /// Classify free-text work into backlog intent
+    Triage(commands::triage::TriageArgs),
 }
 
 #[derive(Subcommand)]
@@ -297,6 +299,9 @@ async fn main() {
             }
             Command::Worklog(args) => {
                 commands::worklog::run(&args)?;
+            }
+            Command::Triage(args) => {
+                commands::triage::run_triage(args).await?;
             }
         }
         Ok(())
