@@ -85,6 +85,13 @@ edition = "2021"
 license = "MIT"
 rust-version = "1.88"
 
+[profile.pgo]
+inherits = "release"
+codegen-units = 1
+lto = "fat"
+panic = "abort"
+strip = "debuginfo"
+
 [package]
 name = "agileplus"
 version.workspace = true
