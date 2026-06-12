@@ -5,13 +5,18 @@
 
 pub mod dag;
 pub mod dashboard;
+pub mod gate_add;
+pub mod gate_run;
 pub mod import_dagctl;
 pub mod list;
 pub mod list_epics;
 pub mod list_projects;
 pub mod list_stories;
 pub mod list_tests;
+pub mod run_record;
+pub mod scope_status;
 pub mod seed_requirements;
+pub mod sidecar_status;
 pub mod trace;
 pub mod worklog;
 

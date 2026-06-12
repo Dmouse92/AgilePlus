@@ -64,6 +64,16 @@ enum Command {
     Trace(commands::trace::TraceArgs),
     /// Render an in-flight DAG view of the SQLite database (L2 #40)
     Dashboard(commands::dashboard::DashboardArgs),
+    /// Execute active policy rules against a feature + work-package pair
+    GateRun(commands::gate_run::GateRunArgs),
+    /// Register a new policy rule
+    GateAdd(commands::gate_add::GateAddArgs),
+    /// Print device-node (sidecar) status
+    SidecarStatus(commands::sidecar_status::SidecarStatusArgs),
+    /// Append a `metrics` row recording a CLI run
+    RunRecord(commands::run_record::RunRecordArgs),
+    /// Print the active cycle and the modules within its scope
+    ScopeStatus(commands::scope_status::ScopeStatusArgs),
     /// Worklog schema management (validate/convert/schema/list)
     Worklog(commands::worklog::WorklogArgs),
     /// DAG orchestration (pick/claim/heartbeat/done/dedup/scan/topology/where)
@@ -308,6 +318,21 @@ async fn main() {
             }
             Command::Dashboard(args) => {
                 commands::dashboard::run(&args)?;
+            }
+            Command::GateRun(args) => {
+                commands::gate_run::run(&args)?;
+            }
+            Command::GateAdd(args) => {
+                commands::gate_add::run(&args)?;
+            }
+            Command::SidecarStatus(args) => {
+                commands::sidecar_status::run(&args)?;
+            }
+            Command::RunRecord(args) => {
+                commands::run_record::run(&args)?;
+            }
+            Command::ScopeStatus(args) => {
+                commands::scope_status::run(&args)?;
             }
             Command::Worklog(args) => {
                 commands::worklog::run(&args)?;
