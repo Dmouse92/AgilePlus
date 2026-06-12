@@ -3,6 +3,8 @@
 // compilation until those upstream gaps are filled.  They are kept in the
 // source tree for reference.
 
+pub mod dag;
+pub mod import_dagctl;
 pub mod list;
 pub mod list_epics;
 pub mod list_projects;

@@ -3,8 +3,14 @@
 //! Each use case is a struct holding `Arc<dyn Port + Send + Sync>` deps wired
 //! explicitly at call-site. No DI frameworks; no axum/sqlx types.
 //!
+//! ## Sub-modules
+//!
+//! - [`dto`]       — Data Transfer Objects
+//! - [`use_cases`] — Use case implementations
+//!
 //! # Structure
-//! - `use_cases/` — one module per use case
+//! - `use_cases/` — one module per use case (incl. `triage` for the CLI
+//!   triage subcommands backed by `agileplus-triage` + `agileplus-graph`)
 //! - `dto/`       — command/output data transfer objects
 //! - `error.rs`   — `AppError` (thiserror; never leaks storage details)
 //! - `events.rs`  — re-exports `DomainEvent` / `DomainEventPublisher`
