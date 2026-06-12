@@ -12,6 +12,7 @@ pub mod events;
 pub mod platform;
 pub mod registry;
 pub mod sync;
+pub mod tracera_bridge;
 
 pub use audit::AuditLog;
 pub use dashboard::{
@@ -33,3 +34,4 @@ pub use sync::{
     SyncDirection, SyncItemOutcome, SyncPullArgs, SyncPushArgs, SyncReport, SyncReportEntry,
     SyncResolveArgs, SyncStatusArgs, SyncStatusRow, SyncSubcommand, run_sync,
 };
+pub use tracera_bridge::{BridgeError, FrId, NfrId, TraceLink};

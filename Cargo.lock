@@ -62,10 +62,17 @@ name = "agileplus-application"
 version = "0.1.0"
 dependencies = [
  "agileplus-domain",
+ "agileplus-graph",
+ "agileplus-triage",
+ "anyhow",
  "async-trait",
+ "chrono",
  "phenotype-error-core",
+ "serde",
+ "serde_json",
  "thiserror 2.0.18",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -90,10 +97,12 @@ dependencies = [
 name = "agileplus-cli"
 version = "0.1.0"
 dependencies = [
+ "agileplus-application",
  "agileplus-domain",
  "agileplus-github",
  "agileplus-sqlite",
  "agileplus-telemetry",
+ "agileplus-triage",
  "anyhow",
  "async-trait",
  "chrono",
@@ -245,6 +254,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "agileplus-graph"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "agileplus-grpc"
 version = "0.1.0"
 dependencies = [
@@ -369,6 +391,25 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
+]
+
+[[package]]
+name = "agileplus-subcmds"
+version = "0.1.0"
+dependencies = [
+ "agileplus-domain",
+ "agileplus-triage",
+ "anyhow",
+ "chrono",
+ "clap",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracera-core",
+ "tracing",
+ "uuid",
 ]
 
 [[package]]
@@ -6065,6 +6106,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8df9b6e13f2d32c91b9bd719c00d1958837bc7dec474d94952798cc8e69eeec3"
 
 [[package]]
+name = "tracera-core"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "indexmap 2.14.0",
+ "serde",
+ "serde_json",
+ "sha2",
+ "thiserror 2.0.18",
+ "uuid",
+]
+
+[[package]]
 name = "tracing"
 version = "0.1.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6368,6 +6422,7 @@ dependencies = [
  "getrandom 0.4.2",
  "js-sys",
  "serde_core",
+ "sha1_smol",
  "wasm-bindgen",
 ]
 

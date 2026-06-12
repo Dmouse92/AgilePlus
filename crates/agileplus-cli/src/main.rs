@@ -62,6 +62,10 @@ enum Command {
     ListStories(commands::list_stories::ListStoriesArgs),
     /// Worklog schema management (validate/convert/schema/list)
     Worklog(commands::worklog::WorklogArgs),
+    /// DAG orchestration (pick/claim/heartbeat/done/dedup/scan/topology/where)
+    Dag(commands::dag::DagArgs),
+    /// Import a dagctl SQLite db into AgilePlus work_packages + wp_dependencies
+    ImportDagctl(commands::import_dagctl::ImportDagctlArgs),
 }
 
 #[derive(Subcommand)]
@@ -297,6 +301,12 @@ async fn main() {
             }
             Command::Worklog(args) => {
                 commands::worklog::run(&args)?;
+            }
+            Command::Dag(args) => {
+                commands::dag::run_dag(args).await?;
+            }
+            Command::ImportDagctl(args) => {
+                commands::import_dagctl::run(&args)?;
             }
         }
         Ok(())
