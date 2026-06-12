@@ -63,7 +63,7 @@ enum Command {
     ListStories(commands::list_stories::ListStoriesArgs),
     /// Worklog schema management (validate/convert/schema/list)
     Worklog(commands::worklog::WorklogArgs),
-    /// Pull the next triage ticket and record an outcome.
+    /// Classify free-text work into backlog intent
     Triage(commands::triage::TriageArgs),
 }
 

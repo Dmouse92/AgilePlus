@@ -149,3 +149,4 @@ agileplus-config = { path = "crates/agileplus-config" }
 agileplus-proto = { path = "crates/agileplus-proto" }
 agileplus-telemetry = { path = "crates/agileplus-telemetry" }
 tokio-stream = { version = "0.1", features = ["net", "sync"] }
+sqlx = { version = "0.8", default-features = false }

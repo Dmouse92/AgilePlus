@@ -7,12 +7,15 @@ rust-version.workspace = true
 description = "Triage engine: dedup, claim, classifier, router, repo introspection, plus minhash/bloom/embeddings/hybrid/ast_tokenize primitives."
 
 [features]
-# Default features: local embedding backend (offline, no network) and bloom filter
-default = ["local", "bloom"]
+# Default features: local embedding backend (offline, no network), bloom filter,
+# and the regex-based AST tokenizer.
+default = ["local", "bloom", "regex-tok"]
 # `local` enables the deterministic hashing-based local embedding backend.
 local = []
 # `bloom` enables the bitvec-backed Bloom filter implementation.
 bloom = ["dep:bitvec"]
+# `regex-tok` enables the regex-based AST tokenizer (Rust + Python).
+regex-tok = ["dep:regex"]
 # `http` enables the `ureq` synchronous HTTP client used by remote embedding
 # backends.  Pulled in by `oai` and `voyage` automatically.
 http = ["dep:ureq"]
@@ -29,8 +32,11 @@ tokio.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 tracing.workspace = true
+clap = { version = "4", features = ["derive"] }
+sqlx.workspace = true
 # Optional deps — feature-gated to keep the default build offline and
 # dependency-light.  `bitvec` is used by `bloom.rs`; `ureq` is used by the
-# `oai` and `voyage` embedding backends.
-bitvec = { version = "1", optional = true, default-features = false }
+# `oai` and `voyage` embedding backends; `regex` is used by `ast_tokenize.rs`.
+bitvec = { version = "1.0", optional = true, default-features = false, features = ["alloc"] }
 ureq = { version = "2", optional = true, default-features = false, features = ["tls", "json"] }
+regex = { version = "1", optional = true, default-features = false }
