@@ -309,9 +309,6 @@ async fn main() {
                     .map_err(|e| anyhow::anyhow!("open triage db: {e}"))?;
                 commands::triage::run_triage(&args, &triage).await?;
             }
-            Command::Triage(args) => {
-                commands::triage::run_triage(args).await?;
-            }
         }
         Ok(())
     }
