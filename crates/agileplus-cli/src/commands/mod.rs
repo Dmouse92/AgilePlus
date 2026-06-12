@@ -9,7 +9,6 @@ pub mod list_projects;
 pub mod list_stories;
 pub mod list_tests;
 pub mod seed_requirements;
-pub mod triage;
 pub mod worklog;
 
 // ── stub modules (excluded until upstream deps are resolved) ──────────────────
@@ -28,4 +27,5 @@ pub mod worklog;
 // pub mod scope;           // STUB: incomplete
 // pub mod ship;            // STUB: agileplus_events dep missing
 // pub mod specify;         // STUB: similar dep missing
+// pub mod triage;          // STUB: agileplus_triage dep missing
 // pub mod validate;        // STUB: agileplus_events dep missing

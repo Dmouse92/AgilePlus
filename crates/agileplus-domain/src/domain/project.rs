@@ -3,6 +3,8 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
+use agileplus_validate::{name_required, slug_format};
+
 use crate::error::DomainError;
 
 /// A project that owns modules, cycles, and features.
@@ -23,25 +25,11 @@ impl Project {
     /// non-empty and consist only of lowercase ASCII alphanumerics and hyphens.
     pub fn new(name: &str, slug: &str) -> Result<Self, DomainError> {
         let name = name.trim();
-        if name.is_empty() {
-            return Err(DomainError::Validation(
-                "project name must not be empty".to_string(),
-            ));
-        }
+        name_required(name)
+            .map_err(|message| DomainError::Validation(format!("project {message}")))?;
         let slug = slug.trim();
-        if slug.is_empty() {
-            return Err(DomainError::Validation(
-                "project slug must not be empty".to_string(),
-            ));
-        }
-        if !slug
-            .chars()
-            .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-')
-        {
-            return Err(DomainError::Validation(
-                "project slug must contain only lowercase letters, digits, and hyphens".to_string(),
-            ));
-        }
+        slug_format(slug)
+            .map_err(|message| DomainError::Validation(format!("project {message}")))?;
         let now = Utc::now();
         Ok(Self {
             id: 0,

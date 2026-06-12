@@ -3,6 +3,8 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
+use agileplus_validate::slug_format;
+
 use super::feature::Feature;
 
 /// A module groups features into a logical scope.
@@ -34,14 +36,17 @@ impl Module {
 
     /// Derive a URL-safe slug from a human-readable name.
     pub fn slug_from_name(name: &str) -> String {
-        name.to_lowercase()
+        let slug = name
+            .to_lowercase()
             .chars()
             .map(|c| if c.is_alphanumeric() { c } else { '-' })
             .collect::<String>()
             .split('-')
             .filter(|s| !s.is_empty())
             .collect::<Vec<_>>()
-            .join("-")
+            .join("-");
+        debug_assert!(slug_format(&slug).is_ok() || slug.is_empty());
+        slug
     }
 }
 
