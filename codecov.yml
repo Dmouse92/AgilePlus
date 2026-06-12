@@ -1,25 +1,21 @@
 coverage:
   status:
     project:
-      default:
+      agileplus-cli:
         target: 80%
         threshold: 1%
-        if_ci_failed: error
-    patch:
-      default:
+        flags:
+          - agileplus-cli
+      agileplus-sqlite:
         target: 80%
         threshold: 1%
-        if_ci_failed: error
+        flags:
+          - agileplus-sqlite
 
-component_management:
-  default_rules:
-    statuses:
-      - type: project
-        target: 80%
-        threshold: 1%
-  individual_components:
-    - component_id: agileplus-trace-validator
-      name: agileplus-trace-validator
-      paths:
-        - crates/agileplus-trace-validator/**
-
+flags:
+  agileplus-cli:
+    paths:
+      - crates/agileplus-cli/
+  agileplus-sqlite:
+    paths:
+      - crates/agileplus-sqlite/

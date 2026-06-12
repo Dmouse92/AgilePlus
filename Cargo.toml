@@ -69,6 +69,7 @@ members = [
     "crates/agileplus-nats",
     "crates/agileplus-p2p",
     "crates/agileplus-telemetry",
+    "crates/agileplus-trace-validator",
     "crates/agileplus-triage",
     "crates/agileplus-trace-validator",
     "crates/agileplus-import",
