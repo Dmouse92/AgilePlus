@@ -4,6 +4,22 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 rust-version.workspace = true
+description = "Triage engine: dedup, claim, classifier, router, repo introspection, plus minhash/bloom/embeddings/hybrid/ast_tokenize primitives."
+
+[features]
+# Default features: local embedding backend (offline, no network) and bloom filter
+default = ["local", "bloom"]
+# `local` enables the deterministic hashing-based local embedding backend.
+local = []
+# `bloom` enables the bitvec-backed Bloom filter implementation.
+bloom = ["dep:bitvec"]
+# `http` enables the `ureq` synchronous HTTP client used by remote embedding
+# backends.  Pulled in by `oai` and `voyage` automatically.
+http = ["dep:ureq"]
+# `oai` enables `OaiEmbeddings` (api.openai.com/v1/embeddings).
+oai = ["http", "dep:ureq"]
+# `voyage` enables `VoyageEmbeddings` (api.voyageai.com/v1/embeddings).
+voyage = ["http", "dep:ureq"]
 
 [dependencies]
 agileplus-domain = { path = "../agileplus-domain" }
@@ -13,3 +29,8 @@ tokio.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 tracing.workspace = true
+# Optional deps — feature-gated to keep the default build offline and
+# dependency-light.  `bitvec` is used by `bloom.rs`; `ureq` is used by the
+# `oai` and `voyage` embedding backends.
+bitvec = { version = "1", optional = true, default-features = false }
+ureq = { version = "2", optional = true, default-features = false, features = ["tls", "json"] }
