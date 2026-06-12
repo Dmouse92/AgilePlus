@@ -74,6 +74,7 @@ members = [
     "crates/agileplus-import",
     "crates/agileplus-proto",
     "crates/agileplus-subcmds",
+    "crates/pheno-ssot-template",
     "xtask-anti-patterns",
 ]
 exclude = ["AgilePlus/rust", "rust", "crates/phenotype-config"]
