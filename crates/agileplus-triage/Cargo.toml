@@ -29,8 +29,5 @@ tokio.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 tracing.workspace = true
-# Optional deps — feature-gated to keep the default build offline and
-# dependency-light.  `bitvec` is used by `bloom.rs`; `ureq` is used by the
-# `oai` and `voyage` embedding backends.
-bitvec = { version = "1", optional = true, default-features = false }
-ureq = { version = "2", optional = true, default-features = false, features = ["tls", "json"] }
+clap = { version = "4", features = ["derive"] }
+sqlx.workspace = true
