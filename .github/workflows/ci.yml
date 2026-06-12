@@ -10,11 +10,6 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-
-concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
@@ -44,9 +39,13 @@ jobs:
 
   # ─── Rust Quality ──────────────────────────────────────────────────
   rust-check:
-    name: Rust Quality
-    runs-on: ubuntu-24.04
+    name: Rust Quality (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: dtolnay/rust-toolchain@5b842231ba77f5c045dba54ac5560fed2db780e2  # nightly
@@ -54,6 +53,7 @@ jobs:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae  # v2
         with:
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'rust/Cargo.toml', 'crates/*/Cargo.toml', 'xtask-anti-patterns/Cargo.toml') }}
           workspaces: rust
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b  # v3
         with:
@@ -69,14 +69,19 @@ jobs:
         run: cd rust && cargo test
 
   rust-build:
-    name: Rust Build
-    runs-on: ubuntu-24.04
+    name: Rust Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: dtolnay/rust-toolchain@5b842231ba77f5c045dba54ac5560fed2db780e2  # nightly
       - uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae  # v2
         with:
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'rust/Cargo.toml', 'crates/*/Cargo.toml', 'xtask-anti-patterns/Cargo.toml') }}
           workspaces: rust
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b  # v3
         with:
@@ -86,14 +91,19 @@ jobs:
         run: cd rust && cargo build --all
 
   rust-msrv:
-    name: Rust MSRV (stable)
-    runs-on: ubuntu-24.04
+    name: Rust MSRV (stable, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8  # stable
       - uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae  # v2
         with:
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'rust/Cargo.toml', 'crates/*/Cargo.toml', 'xtask-anti-patterns/Cargo.toml') }}
           workspaces: rust
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b  # v3
         with:
@@ -130,6 +140,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@5b842231ba77f5c045dba54ac5560fed2db780e2  # nightly
       - uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae  # v2
         with:
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'rust/Cargo.toml', 'crates/*/Cargo.toml', 'xtask-anti-patterns/Cargo.toml') }}
           workspaces: rust
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b  # v3
         with:
@@ -155,6 +166,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@5b842231ba77f5c045dba54ac5560fed2db780e2  # nightly
       - uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae  # v2
         with:
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'rust/Cargo.toml', 'crates/*/Cargo.toml', 'xtask-anti-patterns/Cargo.toml') }}
           workspaces: rust
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b  # v3
         with:
@@ -176,15 +188,21 @@ jobs:
 
   # ─── Core Workspace ───────────────────────────────────────────────
   core-check:
-    name: Core Workspace Quality
-    runs-on: ubuntu-24.04
+    name: Core Workspace Quality (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: dtolnay/rust-toolchain@5b842231ba77f5c045dba54ac5560fed2db780e2  # nightly
         with:
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae  # v2
+        with:
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'rust/Cargo.toml', 'crates/*/Cargo.toml', 'xtask-anti-patterns/Cargo.toml') }}
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b  # v3
         with:
           version: "28.x"
@@ -199,13 +217,19 @@ jobs:
         run: cargo test --workspace
 
   core-build:
-    name: Core Build
-    runs-on: ubuntu-24.04
+    name: Core Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: dtolnay/rust-toolchain@5b842231ba77f5c045dba54ac5560fed2db780e2  # nightly
       - uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae  # v2
+        with:
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'rust/Cargo.toml', 'crates/*/Cargo.toml', 'xtask-anti-patterns/Cargo.toml') }}
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b  # v3
         with:
           version: "28.x"
@@ -214,13 +238,19 @@ jobs:
         run: cargo build --workspace
 
   core-msrv:
-    name: Core MSRV (1.86)
-    runs-on: ubuntu-24.04
+    name: Core MSRV (1.86, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: dtolnay/rust-toolchain@dd44c20b1206a46e25fba8503d5d7c9a33bd355a  # 1.86.0 (toolchain)
       - uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae  # v2
+        with:
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'rust/Cargo.toml', 'crates/*/Cargo.toml', 'xtask-anti-patterns/Cargo.toml') }}
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b  # v3
         with:
           version: "28.x"
@@ -229,13 +259,19 @@ jobs:
         run: cargo check --workspace
 
   core-docs:
-    name: Core Documentation
-    runs-on: ubuntu-24.04
+    name: Core Documentation (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: dtolnay/rust-toolchain@5b842231ba77f5c045dba54ac5560fed2db780e2  # nightly
       - uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae  # v2
+        with:
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.toml', 'rust/Cargo.toml', 'crates/*/Cargo.toml', 'xtask-anti-patterns/Cargo.toml') }}
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b  # v3
         with:
           version: "28.x"
