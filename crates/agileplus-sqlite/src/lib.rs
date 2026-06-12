@@ -7,6 +7,7 @@ pub mod migrations;
 pub mod rebuild;
 pub mod repository;
 pub mod seed;
+pub mod triage;
 
 use std::path::Path;
 use std::sync::{Arc, Mutex};
@@ -51,6 +52,8 @@ use crate::repository::{
 pub struct SqliteStorageAdapter {
     conn: Arc<Mutex<Connection>>,
 }
+
+pub use triage::SqliteTriageAdapter;
 
 impl SqliteStorageAdapter {
     /// Open a file-backed database, enable WAL + FK pragma, and run all migrations.

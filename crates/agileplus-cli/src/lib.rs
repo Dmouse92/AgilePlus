@@ -1,1 +1,3 @@
-//! agileplus-cli stub
+//! agileplus-cli library surface for command integration tests.
+
+pub mod commands;
