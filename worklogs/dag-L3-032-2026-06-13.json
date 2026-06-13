@@ -5,7 +5,7 @@
   "work_package": {
     "wp_id": "L3-032",
     "title": "Add SECURITY.md with vulnerability reporting policy",
-    "state": "doing",
+    "state": "done",
     "lane": "security",
     "category": "security",
     "dependencies": [
@@ -14,11 +14,11 @@
     "files_changed": [
       "SECURITY.md"
     ],
-    "commit_sha": "PENDING",
+    "commit_sha": "37a1cf2fe",
     "branch": "chore/l5-87-focus-repo-specs-2026-06-11",
     "test_results": [],
     "verification": {
-      "status": "pending",
+      "status": "passed",
       "commands": [
         "test -f SECURITY.md"
       ],

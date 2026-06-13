@@ -5,7 +5,7 @@
   "work_package": {
     "wp_id": "L3-031",
     "title": "Add workspace-audit CI workflow",
-    "state": "doing",
+    "state": "done",
     "lane": "ci",
     "category": "automation",
     "dependencies": [
@@ -14,11 +14,11 @@
     "files_changed": [
       ".github/workflows/workspace-audit.yml"
     ],
-    "commit_sha": "PENDING",
+    "commit_sha": "37a1cf2fe",
     "branch": "chore/l5-87-focus-repo-specs-2026-06-11",
     "test_results": [],
     "verification": {
-      "status": "pending",
+      "status": "passed",
       "commands": [
         "test -f .github/workflows/workspace-audit.yml"
       ],
