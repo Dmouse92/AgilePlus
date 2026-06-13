@@ -1,0 +1,41 @@
+name: Cargo Deny
+
+on:
+  pull_request:
+    paths:
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "crates/**"
+      - "deny.toml"
+      - ".github/workflows/cargo-deny.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "crates/**"
+      - "deny.toml"
+      - ".github/workflows/cargo-deny.yml"
+  schedule:
+    - cron: "17 5 * * 1"  # weekly Monday 05:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cargo-deny:
+    name: cargo-deny
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+
+      - name: Install cargo-deny
+        uses: taiki-e/install-action@7ab0d5fba0c0bcf5a8c9f2d1c1470e7a21d8ed63
+        with:
+          tool: cargo-deny
+
+      - name: Run cargo-deny
+        run: cargo deny --manifest-path Cargo.toml --locked check
