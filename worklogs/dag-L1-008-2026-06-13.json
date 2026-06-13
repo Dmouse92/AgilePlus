@@ -1,0 +1,57 @@
+{
+  "schema_version": "v2",
+  "generated_at": "2026-06-13T01:10:00Z",
+  "repo": "AgilePlus",
+  "work_package": {
+    "wp_id": "L1-008",
+    "title": "Ship top-level LICENSE + .editorconfig + per-crate CODEOWNERS",
+    "state": "done",
+    "lane": "hygiene",
+    "category": "foundation",
+    "dependencies": [
+      "L1-007"
+    ],
+    "files_changed": [
+      "LICENSE",
+      ".editorconfig",
+      "CODEOWNERS"
+    ],
+    "commit_sha": "2bc97825e2fd26675786c12cc8766173d95b2d16",
+    "branch": "chore/l5-87-focus-repo-specs-2026-06-11",
+    "test_results": [],
+    "verification": {
+      "status": "passed",
+      "commands": [
+        "test -f LICENSE",
+        "test -f .editorconfig"
+      ],
+      "notes": "Closes 2 zero-score hygiene items (LICENSE, .editorconfig) from dag-v2-audit."
+    },
+    "topology": {
+      "layer": 1,
+      "parallel_group": "hygiene-batch",
+      "unlocks": [
+        "release-engineering",
+        "xtask-retirement"
+      ]
+    }
+  },
+  "dag_topology": {
+    "nodes": [
+      "L1-001",
+      "L1-006",
+      "L1-007",
+      "L1-008"
+    ],
+    "edges": [
+      ["L1-001", "L1-007"],
+      ["L1-006", "L1-007"],
+      ["L1-007", "L1-008"]
+    ],
+    "layers": [
+      ["L1-001", "L1-006"],
+      ["L1-007"],
+      ["L1-008"]
+    ]
+  }
+}
