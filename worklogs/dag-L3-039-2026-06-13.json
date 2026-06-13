@@ -5,7 +5,7 @@
   "work_package": {
     "wp_id": "L3-039",
     "title": "Create toolchain-versions.json matrix",
-    "state": "doing",
+    "state": "done",
     "lane": "ops",
     "category": "automation",
     "dependencies": [
@@ -14,11 +14,11 @@
     "files_changed": [
       "toolchain-versions.json"
     ],
-    "commit_sha": "PENDING",
+    "commit_sha": "bac90c15a14c34f391d73af5c065adf0010172b6",
     "branch": "chore/l5-87-focus-repo-specs-2026-06-11",
     "test_results": [],
     "verification": {
-      "status": "pending",
+      "status": "passed",
       "commands": [
         "test -f toolchain-versions.json"
       ],
