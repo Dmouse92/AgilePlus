@@ -66,10 +66,7 @@ dependencies = [
  "agileplus-triage",
  "anyhow",
  "async-trait",
- "chrono",
  "phenotype-error-core",
- "serde",
- "serde_json",
  "thiserror 2.0.18",
  "tokio",
  "tracing",
@@ -107,6 +104,7 @@ dependencies = [
  "async-trait",
  "chrono",
  "clap",
+ "comfy-table",
  "proptest",
  "rusqlite",
  "serde",
@@ -158,7 +156,6 @@ dependencies = [
 name = "agileplus-domain"
 version = "0.1.0"
 dependencies = [
- "agileplus-validate",
  "anyhow",
  "async-trait",
  "chrono",
@@ -395,25 +392,6 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
-]
-
-[[package]]
-name = "agileplus-subcmds"
-version = "0.1.0"
-dependencies = [
- "agileplus-domain",
- "agileplus-triage",
- "anyhow",
- "chrono",
- "clap",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror 2.0.18",
- "tokio",
- "tracera-core",
- "tracing",
- "uuid",
 ]
 
 [[package]]
@@ -1182,6 +1160,17 @@ dependencies = [
  "pin-project-lite",
  "tokio",
  "tokio-util",
+]
+
+[[package]]
+name = "comfy-table"
+version = "7.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "958c5d6ecf1f214b4c2bbbbf6ab9523a864bd136dcf71a7e8904799acfe1ad47"
+dependencies = [
+ "crossterm",
+ "unicode-segmentation",
+ "unicode-width",
 ]
 
 [[package]]
@@ -4526,10 +4515,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pheno-ssot-template"
-version = "0.1.0"
-
-[[package]]
 name = "phenotype-error-core"
 version = "0.2.0"
 dependencies = [
@@ -6370,19 +6355,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8df9b6e13f2d32c91b9bd719c00d1958837bc7dec474d94952798cc8e69eeec3"
 
 [[package]]
-name = "tracera-core"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "indexmap 2.14.0",
- "serde",
- "serde_json",
- "sha2",
- "thiserror 2.0.18",
- "uuid",
-]
-
-[[package]]
 name = "tracing"
 version = "0.1.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6709,7 +6681,6 @@ dependencies = [
  "getrandom 0.4.2",
  "js-sys",
  "serde_core",
- "sha1_smol",
  "wasm-bindgen",
 ]
 
@@ -7460,6 +7431,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "05f360fc0b24296329c78fda852a1e9ae82de9cf7b27dae4b7f62f118f77b9ed"
 dependencies = [
  "tap",
+]
+
+[[package]]
+name = "xdd-lib-rs"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "toml",
 ]
 
 [[package]]
