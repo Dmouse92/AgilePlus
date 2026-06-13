@@ -5,7 +5,7 @@
   "work_package": {
     "wp_id": "L3-034",
     "title": "Pin GitHub Actions to SHA in pre-commit.yml",
-    "state": "doing",
+    "state": "done",
     "lane": "ci",
     "category": "security",
     "dependencies": [
@@ -14,11 +14,11 @@
     "files_changed": [
       ".github/workflows/pre-commit.yml"
     ],
-    "commit_sha": "PENDING",
+    "commit_sha": "7f61697c0",
     "branch": "chore/l5-87-focus-repo-specs-2026-06-11",
     "test_results": [],
     "verification": {
-      "status": "pending",
+      "status": "passed",
       "commands": [
         "grep -q 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' .github/workflows/pre-commit.yml"
       ],

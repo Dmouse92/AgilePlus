@@ -1,5 +1,5 @@
 {
-  "status": "in_progress",
+  "status": "completed",
   "task_id": "L3-035",
   "agent_id": "codex-exec-2026-06-13",
   "files_changed": [
@@ -8,7 +8,7 @@
     ".github/workflows/spec-first.yml",
     ".github/workflows/workspace-audit.yml"
   ],
-  "commit_sha": "PENDING",
+  "commit_sha": "7f61697c0",
   "verification_result": {
     "status": "pending",
     "commands": [
@@ -20,5 +20,5 @@
     "notes": "eco-011 FR-1: Pin all actions in release-plz.yml, governance-index.yml, spec-first.yml, and workspace-audit.yml to 40-char SHA refs."
   },
   "started_at": "2026-06-13T03:00:00Z",
-  "completed_at": "PENDING"
+  "completed_at": "2026-06-13T03:00:00Z"
 }
