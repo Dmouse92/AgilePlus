@@ -5,7 +5,7 @@
   "work_package": {
     "wp_id": "L3-029",
     "title": "Add cargo workspace audit script",
-    "state": "doing",
+    "state": "done",
     "lane": "ci",
     "category": "automation",
     "dependencies": [
@@ -14,11 +14,11 @@
     "files_changed": [
       "scripts/workspace-audit.sh"
     ],
-    "commit_sha": "PENDING",
+    "commit_sha": "47429db02",
     "branch": "chore/l5-87-focus-repo-specs-2026-06-11",
     "test_results": [],
     "verification": {
-      "status": "pending",
+      "status": "passed",
       "commands": [
         "test -x scripts/workspace-audit.sh",
         "bash -n scripts/workspace-audit.sh"

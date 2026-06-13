@@ -5,7 +5,7 @@
   "work_package": {
     "wp_id": "L3-027",
     "title": "Add pre-commit trufflehog hook for secret scanning",
-    "state": "doing",
+    "state": "done",
     "lane": "security",
     "category": "security",
     "dependencies": [
@@ -14,11 +14,11 @@
     "files_changed": [
       ".githooks/pre-commit"
     ],
-    "commit_sha": "PENDING",
+    "commit_sha": "47429db02",
     "branch": "chore/l5-87-focus-repo-specs-2026-06-11",
     "test_results": [],
     "verification": {
-      "status": "pending",
+      "status": "passed",
       "commands": [
         "test -x .githooks/pre-commit"
       ],
