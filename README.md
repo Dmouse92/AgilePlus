@@ -4,7 +4,7 @@
 # AgilePlus
 
 > **Pinned references (Phenotype-org)**
-> - MSRV: see `rust-toolchain.toml`
+> - MSRV: [![Rust](https://img.shields.io/badge/MSRV-1.88.0-orange?logo=rust)](rust-toolchain.toml)
 > - cargo-deny config: see `deny.toml`
 > - cargo-audit: `rustsec/audit-check@v2` weekly
 > - Branch protection: 1 reviewer required, no force-push
@@ -53,8 +53,12 @@ holds the traceability package.
 # Build the workspace
 cargo build --workspace
 
-# Install and run the CLI
+# Install and run the CLI (from source)
 cargo install --path crates/agileplus-cli
+agileplus --help
+
+# Or install via cargo-binstall (prebuilt binary, faster)
+cargo binstall agileplus-cli
 agileplus --help
 
 # Create a spec / feature
