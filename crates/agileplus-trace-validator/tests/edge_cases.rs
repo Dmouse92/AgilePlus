@@ -171,3 +171,74 @@ fn stats_reports_multiple_traces() {
         .success()
         .stdout(contains("traces: 3"));
 }
+
+/// Edge case: a missing `traces/` directory should produce a clear error
+/// rather than panic or silently succeed.
+#[test]
+fn validate_missing_traces_directory_fails() {
+    let repo = TempDir::new().unwrap();
+    // Intentionally do NOT create a `traces/` subdirectory.
+
+    Command::cargo_bin("agileplus-trace-validator")
+        .unwrap()
+        .args(["validate", repo.path().to_str().unwrap()])
+        .assert()
+        .failure()
+        .stderr(contains("trace directory not found"));
+}
+
+/// Edge case: a trace that references a code_module path which does not exist
+/// on disk should fail validation (dangling reference detection).
+#[test]
+fn validate_dangling_code_module_path_fails() {
+    let repo = TempDir::new().unwrap();
+    fs::create_dir(repo.path().join("traces")).unwrap();
+    fs::write(
+        repo.path().join("traces/FR-dangling.json"),
+        r##"{
+  "fr_id": "FR-dangling",
+  "spec_slug": "eco-024-traceability",
+  "spec_anchor": "#fr-dangling",
+  "docs_pages": [],
+  "tests": [],
+  "code_modules": ["src/does_not_exist.rs"],
+  "journeys": []
+}"##,
+    )
+    .unwrap();
+
+    Command::cargo_bin("agileplus-trace-validator")
+        .unwrap()
+        .args(["validate", repo.path().to_str().unwrap()])
+        .assert()
+        .failure()
+        .stderr(contains("dangling path"));
+}
+
+/// Edge case: a trace that carries an absolute path reference (starting with `/`)
+/// should be rejected as malformed rather than allowed to reach the filesystem.
+#[test]
+fn validate_absolute_path_in_trace_fails() {
+    let repo = TempDir::new().unwrap();
+    fs::create_dir(repo.path().join("traces")).unwrap();
+    fs::write(
+        repo.path().join("traces/FR-abs.json"),
+        r##"{
+  "fr_id": "FR-abs",
+  "spec_slug": "eco-024-traceability",
+  "spec_anchor": "#fr-abs",
+  "docs_pages": ["/etc/passwd"],
+  "tests": [],
+  "code_modules": [],
+  "journeys": []
+}"##,
+    )
+    .unwrap();
+
+    Command::cargo_bin("agileplus-trace-validator")
+        .unwrap()
+        .args(["validate", repo.path().to_str().unwrap()])
+        .assert()
+        .failure()
+        .stderr(contains("malformed path"));
+}
