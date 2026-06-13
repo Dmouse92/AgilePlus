@@ -22,6 +22,8 @@ agileplus-github = { path = "../agileplus-github" }
 agileplus-sqlite = { path = "../agileplus-sqlite" }
 agileplus-triage = { path = "../agileplus-triage" }
 agileplus-telemetry.workspace = true
+agileplus-application = { path = "../agileplus-application" }
+agileplus-triage = { path = "../agileplus-triage" }
 rusqlite = { version = "0.32", features = ["bundled"] }
 async-trait.workspace = true
 serde.workspace = true
