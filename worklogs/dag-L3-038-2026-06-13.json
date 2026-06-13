@@ -5,7 +5,7 @@
   "work_package": {
     "wp_id": "L3-038",
     "title": "Add CI status badge to README.md",
-    "state": "doing",
+    "state": "done",
     "lane": "docs",
     "category": "docs",
     "dependencies": [
@@ -14,11 +14,11 @@
     "files_changed": [
       "README.md"
     ],
-    "commit_sha": "PENDING",
+    "commit_sha": "eb788cb523fe800baa0efd81eb5f457316cf85c8",
     "branch": "chore/l5-87-focus-repo-specs-2026-06-11",
     "test_results": [],
     "verification": {
-      "status": "pending",
+      "status": "passed",
       "commands": [
         "grep -q 'CI' README.md"
       ],

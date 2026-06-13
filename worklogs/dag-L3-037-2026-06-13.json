@@ -5,7 +5,7 @@
   "work_package": {
     "wp_id": "L3-037",
     "title": "Add action pinning check to commit-msg hook",
-    "state": "doing",
+    "state": "done",
     "lane": "security",
     "category": "security",
     "dependencies": [
@@ -14,11 +14,11 @@
     "files_changed": [
       ".githooks/commit-msg"
     ],
-    "commit_sha": "PENDING",
+    "commit_sha": "eb788cb523fe800baa0efd81eb5f457316cf85c8",
     "branch": "chore/l5-87-focus-repo-specs-2026-06-11",
     "test_results": [],
     "verification": {
-      "status": "pending",
+      "status": "passed",
       "commands": [
         "test -x .githooks/commit-msg"
       ],
