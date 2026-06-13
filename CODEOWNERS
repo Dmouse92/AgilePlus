@@ -1,17 +1,9 @@
 # CODEOWNERS — AgilePlus
-<<<<<<< HEAD
-# Per-crate domain mapping with fallback to @KooshaPari
-#
-# GitHub CODEOWNERS location priority:
-#   1. .github/CODEOWNERS  (per-crate detail)
-#   2. /CODEOWNERS         (this file — kept in sync as root-level alias)
-=======
 # Canonical reviewer: @KooshaPari
 #
 # GitHub CODEOWNERS location priority:
 #   1. .github/CODEOWNERS  (already present, per-crate detail)
 #   2. /CODEOWNERS         (this file — kept in sync as a root-level alias)
->>>>>>> origin/main
 #   3. /docs/CODEOWNERS
 #
 # See: https://docs.github.com/en/repositories/creating-and-managing-repositories/about-code-owners
@@ -19,97 +11,6 @@
 # Default catch-all
 * @KooshaPari
 
-<<<<<<< HEAD
-# ============================================================================
-# Domain & Application core
-# ============================================================================
-/crates/agileplus-domain/ @KooshaPari
-/crates/agileplus-application/ @KooshaPari
-/crates/agileplus-config/ @KooshaPari
-/crates/agileplus-events/ @KooshaPari
-/crates/agileplus-proto/ @KooshaPari
-/crates/agileplus-fixtures/ @KooshaPari
-
-# ============================================================================
-# Infrastructure adapters
-# ============================================================================
-/crates/agileplus-sqlite/ @KooshaPari
-/crates/agileplus-cache/ @KooshaPari
-/crates/agileplus-git/ @KooshaPari
-/crates/agileplus-nats/ @KooshaPari
-/crates/agileplus-telemetry/ @KooshaPari
-/crates/agileplus-import/ @KooshaPari
-
-# ============================================================================
-# Interfaces (transport / surface)
-# ============================================================================
-/crates/agileplus-api/ @KooshaPari
-/crates/agileplus-grpc/ @KooshaPari
-/crates/agileplus-dashboard/ @KooshaPari
-/crates/agileplus-github/ @KooshaPari
-/crates/agileplus-plane/ @KooshaPari
-/crates/agileplus-p2p/ @KooshaPari
-/crates/agileplus-triage/ @KooshaPari
-/crates/agileplus-governance/ @KooshaPari
-/crates/agileplus-sync/ @KooshaPari
-/crates/agileplus-subcmds/ @KooshaPari
-/crates/agileplus-artifacts/ @KooshaPari
-/crates/agileplus-benchmarks/ @KooshaPari
-/crates/agileplus-contract-tests/ @KooshaPari
-/crates/agileplus-integration-tests/ @KooshaPari
-
-# ============================================================================
-# Operations / DX
-# ============================================================================
-/crates/agileplus-cli/ @KooshaPari
-/xtask-anti-patterns/ @KooshaPari
-
-# ============================================================================
-# Shared libs
-# ============================================================================
-/libs/ @KooshaPari
-
-# ============================================================================
-# Build / config / governance
-# ============================================================================
-/Cargo.toml @KooshaPari
-/Cargo.lock @KooshaPari
-/Justfile @KooshaPari
-/justfile @KooshaPari
-/Taskfile.yml @KooshaPari
-/pyproject.toml @KooshaPari
-/deny.toml @KooshaPari
-/rust-toolchain.toml @KooshaPari
-/.editorconfig @KooshaPari
-
-# ============================================================================
-# Docs & specs
-# ============================================================================
-/README.md @KooshaPari
-/SECURITY.md @KooshaPari
-/CONTRIBUTING.md @KooshaPari
-/CHANGELOG.md @KooshaPari
-/LICENSE @KooshaPari
-/docs/ @KooshaPari
-/kitty-specs/ @KooshaPari
-/specs/ @KooshaPari
-
-# ============================================================================
-# CI / GitHub
-# ============================================================================
-/.github/ @KooshaPari
-/.github/workflows/ @KooshaPari
-
-# ============================================================================
-# Language-specific files
-# ============================================================================
-*.rs @KooshaPari
-*.py @KooshaPari
-*.ts @KooshaPari
-*.toml @KooshaPari
-*.sh @KooshaPari
-*.proto @KooshaPari
-=======
 # Per-language drill-down
 /*.rs @KooshaPari
 /*.py @KooshaPari
@@ -149,4 +50,3 @@
 /.github/workflows/ @KooshaPari
 /.github/dependabot.yml @KooshaPari
 /.github/FUNDING.yml @KooshaPari
->>>>>>> origin/main
