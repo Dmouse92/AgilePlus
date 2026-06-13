@@ -301,6 +301,22 @@ impl<T: StoragePort> StoryRepository for T {
     }
 }
 
+#[async_trait]
+impl<T: StoragePort> epic::EpicRepository for T {
+    async fn create(&self, epic: &Epic) -> Result<i64, DomainError> {
+        self.create_epic(epic).await
+    }
+    async fn get_by_id(&self, id: i64) -> Result<Option<Epic>, DomainError> {
+        self.get_epic_by_id(id).await
+    }
+    async fn update_status(&self, id: i64, status: EpicStatus) -> Result<(), DomainError> {
+        self.update_epic_status(id, status).await
+    }
+    async fn list_by_project(&self, project_id: i64) -> Result<Vec<Epic>, DomainError> {
+        self.list_epics_by_project(project_id).await
+    }
+}
+
 /// Content storage port — CRUD for the content-centric aggregates currently
 /// exercised by the API and CLI (features, work packages, backlog).
 #[async_trait]

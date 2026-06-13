@@ -1,4 +1,5 @@
 # Justfile - task runner for AgilePlus
+# Anti-pattern checks consolidated from retired xtask-anti-patterns crate.
 
 set dotenv-load
 
@@ -18,6 +19,17 @@ test:
 
 audit:
     cargo deny check
+
+# Consolidated anti-pattern checks (replaces xtask-anti-patterns crate)
+check:
+    cargo build --workspace --all-targets
+    cargo test --workspace
+    cargo clippy --workspace --all-targets --all-features -- -D warnings
+    cargo deny check
+    cargo machete
+
+machete:
+    cargo machete
 
 docs:
     cargo doc --workspace --all-features --no-deps
