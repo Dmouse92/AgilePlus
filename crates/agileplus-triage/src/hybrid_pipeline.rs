@@ -195,6 +195,7 @@ impl HybridDedup {
         let mut uf = UnionFind::new(self.sigs.len());
         for &(i, j) in &candidates {
             let cos = cosine_or_zero(embs.get(i), embs.get(j));
+            let cos = cos as f64;
             let accepted = if cos >= self.cfg.cosine_threshold {
                 true
             } else if cos >= self.cfg.cosine_reject {
@@ -401,10 +402,10 @@ mod tests {
             cosine_reject: 0.40,
             ..Default::default()
         };
-        assert!(ok.validated().is_ok());
+        assert!(ok.clone().validated().is_ok());
         let bad = HybridConfig {
             cosine_reject: 0.85, // >= threshold
-            ..ok.clone()
+            ..ok
         };
         assert!(bad.validated().is_err());
     }
