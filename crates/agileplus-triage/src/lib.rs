@@ -15,7 +15,7 @@
 //!   `OaiEmbeddings` (api.openai.com), feature `voyage` adds `VoyageEmbeddings`
 //! - `hybrid_pipeline`: MinHash-LSH candidate generation + embedding cosine
 //!   verification + Jaccard tiebreak (`HybridDedup::build / find / run_dedup`)
-//! - `ast_tokenize`: regex-based AST-aware tokenization for Rust and Python
+//! - `ast_tokenize`: hand-rolled scanner for AST-aware tokenization of Rust and Python
 //!
 //! Traceability: FR-AGP-017, FR-AGP-018 (triage dedup primitives),
 //! audit recs #1-#5 from `AUDIT_BLOC_VS_2026_SOTA.md`.
