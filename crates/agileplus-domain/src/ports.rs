@@ -1,20 +1,12 @@
 //! Hexagonal-architecture ports — async traits implemented by adapters.
 
-#[path = "ports/agent.rs"]
 pub mod agent;
-#[path = "ports/epic.rs"]
 pub mod epic;
-#[path = "ports/events.rs"]
 pub mod events;
-#[path = "ports/observability.rs"]
 pub mod observability;
-#[path = "ports/plane_sync.rs"]
 pub mod plane_sync;
-#[path = "ports/storage.rs"]
 pub mod storage;
-#[path = "ports/story.rs"]
 pub mod story;
-#[path = "ports/vcs.rs"]
 pub mod vcs;
 
 pub use agent::AgentPort;
@@ -22,19 +14,24 @@ pub use epic::EpicRepository;
 pub use events::{DomainEvent, DomainEventPublisher};
 pub use observability::ObservabilityPort;
 pub use plane_sync::{
-    PlaneIssue, PlaneProject, PlaneSyncPort, plane_state_to_story_status,
-    story_status_to_plane_state,
+    plane_state_to_story_status, story_status_to_plane_state, PlaneIssue, PlaneProject,
+    PlaneSyncPort,
 };
 pub use story::StoryRepository;
+
+// ReviewPort — a no-op port for code-review integrations (WP09, not yet implemented).
+// Kept as a compile-time bound placeholder so the gRPC server type parameters compile.
+pub trait ReviewPort: Send + Sync {}
+// Blanket impl so any struct can satisfy the bound without implementing anything.
+impl ReviewPort for () {}
 
 use std::path::{Path, PathBuf};
 
 use async_trait::async_trait;
-use serde::{Deserialize, Serialize};
 
 use crate::domain::{
     audit::AuditEntry,
-    backlog::{BacklogFilters, BacklogItem, BacklogPriority, BacklogStatus, Intent},
+    backlog::{BacklogFilters, BacklogItem, BacklogPriority, BacklogStatus},
     cycle::{Cycle, CycleFeature, CycleState, CycleWithFeatures},
     epic::{Epic, EpicStatus},
     feature::Feature,
@@ -51,80 +48,6 @@ use crate::domain::{
 use crate::error::DomainError;
 
 use self::vcs::{BranchInfo, ConflictInfo, FeatureArtifacts, MergeResult, WorktreeInfo};
-
-// ReviewPort — a no-op port for code-review integrations (WP09, not yet implemented).
-// Kept as a compile-time bound placeholder so the gRPC server type parameters compile.
-pub trait ReviewPort: Send + Sync {}
-// Blanket impl so any struct can satisfy the bound without implementing anything.
-impl ReviewPort for () {}
-
-/// Outcome recorded after a ticket has been reviewed in triage.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum TriageOutcome {
-    Accepted,
-    Dismissed,
-}
-
-/// Ticket surfaced to a triage consumer.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct TriageTicket {
-    pub id: String,
-    pub title: String,
-    pub description: String,
-    pub intent: Intent,
-    pub priority: BacklogPriority,
-    pub status: BacklogStatus,
-    pub source: String,
-    pub feature_slug: Option<String>,
-    pub tags: Vec<String>,
-}
-
-impl From<BacklogItem> for TriageTicket {
-    fn from(item: BacklogItem) -> Self {
-        Self {
-            id: item.id.unwrap_or_default().to_string(),
-            title: item.title,
-            description: item.description,
-            intent: item.intent,
-            priority: item.priority,
-            status: item.status,
-            source: item.source,
-            feature_slug: item.feature_slug,
-            tags: item.tags,
-        }
-    }
-}
-
-/// Focused triage port for fetching the next ticket and recording a disposition.
-#[async_trait]
-pub trait TriagePort: Send + Sync {
-    async fn next_ticket(&self) -> Result<TriageTicket, TriageError>;
-    async fn record_outcome(&self, id: &str, outcome: TriageOutcome) -> Result<(), TriageError>;
-}
-
-/// Triaging-specific error surface decoupled from any storage implementation.
-#[derive(Debug, thiserror::Error, PartialEq, Eq)]
-pub enum TriageError {
-    #[error("no triage ticket available")]
-    NoTicketAvailable,
-    #[error("invalid triage ticket id: {0}")]
-    InvalidTicketId(String),
-    #[error("triage ticket not found: {0}")]
-    TicketNotFound(String),
-    #[error("triage storage error: {0}")]
-    Storage(String),
-}
-
-impl From<DomainError> for TriageError {
-    fn from(value: DomainError) -> Self {
-        match value {
-            DomainError::NotFound(message) => Self::TicketNotFound(message),
-            DomainError::Storage(message) => Self::Storage(message),
-            other => Self::Storage(other.to_string()),
-        }
-    }
-}
 
 /// Primary storage port — full CRUD across all domain aggregates.
 #[async_trait]
@@ -302,7 +225,7 @@ impl<T: StoragePort> StoryRepository for T {
 }
 
 #[async_trait]
-impl<T: StoragePort> epic::EpicRepository for T {
+impl<T: StoragePort> EpicRepository for T {
     async fn create(&self, epic: &Epic) -> Result<i64, DomainError> {
         self.create_epic(epic).await
     }
@@ -317,8 +240,7 @@ impl<T: StoragePort> epic::EpicRepository for T {
     }
 }
 
-/// Content storage port — CRUD for the content-centric aggregates currently
-/// exercised by the API and CLI (features, work packages, backlog).
+/// Content storage port — subset used by the dashboard/content layer.
 #[async_trait]
 pub trait ContentStoragePort: Send + Sync {
     // Features
@@ -384,11 +306,8 @@ pub trait VcsPort: Send + Sync {
         remote: Option<&str>,
     ) -> Result<(), DomainError>;
     async fn checkout_branch(&self, branch_name: &str) -> Result<(), DomainError>;
-    async fn merge_to_target(
-        &self,
-        source: &str,
-        target: &str,
-    ) -> Result<MergeResult, DomainError>;
+    async fn merge_to_target(&self, source: &str, target: &str)
+        -> Result<MergeResult, DomainError>;
     async fn detect_conflicts(
         &self,
         source: &str,
@@ -414,82 +333,4 @@ pub trait VcsPort: Send + Sync {
         &self,
         feature_slug: &str,
     ) -> Result<FeatureArtifacts, DomainError>;
-}
-
-#[cfg(test)]
-mod tests {
-    use std::collections::{HashMap, VecDeque};
-    use std::sync::Mutex;
-
-    use super::*;
-
-    #[derive(Default)]
-    struct StubTriageAdapter {
-        queue: Mutex<VecDeque<TriageTicket>>,
-        outcomes: Mutex<HashMap<String, TriageOutcome>>,
-    }
-
-    #[async_trait]
-    impl TriagePort for StubTriageAdapter {
-        async fn next_ticket(&self) -> Result<TriageTicket, TriageError> {
-            self.queue
-                .lock()
-                .map_err(|_| TriageError::Storage("queue lock poisoned".into()))?
-                .pop_front()
-                .ok_or(TriageError::NoTicketAvailable)
-        }
-
-        async fn record_outcome(
-            &self,
-            id: &str,
-            outcome: TriageOutcome,
-        ) -> Result<(), TriageError> {
-            self.outcomes
-                .lock()
-                .map_err(|_| TriageError::Storage("outcome lock poisoned".into()))?
-                .insert(id.to_string(), outcome);
-            Ok(())
-        }
-    }
-
-    fn sample_ticket(id: &str) -> TriageTicket {
-        TriageTicket {
-            id: id.to_string(),
-            title: "Fix login regression".to_string(),
-            description: "OAuth callback fails".to_string(),
-            intent: Intent::Bug,
-            priority: BacklogPriority::High,
-            status: BacklogStatus::Triaged,
-            source: "cli".to_string(),
-            feature_slug: Some("auth".to_string()),
-            tags: vec!["oauth".to_string()],
-        }
-    }
-
-    #[tokio::test]
-    async fn triage_port_stub_returns_next_ticket() {
-        let adapter = StubTriageAdapter {
-            queue: Mutex::new(VecDeque::from([sample_ticket("7")])),
-            outcomes: Mutex::new(HashMap::new()),
-        };
-
-        let ticket = adapter.next_ticket().await.unwrap();
-
-        assert_eq!(ticket.id, "7");
-        assert_eq!(ticket.intent, Intent::Bug);
-        assert_eq!(ticket.priority, BacklogPriority::High);
-    }
-
-    #[tokio::test]
-    async fn triage_port_stub_records_outcome() {
-        let adapter = StubTriageAdapter::default();
-
-        adapter
-            .record_outcome("9", TriageOutcome::Dismissed)
-            .await
-            .unwrap();
-
-        let outcomes = adapter.outcomes.lock().unwrap();
-        assert_eq!(outcomes.get("9"), Some(&TriageOutcome::Dismissed));
-    }
 }

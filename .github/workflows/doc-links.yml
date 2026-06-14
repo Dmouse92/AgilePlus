@@ -1,5 +1,4 @@
 name: Doc Links
-permissions: read-all
 on:
   workflow_dispatch:
   push:
@@ -23,18 +22,16 @@ jobs:
     name: Check markdown links in docs/
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
+      - uses: actions/checkout@v6
       - name: Setup Node
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e  # v6
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
       - name: Install markdown-link-check
         run: npm install --silent --no-audit --no-fund --no-progress markdown-link-check@3.13.7
       - name: Write config
-        env:
-          WORKSPACE: ${{ github.workspace }}
         run: |
-          cat > /tmp/mlc-config.json <<EOF
+          cat > /tmp/mlc-config.json <<'EOF'
           {
             "ignorePatterns": [
               {"pattern": "^http(s)?://localhost"},
@@ -45,8 +42,8 @@ jobs:
               {"pattern": "^http(s)?://schemas\\."}
             ],
             "replacementPatterns": [
-              {"pattern": "^/repos", "replacement": "${WORKSPACE}/.."},
-              {"pattern": "^repos/", "replacement": "${WORKSPACE}/../"}
+              {"pattern": "^/repos", "replacement": "${{ github.workspace }}/.."},
+              {"pattern": "^repos/", "replacement": "${{ github.workspace }}/../"}
             ],
             "httpHeaders": [
               {
@@ -66,7 +63,7 @@ jobs:
           failed=0
           files=(docs/**/*.md)
           if [ ${#files[@]} -eq 0 ]; then
-            echo "No markdown files under docs/ - nothing to check."
+            echo "No markdown files under docs/ — nothing to check."
             exit 0
           fi
           for f in "${files[@]}"; do
