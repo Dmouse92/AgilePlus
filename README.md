@@ -25,6 +25,13 @@
 
 # AgilePlus
 
+[![Build](https://github.com/KooshaPari/AgilePlus/actions/workflows/ci.yml/badge.svg)](https://github.com/KooshaPari/AgilePlus/actions)
+[![Release](https://img.shields.io/github/v/release/KooshaPari/AgilePlus?include_prereleases&sort=semver)](https://github.com/KooshaPari/AgilePlus/releases)
+[![License](https://img.shields.io/github/license/KooshaPari/AgilePlus)](LICENSE)
+[![Phenotype](https://img.shields.io/badge/Phenotype-org-blueviolet)](https://github.com/KooshaPari)
+
+> **Architecture:** See [ARCHITECTURE.md](ARCHITECTURE.md) for system architecture.
+
 > **Pinned references (Phenotype-org)**
 > - MSRV: [![Rust](https://img.shields.io/badge/MSRV-1.88.0-orange?logo=rust)](rust-toolchain.toml)
 > - cargo-deny config: see `deny.toml`

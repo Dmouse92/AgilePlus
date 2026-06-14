@@ -13,7 +13,7 @@
 // We re-export the third-party types from this module so callers
 // importing `crate::dto::*` get a closed surface.
 
-pub use agileplus_triage::claim::{Claim, ClaimKind, ClaimState, ClaimStore};
+pub use agileplus_triage::claim::{Claim, ClaimKind, ClaimReason, ClaimState, ClaimStore};
 pub use agileplus_triage::dedup::DuplicateCandidate;
 pub use agileplus_triage::repo_introspect::RepoInfo;
 
@@ -49,7 +49,7 @@ pub struct ClaimRequest {
     pub kind: ClaimKind,
     pub agent_id: String,
     pub ttl_seconds: i64,
-    pub reason: Option<String>,
+    pub reason: ClaimReason,
 }
 
 /// Request: refresh a claim's heartbeat.

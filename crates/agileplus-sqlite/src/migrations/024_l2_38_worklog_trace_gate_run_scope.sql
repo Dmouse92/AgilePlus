@@ -7,23 +7,10 @@
 -- INTEGER PK, timestamps are RFC3339 TEXT and `created_at`/`updated_at`
 -- are always populated. Foreign keys use `ON DELETE CASCADE` only where
 -- the parent lifetime strictly outlives the child row.
-
--- Per-work-package log entries (agent actions, comments, state changes).
-CREATE TABLE IF NOT EXISTS worklog_entries (
-    id              INTEGER PRIMARY KEY AUTOINCREMENT,
-    work_package_id INTEGER NOT NULL REFERENCES work_packages(id) ON DELETE CASCADE,
-    actor           TEXT    NOT NULL,
-    action          TEXT    NOT NULL,
-    message         TEXT,
-    payload         TEXT,
-    created_at      TEXT    NOT NULL,
-    updated_at      TEXT    NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_worklog_entries_wp      ON worklog_entries (work_package_id);
-CREATE INDEX IF NOT EXISTS idx_worklog_entries_actor   ON worklog_entries (actor);
-CREATE INDEX IF NOT EXISTS idx_worklog_entries_action  ON worklog_entries (action);
-CREATE INDEX IF NOT EXISTS idx_worklog_entries_created ON worklog_entries (created_at);
+--
+-- NOTE: `worklog_entries` is defined by migration 023; this migration only
+-- adds the supporting tables (trace_links, gate_results, run_records,
+-- scope_status) that were missing from the L2 #38 audit.
 
 -- Generic, polymorphic traceability links between any two entities.
 -- `source_*` and `target_*` are intentionally text-typed so that a link

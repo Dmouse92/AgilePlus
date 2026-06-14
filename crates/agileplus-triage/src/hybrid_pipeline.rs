@@ -69,9 +69,9 @@ pub struct HybridConfig {
     pub rows: usize,
     /// Embedding cosine threshold for confirming a candidate as a
     /// duplicate.
-    pub cosine_threshold: f64,
+    pub cosine_threshold: f32,
     /// Below this cosine, candidates are rejected outright.
-    pub cosine_reject: f64,
+    pub cosine_reject: f32,
 }
 
 impl Default for HybridConfig {
