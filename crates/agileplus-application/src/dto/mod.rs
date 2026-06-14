@@ -49,6 +49,10 @@ pub struct ClaimRequest {
     pub kind: ClaimKind,
     pub agent_id: String,
     pub ttl_seconds: i64,
+    /// Structured reason for the claim. Optional on the wire; if
+    /// absent, the use case layer falls back to `ClaimReason::default()`
+    /// (`Manual("")`).
+    #[serde(default)]
     pub reason: ClaimReason,
 }
 
