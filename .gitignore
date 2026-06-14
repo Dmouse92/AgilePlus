@@ -95,3 +95,4 @@ _stub/obj/
 **/temp/
 .env.*
 !.env.example
+agileplus.db
