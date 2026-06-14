@@ -8,7 +8,7 @@ pub use tokio::main as tokio_main;
 
 use clap::{Parser, Subcommand};
 
-use agileplus_cli::{commands, Context, SubcommandAsync};
+use agileplus_cli::commands;
 use agileplus_domain::domain::{
     cycle::{Cycle, CycleState},
     feature::Feature,
@@ -61,7 +61,7 @@ enum Command {
     ListEpics(commands::list_epics::ListEpicsArgs),
     /// List stories, optionally filtered by epic and/or status
     ListStories(commands::list_stories::ListStoriesArgs),
-    /// Worklog schema management (validate/convert/schema/list)
+    /// Worklog schema management (validate/convert/schema/list/emit/show)
     Worklog(commands::worklog::WorklogArgs),
     /// Classify free-text work into backlog intent
     Triage(commands::triage::TriageArgs),
@@ -221,6 +221,70 @@ fn db_path_from_env() -> PathBuf {
         .unwrap_or_else(|_| PathBuf::from("agileplus.db"))
 }
 
+// ── entry point ──────────────────────────────────────────────────────────────
+
+#[tokio_main]
+async fn main() {
+    let _telemetry = agileplus_telemetry::init_subscriber().ok();
+    let cli = Cli::parse();
+    let store = MockStore::seed();
+
+    let result: anyhow::Result<()> = async {
+        match cli.command {
+            Command::Feature { sub } => match sub {
+                FeatureCmd::List => cmd_feature_list(&store),
+                FeatureCmd::Show { id } => cmd_feature_show(&store, id),
+            },
+            Command::Module { sub } => match sub {
+                ModuleCmd::List => cmd_module_list(&store),
+            },
+            Command::Cycle { sub } => match sub {
+                CycleCmd::Current => cmd_cycle_current(&store),
+            },
+            Command::Version(_) => {
+                commands::version::run();
+            }
+            Command::Sync(args) => {
+                sync_cmd::run(args, None).await?;
+            }
+            Command::SeedRequirements(args) => {
+                commands::seed_requirements::run(&args)?;
+            }
+            Command::ListProjects(args) => {
+                let db_path = db_path_from_env();
+                let storage = agileplus_sqlite::SqliteStorageAdapter::new(&db_path)
+                    .map_err(|e| anyhow::anyhow!("open db: {e}"))?;
+                commands::list_projects::run(&args, &storage).await?;
+            }
+            Command::ListEpics(args) => {
+                let db_path = db_path_from_env();
+                let storage = agileplus_sqlite::SqliteStorageAdapter::new(&db_path)
+                    .map_err(|e| anyhow::anyhow!("open db: {e}"))?;
+                commands::list_epics::run(&args, &storage).await?;
+            }
+            Command::ListStories(args) => {
+                let db_path = db_path_from_env();
+                let storage = agileplus_sqlite::SqliteStorageAdapter::new(&db_path)
+                    .map_err(|e| anyhow::anyhow!("open db: {e}"))?;
+                commands::list_stories::run(&args, &storage).await?;
+            }
+            Command::Worklog(args) => {
+                commands::worklog::run(&args)?;
+            }
+            Command::Triage(args) => {
+                commands::triage::run_triage(args).await?;
+            }
+        }
+        Ok(())
+    }
+    .await;
+
+    if let Err(e) = result {
+        eprintln!("error: {e:#}");
+        std::process::exit(1);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -246,76 +310,5 @@ mod tests {
         std::env::set_var("AGILEPLUS_DB", "/tmp/agileplus-test.db");
         assert_eq!(db_path_from_env(), PathBuf::from("/tmp/agileplus-test.db"));
         std::env::remove_var("AGILEPLUS_DB");
-    }
-}
-
-// ── entry point ──────────────────────────────────────────────────────────────
-
-#[tokio_main]
-async fn main() {
-    let _telemetry = agileplus_telemetry::init_subscriber().ok();
-    let cli = Cli::parse();
-    let store = MockStore::seed();
-    let mut ctx = Context::new(db_path_from_env());
-
-    let result: anyhow::Result<()> = async {
-        match cli.command {
-            Command::Feature { sub } => match sub {
-                FeatureCmd::List => cmd_feature_list(&store),
-                FeatureCmd::Show { id } => cmd_feature_show(&store, id),
-            },
-            Command::Module { sub } => match sub {
-                ModuleCmd::List => cmd_module_list(&store),
-            },
-            Command::Cycle { sub } => match sub {
-                CycleCmd::Current => cmd_cycle_current(&store),
-            },
-            Command::Version(args) => {
-                args.execute(&mut ctx)
-                    .await
-                    .map_err(|e| anyhow::anyhow!(e))?;
-            }
-            Command::Sync(args) => {
-                sync_cmd::run(args, None).await?;
-            }
-            Command::SeedRequirements(args) => {
-                commands::seed_requirements::run(&args)?;
-            }
-            Command::ListProjects(args) => {
-                args.execute(&mut ctx)
-                    .await
-                    .map_err(|e| anyhow::anyhow!(e))?;
-            }
-            Command::ListEpics(args) => {
-                let db_path = db_path_from_env();
-                let storage = agileplus_sqlite::SqliteStorageAdapter::new(&db_path)
-                    .map_err(|e| anyhow::anyhow!("open db: {e}"))?;
-                commands::list_epics::run(&args, &storage).await?;
-            }
-            Command::ListStories(args) => {
-                let db_path = db_path_from_env();
-                let storage = agileplus_sqlite::SqliteStorageAdapter::new(&db_path)
-                    .map_err(|e| anyhow::anyhow!("open db: {e}"))?;
-                commands::list_stories::run(&args, &storage).await?;
-            }
-            Command::Worklog(args) => {
-                args.execute(&mut ctx)
-                    .await
-                    .map_err(|e| anyhow::anyhow!(e))?;
-            }
-            Command::Triage(args) => {
-                let db_path = db_path_from_env();
-                let triage = agileplus_sqlite::SqliteTriageAdapter::new(&db_path)
-                    .map_err(|e| anyhow::anyhow!("open triage db: {e}"))?;
-                commands::triage::run_triage(&args, &triage).await?;
-            }
-        }
-        Ok(())
-    }
-    .await;
-
-    if let Err(e) = result {
-        eprintln!("error: {e:#}");
-        std::process::exit(1);
     }
 }
