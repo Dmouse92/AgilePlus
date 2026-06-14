@@ -304,10 +304,7 @@ async fn main() {
                     .map_err(|e| anyhow::anyhow!(e))?;
             }
             Command::Triage(args) => {
-                let db_path = db_path_from_env();
-                let triage = agileplus_sqlite::SqliteTriageAdapter::new(&db_path)
-                    .map_err(|e| anyhow::anyhow!("open triage db: {e}"))?;
-                commands::triage::run_triage(&args, &triage).await?;
+                commands::triage::run_triage(args).await?;
             }
         }
         Ok(())

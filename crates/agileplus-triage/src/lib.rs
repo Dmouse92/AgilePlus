@@ -7,7 +7,9 @@
 //! - `adapter`: high-level orchestration combining classifier + store
 //! - `router`: governance file (CLAUDE.md / AGENTS.md) generator
 //! - `dedup`: token-Jaccard, fuzzy ratio, simhash, n-gram, hybrid dedup scorer
-//! - `claim`: resource claim primitives (repo/branch/worktree) with TTL + heartbeat
+//! - `claim`: resource claim primitives (repo/branch/worktree) with TTL + heartbeat,
+//!   structured `ClaimReason`, in-memory `ClaimStore` + `ClaimStoreTrait`
+//! - `claim_store_sqlite`: SQLite-backed `ClaimStoreTrait` impl (feature `sqlite`)
 //! - `repo_introspect`: git / mangled / no-git repo classification
 //! - `minhash`: Broder MinHash signatures with k-permutation FNV-1a
 //! - `bloom`: feature `bloom` — bitvec-backed Bloom filter for membership tests
@@ -18,7 +20,9 @@
 //! - `ast_tokenize`: regex-based AST-aware tokenization for Rust and Python
 //!
 //! Traceability: FR-AGP-017, FR-AGP-018 (triage dedup primitives),
-//! audit recs #1-#5 from `AUDIT_BLOC_VS_2026_SOTA.md`.
+//! audit recs #1-#5 from `AUDIT_BLOC_VS_2026_SOTA.md`, and audit recs
+//! #6 (structured `ClaimReason`), #7 (`claim_transfer`), #8 (SQLite
+//! store behind `sqlite` feature).
 
 use std::str::FromStr;
 
@@ -30,6 +34,8 @@ pub mod ast_tokenize;
 pub mod backlog;
 pub mod bloom;
 pub mod claim;
+#[cfg(feature = "sqlite")]
+pub mod claim_store_sqlite;
 pub mod classifier;
 pub mod dedup;
 pub mod embeddings;
@@ -53,8 +59,8 @@ pub struct TriageArgs {
     #[arg(long)]
     pub dry_run: bool,
 
-    /// Output format: table (default) or json.
-    #[arg(long, default_value = "table")]
+    /// Output format (table, json, yaml).
+    #[arg(long, value_name = "FMT", default_value = "table")]
     pub output: String,
 }
 
