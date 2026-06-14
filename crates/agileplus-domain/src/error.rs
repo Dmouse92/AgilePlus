@@ -30,6 +30,9 @@ pub enum DomainError {
     #[error("Not found: {0}")]
     NotFound(String),
 
+    #[error("Invalid claim: {0}")]
+    InvalidClaim(String),
+
     #[error("Not implemented")]
     NotImplemented,
 
@@ -78,7 +81,8 @@ impl From<DomainError> for ErrorCode {
             // invalid-argument-shaped from the caller's perspective)
             DomainError::Validation(_)
             | DomainError::FeatureNotInModuleScope { .. }
-            | DomainError::InvalidTransition { .. } => Self::ValidationError,
+            | DomainError::InvalidTransition { .. }
+            | DomainError::InvalidClaim(_) => Self::ValidationError,
 
             DomainError::NotImplemented => Self::NotImplemented,
 

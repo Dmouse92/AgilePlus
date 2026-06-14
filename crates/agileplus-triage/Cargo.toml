@@ -23,6 +23,8 @@ http = ["dep:ureq"]
 oai = ["http", "dep:ureq"]
 # `voyage` enables `VoyageEmbeddings` (api.voyageai.com/v1/embeddings).
 voyage = ["http", "dep:ureq"]
+# `sqlite` enables the SQLite-backed claim store.
+sqlite = ["dep:rusqlite", "dep:thiserror"]
 
 [dependencies]
 agileplus-domain = { path = "../agileplus-domain" }
@@ -33,10 +35,12 @@ serde.workspace = true
 serde_json.workspace = true
 tracing.workspace = true
 clap = { version = "4", features = ["derive"] }
-sqlx.workspace = true
 # Optional deps — feature-gated to keep the default build offline and
 # dependency-light.  `bitvec` is used by `bloom.rs`; `ureq` is used by the
 # `oai` and `voyage` embedding backends; `regex` is used by `ast_tokenize.rs`.
 bitvec = { version = "1.0", optional = true, default-features = false, features = ["alloc"] }
 ureq = { version = "2", optional = true, default-features = false, features = ["tls", "json"] }
 regex = { version = "1", optional = true, default-features = false }
+# Optional deps for the SQLite-backed claim store (feature `sqlite`).
+thiserror = { version = "1", optional = true }
+rusqlite = { version = "0.32", optional = true }

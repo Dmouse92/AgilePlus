@@ -39,6 +39,9 @@ pub mod minhash;
 pub mod repo_introspect;
 pub mod router;
 
+#[cfg(feature = "sqlite")]
+pub mod claim_store_sqlite;
+
 /// Arguments for the `agileplus triage` subcommand.
 #[derive(Debug, Clone, Args)]
 pub struct TriageArgs {

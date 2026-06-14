@@ -10,3 +10,8 @@ tasks:
     desc: Run the Rust workspace test suite with cargo-nextest and export JUnit XML.
     cmds:
       - nextest run --workspace --profile default --cargo-quiet --no-fail-fast --export-junit target/nextest/junit.xml
+
+  coverage:
+    desc: Coverage report (SSOT for how to measure coverage)
+    cmds:
+      - cargo tarpaulin --workspace --all-features

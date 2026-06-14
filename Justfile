@@ -19,6 +19,10 @@ build:
 test:
     cargo test --all-features
 
+# Coverage report (SSOT for how to measure coverage).
+coverage:
+    cargo tarpaulin --workspace --all-features
+
 # Format code
 fmt:
     cargo fmt --all
