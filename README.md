@@ -1,39 +1,12 @@
-<!-- AI-DD-META:START -->
-<!-- This repository is planned, maintained, and managed by AI Agents only. -->
-<!-- Slop issues are expected and intentionally present as part of an HITL-less -->
-<!-- /minimized AI-DD metaproject of learning, refining, and building brute-force -->
-<!-- training for both agents and the human operator. -->
-![Downloads](https://img.shields.io/github/downloads/KooshaPari/AgilePlus/total?style=flat-square&label=downloads&color=blue)
-![GitHub release](https://img.shields.io/github/v/release/KooshaPari/AgilePlus?style=flat-square&label=release)
-![CI](https://img.shields.io/github/actions/workflow/status/KooshaPari/AgilePlus/ci.yml?branch=main&style=flat-square&label=CI)
-![License](https://img.shields.io/github/license/KooshaPari/AgilePlus?style=flat-square)
-![AI-Slop](https://img.shields.io/badge/AI--DD-Slop%20Expected-orange?style=flat-square)
-![AI-Only-Maintained](https://img.shields.io/badge/Planned%20%26%20Maintained%20by-AI%20Agents%20Only-red?style=flat-square)
-![HITL-less](https://img.shields.io/badge/HITL--less%20AI--DD-metaproject-yellow?style=flat-square)
-
-> ⚠️ **AI-Agent-Only Repository**
->
-> This repo is **planned, maintained, and managed exclusively by AI Agents**.
-> Slop issues, rough edges, and AI artifacts are **expected and intentionally
-> present** as part of an **HITL-less / minimized AI-DD** metaproject focused
-> on learning, refining, and brute-force training both the agents and the
-> human operator. Bug reports and contributions are still welcome, but please
-> expect AI-generated code, comments, and documentation throughout.
-<!-- AI-DD-META:END -->
 > **Work state:** ACTIVE · **Progress:** `███████░░░ 70%`
 > AI-native spec-driven PM platform (Rust workspace + React/TS dashboard + Electrobun desktop); frontend candidate #1. Core domain/api/dashboard implemented; CI partially red. · updated 2026-06-02
 
 # AgilePlus
 
-[![Build](https://github.com/KooshaPari/AgilePlus/actions/workflows/ci.yml/badge.svg)](https://github.com/KooshaPari/AgilePlus/actions)
-[![Release](https://img.shields.io/github/v/release/KooshaPari/AgilePlus?include_prereleases&sort=semver)](https://github.com/KooshaPari/AgilePlus/releases)
-[![License](https://img.shields.io/github/license/KooshaPari/AgilePlus)](LICENSE)
-[![Phenotype](https://img.shields.io/badge/Phenotype-org-blueviolet)](https://github.com/KooshaPari)
-
-> **Architecture:** See [ARCHITECTURE.md](ARCHITECTURE.md) for system architecture.
+![Scorecard](https://api.securityscorecards.dev/projects/github.com/KooshaPari/AgilePlus/badge)
 
 > **Pinned references (Phenotype-org)**
-> - MSRV: [![Rust](https://img.shields.io/badge/MSRV-1.88.0-orange?logo=rust)](rust-toolchain.toml)
+> - MSRV: see `rust-toolchain.toml`
 > - cargo-deny config: see `deny.toml`
 > - cargo-audit: `rustsec/audit-check@v2` weekly
 > - Branch protection: 1 reviewer required, no force-push
@@ -82,12 +55,8 @@ holds the traceability package.
 # Build the workspace
 cargo build --workspace
 
-# Install and run the CLI (from source)
+# Install and run the CLI
 cargo install --path crates/agileplus-cli
-agileplus --help
-
-# Or install via cargo-binstall (prebuilt binary, faster)
-cargo binstall agileplus-cli
 agileplus --help
 
 # Create a spec / feature
