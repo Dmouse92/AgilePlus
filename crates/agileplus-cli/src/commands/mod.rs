@@ -5,6 +5,7 @@
 
 pub mod dag;
 pub mod import_dagctl;
+pub mod intent;
 pub mod list;
 pub mod list_epics;
 pub mod list_projects;

@@ -69,11 +69,12 @@ members = [
     "crates/agileplus-p2p",
     "crates/agileplus-telemetry",
     "crates/agileplus-triage",
+    "crates/agileplus-subcmds",
     "crates/agileplus-trace-validator",
     "crates/agileplus-import",
     "crates/agileplus-validate",
     "crates/agileplus-proto",
-    "crates/agileplus-subcmds",
+    "crates/agileplus-mcp-intent",
 ]
 exclude = ["AgilePlus/rust", "rust", "crates/phenotype-config"]
 

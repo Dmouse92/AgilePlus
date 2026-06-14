@@ -66,6 +66,8 @@ enum Command {
     Dag(commands::dag::DagArgs),
     /// Import a dagctl SQLite db into AgilePlus work_packages + wp_dependencies
     ImportDagctl(commands::import_dagctl::ImportDagctlArgs),
+    /// Convert a natural language prompt into a structured intent graph
+    Intent(commands::intent::IntentArgs),
 }
 
 #[derive(Subcommand)]
@@ -307,6 +309,9 @@ async fn main() {
             }
             Command::ImportDagctl(args) => {
                 commands::import_dagctl::run(&args)?;
+            }
+            Command::Intent(args) => {
+                commands::intent::run(&args)?;
             }
         }
         Ok(())
