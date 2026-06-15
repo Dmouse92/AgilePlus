@@ -97,14 +97,16 @@ exclude = ["AgilePlus/rust", "rust", "crates/phenotype-config"]
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-license = "MIT"
+license = "MIT OR Apache-2.0"
 rust-version = "1.88"
+repository = "https://github.com/KooshaPari/AgilePlus"
+authors = ["kooshapari"]
 
 [package]
 name = "agileplus"
 version.workspace = true
 edition.workspace = true
-license = "MIT-or-Apache-2.0"
+license = "MIT OR Apache-2.0"
 license-file = "LICENSE"
 description = "AgilePlus — Rust+TypeScript product & engineering management platform with Axum HTTP/gRPC backend, SQLite local store, Electrobun desktop app, and React/TS dashboard"
 homepage = "https://github.com/KooshaPari/AgilePlus"
@@ -112,6 +114,9 @@ documentation = "https://docs.rs/agileplus"
 repository = "https://github.com/KooshaPari/AgilePlus"
 readme = "README.md"
 publish = false
+authors = ["kooshapari"]
+keywords = ["phenotype", "agileplus"]
+categories = ["development-tools"]
 [dependencies]
 serde.workspace = true
 serde_json.workspace = true

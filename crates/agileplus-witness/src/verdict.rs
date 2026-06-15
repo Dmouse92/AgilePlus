@@ -3,6 +3,7 @@
 use std::collections::HashMap;
 
 use anyhow::Result;
+use serde::{Deserialize, Serialize};
 use tracing::info;
 use uuid::Uuid;
 
@@ -12,7 +13,7 @@ use agileplus_convoy::Convoy;
 use crate::Witness;
 
 /// Outcome of an individual witness.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Verdict {
     Pass,
     Fail,
