@@ -2,6 +2,12 @@ name: quality-gate
 on: [pull_request]
 permissions:
   contents: read
+
+# Concurrency hardening: cancel superseded PR runs, queue main runs.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   verify:
     runs-on: ubuntu-24.04

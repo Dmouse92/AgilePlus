@@ -9,6 +9,12 @@ on:
 permissions:
   contents: read
 
+
+# Concurrency hardening: cancel superseded PR runs, queue main runs.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   governance-index:
     runs-on: ubuntu-latest
