@@ -30,9 +30,6 @@ pub enum DomainError {
     #[error("Not found: {0}")]
     NotFound(String),
 
-    #[error("Invalid claim: {0}")]
-    InvalidClaim(String),
-
     #[error("Not implemented")]
     NotImplemented,
 
