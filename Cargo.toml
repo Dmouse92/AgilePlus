@@ -88,6 +88,7 @@ members = [
     "crates/agileplus-refinery",
     "crates/agileplus-sync",
     "crates/agileplus-witness",
+    "crates/pheno-ci-templates",
     "crates/pheno-ssot-template",
     "crates/pheno-flags",
     "crates/phenotype-mcp-sdk-rs",
