@@ -44,7 +44,7 @@ impl LshIndex {
         for (band_idx, band) in self.bands.iter_mut().enumerate() {
             let band_start = band_idx * self.rows_per_band;
             let band_end = band_start + self.rows_per_band;
-            let h = band_hash(signature, band_start, band_end);
+            let h = Self::band_hash(signature, band_start, band_end);
             let bucket = band.entry(h).or_default();
             if !bucket.contains(&id.to_string()) {
                 bucket.push(id.to_string());
@@ -63,7 +63,7 @@ impl LshIndex {
         for (band_idx, band) in self.bands.iter().enumerate() {
             let band_start = band_idx * self.rows_per_band;
             let band_end = band_start + self.rows_per_band;
-            let h = band_hash(signature, band_start, band_end);
+            let h = Self::band_hash(signature, band_start, band_end);
             if let Some(bucket) = band.get(&h) {
                 for id in bucket {
                     if seen.insert(id.clone()) {
