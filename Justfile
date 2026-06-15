@@ -8,6 +8,17 @@ default:
 
 ci: fmt lint test audit docs
 
+# Run the full grading gate (alias of `ci`)
+[private]
+grade: ci
+
+# Quick grading mode — build, lint, fmt, test only
+grade-fast:
+    cargo build --workspace --all-targets
+    cargo clippy --workspace --all-targets --all-features -- -D warnings
+    cargo fmt --all --check
+    cargo test --workspace
+
 lint:
     cargo clippy --workspace --all-targets --all-features -- -D warnings
 
