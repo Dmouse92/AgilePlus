@@ -70,11 +70,27 @@ members = [
     "crates/agileplus-telemetry",
     "crates/agileplus-triage",
     "crates/agileplus-subcmds",
+    "crates/agileplus-pipeline",
     "crates/agileplus-trace-validator",
-    "crates/agileplus-import",
     "crates/agileplus-validate",
     "crates/agileplus-proto",
     "crates/agileplus-mcp-intent",
+    "crates/phenotype-dep-guard",
+    "crates/agileplus-artifacts",
+    "crates/agileplus-benchmarks",
+    "crates/agileplus-contract-tests",
+    "crates/agileplus-convoy",
+    "crates/agileplus-factory",
+    "crates/agileplus-graph",
+    "crates/agileplus-hook",
+    "crates/agileplus-import",
+    "crates/agileplus-integration-tests",
+    "crates/agileplus-refinery",
+    "crates/agileplus-sync",
+    "crates/agileplus-witness",
+    "crates/pheno-ssot-template",
+    "crates/phenotype-mcp-sdk-rs",
+    "crates/phenotype-sandbox",
 ]
 exclude = ["AgilePlus/rust", "rust", "crates/phenotype-config"]
 
@@ -154,3 +170,4 @@ agileplus-validate = { path = "crates/agileplus-validate" }
 agileplus-proto = { path = "crates/agileplus-proto" }
 agileplus-telemetry = { path = "crates/agileplus-telemetry" }
 tokio-stream = { version = "0.1", features = ["net", "sync"] }
+hex = "0.4"

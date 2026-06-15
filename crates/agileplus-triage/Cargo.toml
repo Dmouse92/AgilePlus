@@ -27,6 +27,7 @@ voyage = ["http", "dep:ureq"]
 # `sqlite` enables the `agileplus_triage::claim_store_sqlite` module,
 # which persists claims to a `rusqlite::Connection`. Off by default to
 # keep the dependency-light default build.
+codebert = ["oai"]
 sqlite = ["dep:rusqlite"]
 
 [dependencies]

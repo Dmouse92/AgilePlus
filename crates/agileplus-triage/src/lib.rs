@@ -44,6 +44,12 @@ pub mod hybrid_pipeline;
 pub mod minhash;
 pub mod repo_introspect;
 pub mod router;
+pub mod lsh;
+#[cfg(feature = "codebert")]
+pub mod codebert;
+pub mod claim_watcher;
+pub mod tree_sitter;
+
 
 #[cfg(feature = "sqlite")]
 pub mod claim_store_sqlite;

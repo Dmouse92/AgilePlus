@@ -15,6 +15,10 @@
 .agileplus/*.db-journal
 .agileplus/*.db-wal
 .agileplus/*.db-shm
+agileplus.db
+agileplus.db-journal
+agileplus.db-wal
+agileplus.db-shm
 .worktrees/
 .claude/worktrees/
 .claude/scheduled_tasks.lock
