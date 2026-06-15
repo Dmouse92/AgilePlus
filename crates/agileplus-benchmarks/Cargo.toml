@@ -6,10 +6,10 @@ rust-version.workspace = true
 description = "Criterion performance benchmarks for all AgilePlus subsystems"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/KooshaPari/AgilePlus"
-authors = ["kooshapari"]
 documentation = "https://docs.rs/agileplus-benchmarks"
 keywords = ["phenotype", "agileplus", "bench"]
 categories = ["development-tools::profiling"]
+authors = ["kooshapari"]
 
 [dependencies]
 agileplus-domain = { path = "../agileplus-domain" }

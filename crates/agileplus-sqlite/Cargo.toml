@@ -5,11 +5,11 @@ edition.workspace = true
 rust-version.workspace = true
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/KooshaPari/AgilePlus"
-authors = ["kooshapari"]
 description = "agileplus sqlite — Phenotype infrastructure crate (AgilePlus)"
 documentation = "https://docs.rs/agileplus-sqlite"
 keywords = ["phenotype", "agileplus", "sql"]
 categories = ["database"]
+authors = ["kooshapari"]
 
 [dependencies]
 agileplus-domain = { path = "../agileplus-domain" }

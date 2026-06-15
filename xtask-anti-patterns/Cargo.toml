@@ -6,11 +6,11 @@ rust-version.workspace = true
 publish = false
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/KooshaPari/AgilePlus"
-authors = ["kooshapari"]
 description = "xtask anti patterns — Phenotype infrastructure crate (AgilePlus)"
 documentation = "https://docs.rs/xtask-anti-patterns"
 keywords = ["phenotype", "agileplus"]
 categories = ["development-tools"]
+authors = ["kooshapari"]
 
 [[bin]]
 name = "xtask-anti-patterns"
