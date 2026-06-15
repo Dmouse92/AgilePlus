@@ -10,6 +10,8 @@ on:
 permissions: read-all
 
 
+# Concurrency hardening: cancel superseded PR runs, queue main runs.
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

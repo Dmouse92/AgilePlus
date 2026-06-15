@@ -25,6 +25,8 @@ permissions:
   contents: read
 
 
+# Concurrency hardening: cancel superseded PR runs, queue main runs.
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
