@@ -91,6 +91,7 @@ members = [
     "crates/pheno-ci-templates",
     "crates/pheno-ssot-template",
     "crates/pheno-flags",
+    "crates/pheno-vibecoding-guard",
     "crates/phenotype-mcp-sdk-rs",
     "crates/phenotype-sandbox",
 ]
