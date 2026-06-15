@@ -1,5 +1,7 @@
 //! Aggregated scan report.
 
+use std::fmt;
+
 use serde::{Deserialize, Serialize};
 
 use crate::dependency::Dependency;
@@ -62,5 +64,21 @@ impl Report {
     /// Returns true if at least one critical or high finding was found.
     pub fn has_blocking_findings(&self) -> bool {
         self.summary.critical > 0 || self.summary.high > 0
+    }
+}
+
+impl fmt::Display for Summary {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} deps scanned, {} with findings ({} critical, {} high, {} medium, {} low, {} unknown)",
+            self.total,
+            self.with_findings,
+            self.critical,
+            self.high,
+            self.medium,
+            self.low,
+            self.unknown,
+        )
     }
 }

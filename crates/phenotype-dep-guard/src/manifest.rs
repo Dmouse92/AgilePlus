@@ -1,17 +1,26 @@
 //! Manifest parsers for the four supported ecosystems.
 //!
-//! Each parser turns a file into a `Vec<Dependency>`. The dispatch is
-//! filename-based (see [`ecosystem::ecosystem_for_manifest`]). All parsers
-//! are best-effort: a parse error in one section is surfaced as
-//! [`Error::Manifest`], not a panic.
+//! Each parser turns the raw file contents into a `Vec<Dependency>`. The
+//! dispatch is filename-based (see [`ecosystem::ecosystem_for_manifest`])
+//! and is exposed as the file-level [`parse_manifest`] entry point.
 //!
-//! Implemented formats:
-//! - Cargo: `Cargo.toml` — `[dependencies]`, `[dev-dependencies]`, `[build-dependencies]`
-//! - Npm: `package.json` — `dependencies`, `devDependencies`, `optionalDependencies`
-//! - PyPI: `pyproject.toml` — `[project.dependencies]` (PEP 621), `[tool.uv.sources]`
-//! - Go: `go.mod` — `require` blocks (single + grouped)
+//! Public convenience surface (string-only, infallible for well-formed
+//! input — invalid input is silently skipped rather than panicking):
+//! - [`parse_cargo`]      — `Cargo.toml`
+//! - [`parse_npm`]        — `package.json`
+//! - [`parse_pypi`]       — `pyproject.toml` (PEP 621)
+//! - [`parse_go`]         — `go.mod` (single + grouped `require` blocks)
+//!
+//! Path-level entry point:
+//! - [`parse_manifest`]   — reads from disk, dispatches on filename
+//!
+//! Sections covered:
+//! - Cargo: `[dependencies]`, `[dev-dependencies]`, `[build-dependencies]`
+//! - Npm:   `dependencies`, `devDependencies`, `optionalDependencies`,
+//!          `peerDependencies`
+//! - PyPI:  `[project.dependencies]`, `[project.optional-dependencies.*]`
+//! - Go:    `require ...` lines and `require (...)` blocks
 
-use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 
@@ -20,8 +29,13 @@ use serde::Deserialize;
 use crate::dependency::{Dependency, Ecosystem};
 use crate::ecosystem;
 use crate::error::{Error, Result};
+use crate::lockfile::split_requirements_line;
 
-/// Parse a manifest at `path` and return its declared dependencies.
+/// Read a manifest from disk and dispatch to the right parser.
+///
+/// Returns [`Error::Manifest`] for an unsupported filename and propagates
+/// IO errors verbatim. (Parse errors are swallowed by the per-ecosystem
+/// parsers — they return `Vec::new()` for malformed input.)
 pub fn parse_manifest(path: &Path) -> Result<Vec<Dependency>> {
     let ecosystem = ecosystem::ecosystem_for_manifest(path).ok_or_else(|| {
         Error::Manifest(format!(
@@ -30,100 +44,112 @@ pub fn parse_manifest(path: &Path) -> Result<Vec<Dependency>> {
         ))
     })?;
     let raw = fs::read_to_string(path)?;
-    let manifest_path = path
-        .file_name()
-        .and_then(|s| s.to_str())
-        .unwrap_or("manifest")
-        .to_string();
     let deps = match ecosystem {
-        Ecosystem::Cargo => parse_cargo(&raw, &manifest_path)?,
-        Ecosystem::Npm => parse_npm(&raw, &manifest_path)?,
-        Ecosystem::Pypi => parse_pypi(&raw, &manifest_path)?,
-        Ecosystem::Go => parse_go(&raw, &manifest_path)?,
+        Ecosystem::Cargo => parse_cargo(&raw),
+        Ecosystem::Npm => parse_npm(&raw),
+        Ecosystem::Pypi => parse_pypi(&raw),
+        Ecosystem::Go => parse_go(&raw),
         Ecosystem::Other => Vec::new(),
     };
     Ok(deps)
 }
 
-/// Parse the contents of a `Cargo.toml` manifest.
-pub fn parse_cargo(raw: &str, manifest_path: &str) -> Result<Vec<Dependency>> {
-    let manifest: CargoToml = toml::from_str(raw)
-        .map_err(|e| Error::Manifest(format!("Cargo.toml: {e}")))?;
+/// Parse the contents of a `Cargo.toml` manifest. Returns one
+/// `Dependency` per `[dependencies]`, `[dev-dependencies]`, and
+/// `[build-dependencies]` entry. Bare-version and table-with-version
+/// forms are both supported.
+pub fn parse_cargo(raw: &str) -> Vec<Dependency> {
+    let Ok(manifest) = toml::from_str::<CargoToml>(raw) else {
+        return Vec::new();
+    };
     let mut out = Vec::new();
     for (name, spec) in manifest.dependencies {
-        out.push(dep_from_cargo_spec(name, spec, "dependencies", manifest_path));
+        out.push(dep_from_cargo_spec(name, spec, "dependencies"));
     }
     for (name, spec) in manifest.dev_dependencies {
-        out.push(dep_from_cargo_spec(
-            name,
-            spec,
-            "dev-dependencies",
-            manifest_path,
-        ));
+        out.push(dep_from_cargo_spec(name, spec, "dev-dependencies"));
     }
     for (name, spec) in manifest.build_dependencies {
-        out.push(dep_from_cargo_spec(
-            name,
-            spec,
-            "build-dependencies",
-            manifest_path,
-        ));
+        out.push(dep_from_cargo_spec(name, spec, "build-dependencies"));
     }
-    Ok(out)
+    out
 }
 
 fn dep_from_cargo_spec(
     name: String,
     spec: CargoDepSpec,
     section: &'static str,
-    manifest_path: &str,
 ) -> Dependency {
-    let version = spec.version.unwrap_or_else(|| "*".into());
-    Dependency::new(name, version, Ecosystem::Cargo, manifest_path).with_section(section)
+    let version = match spec {
+        CargoDepSpec::Bare(v) => v,
+        CargoDepSpec::Detailed { version } => version.unwrap_or_else(|| "*".into()),
+    };
+    Dependency::new(name, version, Ecosystem::Cargo, "Cargo.toml")
+        .with_section(section)
 }
 
-/// Parse the contents of a `package.json` manifest.
-pub fn parse_npm(raw: &str, manifest_path: &str) -> Result<Vec<Dependency>> {
-    let pkg: NpmPackage = serde_json::from_str(raw)
-        .map_err(|e| Error::Manifest(format!("package.json: {e}")))?;
+/// Parse the contents of a `package.json` manifest. Returns one
+/// `Dependency` per `dependencies`, `devDependencies`,
+/// `optionalDependencies`, and `peerDependencies` entry.
+pub fn parse_npm(raw: &str) -> Vec<Dependency> {
+    let Ok(pkg) = serde_json::from_str::<NpmPackage>(raw) else {
+        return Vec::new();
+    };
     let mut out = Vec::new();
     for (name, version) in pkg.dependencies {
         out.push(
-            Dependency::new(name, version, Ecosystem::Npm, manifest_path)
+            Dependency::new(name, version, Ecosystem::Npm, "package.json")
                 .with_section("dependencies"),
         );
     }
     for (name, version) in pkg.dev_dependencies {
         out.push(
-            Dependency::new(name, version, Ecosystem::Npm, manifest_path)
+            Dependency::new(name, version, Ecosystem::Npm, "package.json")
                 .with_section("devDependencies"),
         );
     }
     for (name, version) in pkg.optional_dependencies {
         out.push(
-            Dependency::new(name, version, Ecosystem::Npm, manifest_path)
+            Dependency::new(name, version, Ecosystem::Npm, "package.json")
                 .with_section("optionalDependencies"),
         );
     }
     for (name, version) in pkg.peer_dependencies {
         out.push(
-            Dependency::new(name, version, Ecosystem::Npm, manifest_path)
+            Dependency::new(name, version, Ecosystem::Npm, "package.json")
                 .with_section("peerDependencies"),
         );
     }
-    Ok(out)
+    out
 }
 
-/// Parse the contents of a `pyproject.toml` manifest.
-pub fn parse_pypi(raw: &str, manifest_path: &str) -> Result<Vec<Dependency>> {
-    let pyp: PyProject = toml::from_str(raw)
-        .map_err(|e| Error::Manifest(format!("pyproject.toml: {e}")))?;
+/// Parse the contents of a `pyproject.toml` manifest. Returns one
+/// `Dependency` per `[project.dependencies]` entry plus one per
+/// `[project.optional-dependencies.<extra>]` entry.
+///
+/// Auto-detects format: if the input does not look like a TOML
+/// `pyproject.toml` (i.e. TOML parsing fails or yields nothing), the
+/// function falls back to `requirements.txt` syntax, which makes it
+/// safe to call `parse_pypi` on either kind of file.
+pub fn parse_pypi(raw: &str) -> Vec<Dependency> {
+    let toml_deps = parse_pypi_pyproject(raw);
+    if !toml_deps.is_empty() {
+        return toml_deps;
+    }
+    // Fall back to requirements.txt syntax.
+    parse_requirements_txt_format(raw)
+}
+
+fn parse_pypi_pyproject(raw: &str) -> Vec<Dependency> {
+    let Ok(pyp) = toml::from_str::<PyProject>(raw) else {
+        return Vec::new();
+    };
     let mut out = Vec::new();
     if let Some(project) = pyp.project {
         for spec in project.dependencies {
             let (name, version) = split_pep508(&spec);
             out.push(
-                Dependency::new(name, version, Ecosystem::Pypi, manifest_path)
+                Dependency::new(name, version, Ecosystem::Pypi, "pyproject.toml")
                     .with_section("project.dependencies"),
             );
         }
@@ -131,20 +157,46 @@ pub fn parse_pypi(raw: &str, manifest_path: &str) -> Result<Vec<Dependency>> {
             for s in spec {
                 let (n, v) = split_pep508(&s);
                 out.push(
-                    Dependency::new(n, v, Ecosystem::Pypi, manifest_path)
+                    Dependency::new(n, v, Ecosystem::Pypi, "pyproject.toml")
                         .with_section(format!("project.optional-dependencies.{name}")),
                 );
             }
         }
     }
-    Ok(out)
+    out
 }
 
-/// Parse the contents of a `go.mod` file.
-pub fn parse_go(raw: &str, manifest_path: &str) -> Result<Vec<Dependency>> {
-    // `go.mod` is line-oriented with `require` blocks (single or grouped).
-    // We do a focused parse: ignore everything outside `require (...)`
-    // sections and pull the `module version` pairs.
+fn parse_requirements_txt_format(raw: &str) -> Vec<Dependency> {
+    let mut out = Vec::new();
+    for line in raw.lines() {
+        let line = line.trim();
+        if line.is_empty() || line.starts_with('#') {
+            continue;
+        }
+        if let Some(rest) = line.strip_prefix("-r ") {
+            let target = rest.trim().to_string();
+            out.push(
+                Dependency::new(target, "*", Ecosystem::Pypi, "requirements.txt")
+                    .with_section("-r"),
+            );
+            continue;
+        }
+        let (name, version) = split_requirements_line(line);
+        if name.is_empty() || name == "*" {
+            continue;
+        }
+        out.push(
+            Dependency::new(name, version, Ecosystem::Pypi, "requirements.txt")
+                .with_section("requirements"),
+        );
+    }
+    out
+}
+
+/// Parse the contents of a `go.mod` file. Handles both the inline
+/// `require module version` form and grouped `require (...)` blocks.
+/// Indirect markers (`// indirect`) are tolerated but ignored.
+pub fn parse_go(raw: &str) -> Vec<Dependency> {
     let mut out = Vec::new();
     let mut in_require = false;
     for line in raw.lines() {
@@ -154,7 +206,6 @@ pub fn parse_go(raw: &str, manifest_path: &str) -> Result<Vec<Dependency>> {
         }
         if trimmed.starts_with("require (") {
             in_require = true;
-            // Single-line `require` blocks don't have an opening paren.
             continue;
         }
         if in_require && trimmed == ")" {
@@ -164,7 +215,7 @@ pub fn parse_go(raw: &str, manifest_path: &str) -> Result<Vec<Dependency>> {
         if in_require {
             if let Some((name, version)) = parse_go_require_line(trimmed) {
                 out.push(
-                    Dependency::new(name, version, Ecosystem::Go, manifest_path)
+                    Dependency::new(name, version, Ecosystem::Go, "go.mod")
                         .with_section("require"),
                 );
             }
@@ -174,14 +225,14 @@ pub fn parse_go(raw: &str, manifest_path: &str) -> Result<Vec<Dependency>> {
             if let Some(rest) = trimmed.strip_prefix("require ") {
                 if let Some((name, version)) = parse_go_require_line(rest.trim()) {
                     out.push(
-                        Dependency::new(name, version, Ecosystem::Go, manifest_path)
+                        Dependency::new(name, version, Ecosystem::Go, "go.mod")
                             .with_section("require"),
                     );
                 }
             }
         }
     }
-    Ok(out)
+    out
 }
 
 // ---- internal: serde shapes ----------------------------------------------
@@ -189,11 +240,11 @@ pub fn parse_go(raw: &str, manifest_path: &str) -> Result<Vec<Dependency>> {
 #[derive(Debug, Default, Deserialize)]
 struct CargoToml {
     #[serde(default)]
-    dependencies: BTreeMap<String, CargoDepSpec>,
+    dependencies: std::collections::BTreeMap<String, CargoDepSpec>,
     #[serde(default, rename = "dev-dependencies")]
-    dev_dependencies: BTreeMap<String, CargoDepSpec>,
+    dev_dependencies: std::collections::BTreeMap<String, CargoDepSpec>,
     #[serde(default, rename = "build-dependencies")]
-    build_dependencies: BTreeMap<String, CargoDepSpec>,
+    build_dependencies: std::collections::BTreeMap<String, CargoDepSpec>,
 }
 
 /// `Cargo.toml` accepts either a bare version string or a table with a
@@ -209,13 +260,13 @@ enum CargoDepSpec {
 #[derive(Debug, Default, Deserialize)]
 struct NpmPackage {
     #[serde(default)]
-    dependencies: BTreeMap<String, String>,
+    dependencies: std::collections::BTreeMap<String, String>,
     #[serde(default, rename = "devDependencies")]
-    dev_dependencies: BTreeMap<String, String>,
+    dev_dependencies: std::collections::BTreeMap<String, String>,
     #[serde(default, rename = "optionalDependencies")]
-    optional_dependencies: BTreeMap<String, String>,
+    optional_dependencies: std::collections::BTreeMap<String, String>,
     #[serde(default, rename = "peerDependencies")]
-    peer_dependencies: BTreeMap<String, String>,
+    peer_dependencies: std::collections::BTreeMap<String, String>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -229,13 +280,13 @@ struct PyProjectSection {
     #[serde(default)]
     dependencies: Vec<String>,
     #[serde(default, rename = "optional-dependencies")]
-    optional_dependencies: BTreeMap<String, Vec<String>>,
+    optional_dependencies: std::collections::BTreeMap<String, Vec<String>>,
 }
 
 // ---- internal: tiny helpers ---------------------------------------------
 
 /// Split a PEP 508 spec like `requests >= 2.0, < 3` into `(name, version)`.
-/// Returns `("*", "*")` if we can't find a version.
+/// Returns `("*", "*")` if we can't find a name.
 fn split_pep508(spec: &str) -> (String, String) {
     let mut parts = spec.split_whitespace();
     let name = parts.next().unwrap_or("").to_string();
@@ -249,6 +300,8 @@ fn split_pep508(spec: &str) -> (String, String) {
 
 /// Parse a single line inside a `go.mod` `require` block, e.g.
 /// `github.com/foo/bar v1.2.3` or `github.com/foo/bar v1.2.3 // indirect`.
+/// The trailing `// indirect` marker is stripped; the `v`-prefix on
+/// the version is **preserved** (`v1.2.3` stays `v1.2.3`).
 fn parse_go_require_line(line: &str) -> Option<(String, String)> {
     let line = line.split("//").next().unwrap_or("").trim();
     let mut parts = line.split_whitespace();
@@ -317,7 +370,7 @@ require (
 
     #[test]
     fn cargo_manifest_parses_all_sections() {
-        let deps = parse_cargo(CARGO, "Cargo.toml").unwrap();
+        let deps = parse_cargo(CARGO);
         assert_eq!(deps.len(), 3);
         let serde = deps.iter().find(|d| d.name == "serde").unwrap();
         assert_eq!(serde.version, "1.0");
@@ -337,13 +390,13 @@ version = "0.0.1"
 [dependencies]
 serde = "1"
 "#;
-        let deps = parse_cargo(raw, "Cargo.toml").unwrap();
+        let deps = parse_cargo(raw);
         assert_eq!(deps.len(), 1);
     }
 
     #[test]
     fn npm_manifest_parses_all_sections() {
-        let deps = parse_npm(NPM, "package.json").unwrap();
+        let deps = parse_npm(NPM);
         assert_eq!(deps.len(), 4);
         let lodash = deps.iter().find(|d| d.name == "lodash").unwrap();
         assert_eq!(lodash.version, "4.17.21");
@@ -358,7 +411,7 @@ serde = "1"
 
     #[test]
     fn pypi_manifest_parses_pep508() {
-        let deps = parse_pypi(PYPI, "pyproject.toml").unwrap();
+        let deps = parse_pypi(PYPI);
         assert!(deps.iter().any(|d| d.name == "requests" && d.version == ">="));
         assert!(deps.iter().any(|d| d.name == "click" && d.version == "*"));
         assert!(deps.iter().any(|d| d.name == "PyQt5"));
@@ -366,7 +419,7 @@ serde = "1"
 
     #[test]
     fn go_manifest_parses_both_require_forms() {
-        let deps = parse_go(GO, "go.mod").unwrap();
+        let deps = parse_go(GO);
         assert_eq!(deps.len(), 3);
         let bar = deps.iter().find(|d| d.name == "github.com/foo/bar").unwrap();
         assert_eq!(bar.version, "v1.2.3");
@@ -378,8 +431,7 @@ serde = "1"
 
     #[test]
     fn go_manifest_ignores_indirect_marker() {
-        let deps = parse_go(GO, "go.mod").unwrap();
-        // All entries should still appear, just with version parsed correctly.
+        let deps = parse_go(GO);
         assert_eq!(deps.iter().filter(|d| d.version == "v2.0.1").count(), 1);
     }
 

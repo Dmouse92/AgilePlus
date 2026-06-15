@@ -6,15 +6,15 @@
 //! # Quick start
 //!
 //! ```no_run
-//! use phenotype_dep_guard::{Ecosystem, OsvClient, Scanner, ScannerBuilder};
+//! use phenotype_dep_guard::{OsvClient, ScannerBuilder};
 //!
 //! # async fn run() -> Result<(), Box<dyn std::error::Error>> {
 //! let scanner = ScannerBuilder::new("phenotype-dep-guard", "0.1.0")
 //!     .add_path(".")
 //!     .osv(OsvClient::default())
 //!     .build();
-//! let report = scanner.scan().await?;
-//! println!("{}", report.summary());
+//! let report = scanner.scan_paths().await?.report;
+//! println!("{}", report.summary);
 //! # Ok(()) }
 //! ```
 //!
@@ -141,7 +141,7 @@ serde = "1.0"
         );
         assert_eq!(go.len(), 1);
         assert_eq!(go[0].name, "github.com/gin-gonic/gin");
-        assert_eq!(go[0].version, "1.9.0");
+        assert_eq!(go[0].version, "v1.9.0");
         assert_eq!(go[0].ecosystem, Ecosystem::Go);
     }
 

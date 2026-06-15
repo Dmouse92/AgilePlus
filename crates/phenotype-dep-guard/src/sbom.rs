@@ -113,9 +113,9 @@ impl Sbom {
         }
     }
 
-    /// Serialize as CycloneDX 1.5 JSON.
+    /// Serialize as CycloneDX 1.5 JSON (compact, no whitespace).
     pub fn to_json(&self) -> Result<String, serde_json::Error> {
-        serde_json::to_string_pretty(self)
+        serde_json::to_string(self)
     }
 }
 
