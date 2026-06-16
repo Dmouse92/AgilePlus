@@ -26,3 +26,4 @@ tracing.workspace = true
 [dev-dependencies]
 tokio = { workspace = true, features = ["full", "macros"] }
 tempfile.workspace = true
+chrono.workspace = true
